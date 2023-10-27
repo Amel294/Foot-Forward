@@ -20,6 +20,7 @@ router.get('/allUsers', async (req, res) => {
 router.get('/customers', async (req, res) => {
     try {
         const users = await User.find(); // Retrieve all users from the database
+        console.log(users)
         // Define the pageUrl function
         const pageUrl = (pageNumber) => {
             // Calculate the URL for the given page number

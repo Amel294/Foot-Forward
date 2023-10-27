@@ -68,7 +68,6 @@ const orders = [
 const dashboardRoutes = require('./server/router/adminRoute/dashboard');
 const ordersRoutes = require('./server/router/adminRoute/orders');
 const productsRoutes = require('./server/router/adminRoute/products');
-const addProductsRoutes = require('./server/router/adminRoute/addProducts');
 const addVarientsRoutes = require('./server/router/adminRoute/addVarients');
 const customersRoutes = require('./server/router/adminRoute/customers');
 const attributesRoutes = require('./server/router/adminRoute/attributes');
@@ -76,7 +75,6 @@ const attributesRoutes = require('./server/router/adminRoute/attributes');
 app.use('/admin', dashboardRoutes);
 app.use('/admin', ordersRoutes);
 app.use('/admin', productsRoutes);
-app.use('/admin', addProductsRoutes);
 app.use('/admin', addVarientsRoutes);
 app.use('/admin', customersRoutes);
 app.use('/admin', attributesRoutes);
