@@ -27,7 +27,7 @@ function generateOtpForUser(session) {
 }
 
 async function sendOtpEmail(session, isResend = false) {
-    const subject = isResend ? `Your Resend OTP Code [${Date.now()}]` : 'Your OTP Code';
+    const subject = isResend ? `Your Resend OTP Code ` : 'Your OTP Code';
     let mailOptions = {
         from: process.env.SMTP_EMAIL,
         to: session.email,
@@ -56,10 +56,13 @@ exports.myOrders = (req, res) => {
 }
 
 exports.otpPage = async (req, res) => {
+    console.log("inside emailOTP route")
     if (!req.session.temp) {
+        console.log("There was no temp session")
         req.session.temp = {}; // Initialize req.session.temp as an empty object
     }
 
+    console.log(req.session.temp)
     if (!req.session.temp.otp || !req.session.temp.otpExpirationTime) {
         generateOtpForUser(req.session.temp);
 
@@ -75,10 +78,18 @@ exports.otpPage = async (req, res) => {
 
 
 exports.signup_POST = (req, res) => {
+    console.log("inside signup.post")
     const fullName = req.body.full_name;
     const email = req.body.email;
-    const phone = req.body.phone;
+    const phone = req.body.phone.toString() ;
     const password = req.body.password;
+
+    // Check if the phone number is empty
+    if (!phone) {
+        return res.status(400).json({ error: "Phone number is required" });
+    }else{
+        console.log(phone)
+    }
 
     // Store user information in the session
     req.session.temp = {
@@ -113,16 +124,22 @@ exports.resend = async (req, res) => {
 
 
 exports.verifyOTP = async (req, res) => {
+    console.log("Verify OTP");
   const userOtp = req.body.otp;
-
+    console.log(req.session.temp);
   if (Date.now() > req.session.temp.otpExpirationTime) {
       return res.json({ success: false, message: 'OTP has expired!' });
   }
-
+  console.log("Date created");
+  console.log(req.session.temp);
   if (userOtp === req.session.temp.otp) {
       try {
+            console.log("OTP VERIFIED");
+            console.log(req.session.temp);
           const user = new User(req.session.temp);  // No need to manually hash the password
-
+            console.log("In verify Otp");
+            console.log(user)
+            console.log(req.session.temp);
           await user.save();
           req.session.temp = null;  // Clear the temporary session data
           res.json({ success: true, message: 'OTP verified successfully and user saved!' });
