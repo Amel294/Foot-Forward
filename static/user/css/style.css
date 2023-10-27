@@ -1,0 +1,15 @@
+.center_sign{
+    display: flex;
+    justify-content: space-around;
+}
+
+.rounded_button{
+    background: #7520dd;
+    border-radius: 0.25rem;
+}
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+}

@@ -1,0 +1,33 @@
+<section class="section-b-space">
+    <div class="container col-sm-12 col-md-12 col-lg-6">
+        <div class="row shadow p-3 mb-5 bg-white rounded py-5">
+            <div class="col-lg-12">
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade dashboard-security dashboard active show" id="security">
+                        <div class="security-details">
+                            <h5 class="font-light mt-3">Hi <span>User</span></h5>
+                        </div>
+                        <div class="box-head">
+                            <h3>Please enter The Confirmation code from the email</h3>
+                        </div>
+                        <!-- Error Handling -->
+                        <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+                        <div id="countdown" class="font-light mt-3">EXPIRED</div>
+                    
+                        <form id="verificationForm">
+                            <div class="input-group">
+                                <input type="text" id="verificationCodeInput" class="form-control" placeholder="Code" required="">
+                                <button class="btn btn-solid-default" type="button" id="otpVerify">Submit</button>
+                            </div>
+                        </form>
+                    
+                        <!-- Resend Button -->
+                        <button class="btn btn-solid-default mt-3" id="resendButton" onclick="resendCode()">Resend Code</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

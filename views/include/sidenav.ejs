@@ -1,0 +1,58 @@
+<div class="nk-sidebar nk-sidebar-fixed is-light " data-content="sidebarMenu">
+    <div class="nk-sidebar-element nk-sidebar-head">
+        <div class="nk-sidebar-brand"><a href="/static/index.html"
+                class="logo-link nk-sidebar-logo"><img class="logo-light logo-img"
+                    src="/static/images/logo.png" srcset="/demo2/images/logo2x.png 2x" alt="logo"><img
+                    class="logo-dark logo-img" src="/static/images/logo-dark.png"
+                    srcset="/demo2/images/logo-dark2x.png 2x" alt="logo-dark"><img
+                    class="logo-small logo-img logo-img-small" src="/static/images/logo-small.png"
+                    srcset="/demo2/images/logo-small2x.png 2x" alt="logo-small"></a></div>
+        <div class="nk-menu-trigger me-n2"><a href="#" class="nk-nav-toggle nk-quick-nav-icon d-xl-none"
+                data-target="sidebarMenu"><em class="icon ni ni-arrow-left"></em></a><a href="#"
+                class="nk-nav-compact nk-quick-nav-icon d-none d-xl-inline-flex"
+                data-target="sidebarMenu"><em class="icon ni ni-menu"></em></a></div>
+    </div>
+    <div class="nk-sidebar-element">
+        <div class="nk-sidebar-content">
+            <div class="nk-sidebar-menu" data-simplebar>
+                <ul class="nk-menu">
+                    <li class="nk-menu-item <%= activeRoute === 'dashboard' ? 'active' : '' %>">
+                        <a href="/admin/dashboard" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-dashboard-fill"></em></span>
+                            <span class="nk-menu-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nk-menu-item <%= activeRoute === 'orders' ? 'active' : '' %>">
+                        <a href="/admin/orders" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-bag-fill"></em></span>
+                            <span class="nk-menu-text">Orders</span>
+                        </a>
+                    </li>
+                    <!-- ...similar for other menu items... -->
+                    <li class="nk-menu-item <%= activeRoute === 'customers' ? 'active' : '' %>">
+                        <a href="/admin/customers" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-users-fill"></em></span>
+                            <span class="nk-menu-text">Customers</span>
+                        </a>
+                    </li>
+                    <li class="nk-menu-item <%= activeRoute === 'products' ? 'active' : '' %>">
+                        <a href="/admin/products" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-package-fill"></em></span>
+                            <span class="nk-menu-text">Products</span>
+                        </a>
+                    </li>
+                    <li class="nk-menu-item <%= activeRoute === 'attributes' ? 'active' : '' %>">
+                        <a href="/admin/attributes" class="nk-menu-link">
+                            <span class="nk-menu-icon"><em class="icon ni ni-property-add"></em></span>
+                            <span class="nk-menu-text">Add Attributes</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<div class="nk-wrap ">

@@ -1,0 +1,37 @@
+/*!
+ * Theme Name: Default
+ * Package : DashLite
+ * Author: Softnio
+ * Author URI: http://themeforest.net/user/softnio
+ * Version	 :	1.0.0
+ * Updated	 :	07.23.2020
+**/
+
+.custom-card {
+    height: 100px;
+}
+
+.color-box {
+    width: 50px;
+    height: 50px;
+}
+
+.bg-blue {
+    background-color: #0000FF;
+}
+
+.color-circle {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.preview-list2 {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -.75rem
+}
+

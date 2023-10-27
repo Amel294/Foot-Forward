@@ -1,0 +1,150 @@
+
+
+        <!-- tap to top Section Start -->
+        <div class="tap-to-top">
+            <a href="#home">
+                <i class="fas fa-chevron-up"></i>
+            </a>
+        </div>
+        <!-- tap to top Section End -->
+
+        <div class="bg-overlay"></div>
+
+      <!-- latest jquery-->
+      <script src="/static/user/js/jquery-3.5.1.min.js"></script>
+
+      <!-- Bootstrap js-->
+      <script src="/static/user/js/bootstrap/bootstrap.bundle.min.js"></script>
+  
+      <!-- feather icon js-->
+      <script src="/static/user/js/feather/feather.min.js"></script>
+  
+      <!-- lazyload js-->
+      <script src="/static/user/js/lazysizes.min.js"></script>
+  
+      <!-- Slick js-->
+      <script src="/static/user/js/slick/slick.js"></script>
+      <script src="/static/user/js/slick/slick-animation.min.js"></script>
+      <script src="/static/user/js/slick/custom_slick.js"></script>
+  
+      <!-- newsletter js -->
+      <script src="/static/user/js/newsletter.js"></script>
+  
+      <!-- add to cart modal resize -->
+      <script src="/static/user/js/cart_modal_resize.js"></script>
+  
+      <!-- Add To Home js -->
+      <script src="/static/user/js/pwa.js"></script>
+  
+      <!-- add to cart modal resize -->
+      <script src="/static/user/js/cart_modal_resize.js"></script>
+  
+      <!-- feather icon js-->
+      <!-- <script src="/static/user/js/timer1.js"></script> -->
+  
+      <!-- notify js -->
+      <script src="/static/user/js/bootstrap/bootstrap-notify.min.js"></script>
+  
+      <!-- script js -->
+      <script src="/static/user/js/theme-setting.js"></script>
+      <script src="/static/user/js/script.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script>
+        // Assuming countdownExpirationTime is passed in as a variable from the server
+        let countdownEnd = new Date(<%=countdownExpirationTime%>);
+    
+        function updateCountdownDisplay() {
+            let now = new Date().getTime();
+            let distance = countdownEnd - now;
+    
+            // Time calculations for minutes and seconds
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+    
+            // Display the result in the element with id="countdown"
+            document.getElementById("countdown").innerHTML = minutes + "m " + seconds + "s";
+    
+            // If the countdown is over, write some text and clear the interval
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdown").innerHTML = "EXPIRED";
+            }
+        }
+    
+        // Update countdown display immediately
+        updateCountdownDisplay();
+    
+        // Update the countdown every second
+        let countdownInterval = setInterval(updateCountdownDisplay, 1000);
+    </script>
+    
+
+    <script>
+        // Fetch the form and button elements
+        const verificationForm = document.getElementById('verificationForm');
+        const otpVerifyButton = document.getElementById('otpVerify');
+    
+        otpVerifyButton.addEventListener('click', function(event) {
+            event.preventDefault();  // Prevent default form submission
+    
+            // Fetch the verification code from the input field
+            const otpCode = document.getElementById('verificationCodeInput').value;
+    
+            // Send an AJAX request to verify the OTP
+            fetch('/verifyOtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ otp: otpCode })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // OTP verified successfully, handle the success case
+                    // For example, redirect the user or show a success message
+                    window.location.href = '/signin';
+                } else {
+                    // OTP verification failed, display the error message
+                    const errorMessage = document.getElementById('errorMessage');
+                    errorMessage.style.display = 'block';
+                    errorMessage.textContent = data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Error verifying OTP:', error);
+            });
+        });
+    </script>
+    <script>
+        // script.js
+function resendCode() {
+    fetch('/resendOtp', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            
+            // Reset the countdown timer with new expiration time
+            countdownEnd = new Date(data.otpExpirationTime);
+            updateCountdownDisplay(); // Update the display immediately
+            clearInterval(countdownInterval); // Clear previous interval
+            countdownInterval = setInterval(updateCountdownDisplay, 1000); // Start a new interval
+        } else {
+            alert('Error resending code: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('There was an error!', error);
+    });
+}
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,142 @@
+<div class="nk-content">
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between g-3">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">Add Product</h3>
+            </div>
+          </div>
+        </div>
+        <div class="nk-block">
+          <div class="card">
+            <div class="card-inner">
+              <form id="productForm" enctype="multipart/form-data">
+                <div class="row gy-4">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Select Brand</label>
+                      <div class="form-control-wrap">
+                        <select class="form-select js-select2" data-search="on" id="brandDropdown" name="brand">
+                          <!-- Options will be populated here using JavaScript -->
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Other form fields... -->
+
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="form-label" for="default-01">Enter Product Name</label>
+                      <div class="form-control-wrap">
+                        <input type="text" class="form-control" id="default-01" placeholder="Enter product name"
+                          name="name">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label class="form-label" for="default-03">Product Price</label>
+                      <div class="form-control-wrap">
+                        <div class="form-icon form-icon-left">₹</div>
+                        <input type="text" class="form-control" id="default-03" placeholder="Enter price of product"
+                          name="price">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-1">
+                    <label class="form-label">Trending</label>
+                    <div class="preview-block">
+                      <div class="custom-control custom-switch checked">
+                        <input type="checkbox" class="custom-control-input" checked="" id="customSwitch2"
+                          name="trending">
+                        <label class="custom-control-label" for="customSwitch2"></label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-2">
+                    <div class="form-group">
+                      <label class="form-label" for="default-1-03">Product ID</label>
+                      <input type="text" class="form-control" id="default-1-03" disabled="" value="1" name="productId"
+                        readonly>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Category</label>
+                      <div class="form-control-wrap">
+                        <select class="form-select" id="categoryDropdown" name="category">
+                          <option value="Men" selected>Men</option>
+                          <option value="Women">Women</option>
+                          <option value="Unisex">Unisex</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Subcategory</label>
+                      <div class="form-control-wrap">
+                        <select class="form-select" id="subcategoryDropdown" name="subcategory">
+                          <!-- Options will be populated here using JavaScript -->
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label class="form-label" for="cf-default-textarea">Product Description</label>
+                      <div class="form-control-wrap">
+                        <textarea class="form-control form-control-sm" id="cf-default-textarea"
+                          placeholder="Describe your Product" name="description"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-3">
+                    <input type="file" id="imageInput" multiple accept="image/*" name="images">
+                    <img id="imagePreview" style="max-width: 100%; display: none;">
+                  </div>
+
+
+                  <div class="col-sm-12 mt-4">
+                    <div class="form-group">
+                    <ul class="preview-list">
+                      <li class="preview-item">
+                        <button type="button" class="btn btn-primary" id="addVariantBtn">Add
+                          Variant</button>
+                          <button type="button" class="btn btn-primary" id="addProductBtn">Submit</button>
+
+                      </li>
+                      <li class="preview-item">
+                      </li>
+                    </ul>
+                  </div>
+                  </div>
+
+
+                  
+                  <div class="col-sm-12 mt-4">
+                    <ul class="preview-list2">
+                      <li class="preview-item">
+                        <button type="button" class="btn btn-primary" id="addProductBtn">Submit</button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

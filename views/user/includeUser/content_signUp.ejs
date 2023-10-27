@@ -1,0 +1,53 @@
+<section class="contact-section" id="right-bg" style="padding-bottom: 80px;">
+    <div class="container">
+        <div class="row g-2 center_sign">
+            <div class="col-lg-6">
+                <div class="materialContainer">
+                    <div class="material-details">
+                        <div class="title mb-1">
+                            <h2>Sign Up</h2>
+                        </div>
+                    </div>
+                    <form action="/signup" method="POST" id="signupForm"> <!-- Added form element with action and method -->
+                        <div class="row g-4 mt-md-1 mt-2">
+                            <div class="col-md-12">
+                                <label for="full_name" class="form-label d-block">Full Name</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Enter Your Full Name" required>
+                                <div class="error-message" id="full_name_error"></div>
+
+                            </div>
+                            <div class="col-md-12">
+                                <label for="email" class="form-label d-block">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Enter Your Email Address" required>
+                                <div class="error-message" id="email_error"></div>
+
+                            </div>
+                            <div class="col-md-12">
+                                <label for="username" class="form-label d-block">Username</label>
+                                <input type="text" class="form-control" id="username" name="username" placeholder="Enter Your Username" required>
+                                <div class="error-message" id="username_error"></div>
+
+                            </div>
+                            <div class="col-md-12">
+                                <label for="password" class="form-label d-block">Create Password</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Create a Password" required>
+                                <div class="error-message" id="password_error"></div>
+
+                            </div>
+                            <div class="btn-group-showcase d-grid">
+                                <button type="submit" class="btn btn-secondary btn-lg btn-block ms-0 rounded_button" id="signupButton">Sign Up</button> <!-- Changed button type to "submit" -->
+                            </div>
+                            <!-- Added section for "Already have an account! Sign in" -->
+                            <div class="mt-3 text-center">
+                                <p>Already have an account? <a href="#signin">Sign In</a></p>
+                            </div>
+                            <!-- End of added section -->
+                        </div>
+                    </form> <!-- End of form element -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    

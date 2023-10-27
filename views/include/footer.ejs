@@ -1,0 +1,163 @@
+<div class="nk-footer">
+  <div class="container-fluid">
+    <div class="nk-footer-wrap">
+      <div class="nk-footer-copyright"> &copy;Foot Forward </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Import jQuery from a CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/static/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<!-- <script src="/static/assets/js/scriptse5ca.js?ver=3.2.3"></script> -->
+<!-- <script src="/static/assets/js/demo-settingse5ca.js?ver=3.2.3"></script> -->
+<!-- <script src="/static/assets/js/charts/chart-ecommercee5ca.js?ver=3.2.3"></script> -->
+<!-- JavaScript for Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+<script>document.addEventListener("DOMContentLoaded", function () {
+    // Get all menu links
+    var menuLinks = document.querySelectorAll('.nk-menu-link');
+
+    // Get the current path
+    var currentPath = window.location.pathname;
+
+    // Loop through all links
+    menuLinks.forEach(function (link) {
+      // Check if the link's href matches the current path
+      if (link.getAttribute('href') === currentPath) {
+        // Add the 'active' class
+        link.parentElement.classList.add('active');
+      } else {
+        // Remove the 'active' class
+        link.parentElement.classList.remove('active');
+      }
+    });
+  });
+</script>
+
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
+<script src="/static/assets/js/productAttributes/brandNames.js"></script>
+<script src="/static/assets/js/productAttributes/categoryNames.js"> </script>
+<script src="/static/assets/js/productAttributes/sizeNames.js"></script>
+<script src="/static/assets/js/productAttributes/colorName.js"></script>
+<script src="/static/assets/js/productAttributes/varientsPage.js"></script>
+
+<!-- Updated jQuery code for populating dropdowns -->
+<script>
+  $(document).ready(function () {
+    // Fetch brands from the API
+    $.get("http://localhost:3000/attributes/brands", function (data) {
+      var dropdown = $("#brandDropdown");
+
+      // Populate the dropdown with brands
+      data.forEach(function (brand) {
+        dropdown.append(new Option(brand.name, brand._id));
+      });
+    });
+  });
+
+  $(document).ready(function () {
+    // Function to load subcategories based on the given category
+    var loadSubcategories = function (category) {
+      $.get("http://localhost:3000/attributes/category/" + category, function (data) {
+        var subcategoryDropdown = $("#subcategoryDropdown");
+
+        // Clear existing options
+        subcategoryDropdown.empty();
+
+        // Add a default option
+        subcategoryDropdown.append(new Option("Select a subcategory", ""));
+
+        // Populate the subcategory dropdown
+        data.forEach(function (item) {
+          subcategoryDropdown.append(new Option(item.Subcategory, item._id));
+        });
+      });
+    };
+
+    // Event handler for when category dropdown changes
+    $("#categoryDropdown").change(function () {
+      var selectedCategory = $(this).val();
+      loadSubcategories(selectedCategory);
+    });
+
+    // Populate subcategories for Men by default on page load
+    loadSubcategories("Men");
+  });
+</script>
+
+
+
+
+
+<script>
+  // Assuming you're using jQuery
+$(document).ready(function() {
+  $.ajax({
+    url: 'http://localhost:3000/attributes/productIDLastAdded',
+    method: 'GET',
+    success: function(response) {
+        console.log("Fetched productId:", response.newProductID);  // Add this line
+        $('#default-1-03').val(response.newProductID);
+    },
+    error: function(error) {
+        console.error('Error fetching new Product ID:', error);
+    }
+});
+
+});
+
+</script>
+
+
+<script>
+$(document).ready(function () {
+    $('#addProductBtn').click(function () {
+      
+      console.log('Button Clicked: Initiating Product Upload');
+      const productForm = $('#productForm')[0];
+      const formData = new FormData(productForm);
+      formData.append('productId', $('#default-1-03').val());  // Ensure productId is added
+
+      // Loop to log each key-value pair from the formData
+      for (var pair of formData.entries()) {
+          console.log(pair[0] + ': ' + pair[1]);
+      }
+      $.ajax({
+        url: 'http://localhost:3000/attributes/product/addWithImage',
+        method: 'POST',
+        data: formData,
+        processData: false, // Don't process data
+        contentType: false, // Don't set content type (let jQuery handle it)
+
+        success: function (data) {
+          if (data.success) {
+            console.log('Product uploaded successfully');
+            // Clear form fields or perform other actions as needed
+          } else {
+            console.error('Error uploading product:', data.message);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error('Network error:', error);
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+</body>
+<!-- Mirrored from dashlite.net/demo2/ecommerce/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Thu, 12 Oct 2023 14:32:19 GMT -->
+
+</html>
