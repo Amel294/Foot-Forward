@@ -77,14 +77,14 @@ exports.otpPage = async (req, res) => {
 exports.signup_POST = (req, res) => {
     const fullName = req.body.full_name;
     const email = req.body.email;
-    const username = req.body.username;
+    const phone = req.body.phone;
     const password = req.body.password;
 
     // Store user information in the session
     req.session.temp = {
         fullName,
         email,
-        username,
+        phone,
         password
     };
 
@@ -127,8 +127,8 @@ exports.verifyOTP = async (req, res) => {
           req.session.temp = null;  // Clear the temporary session data
           res.json({ success: true, message: 'OTP verified successfully and user saved!' });
       } catch (error) {
-          res.status(500).json({ success: false, message: 'There was an error saving the user.' });
-      }
+        console.error("Database Error:", error.message);  // Log the specific error message
+        res.status(500).json({ success: false, message: 'There was an error saving the user.' });      }
   } else {
       res.json({ success: false, message: 'Wrong OTP. Please try again.' });
   }
@@ -140,16 +140,19 @@ exports.verifyOTP = async (req, res) => {
 
 exports.postUser = async (req, res) => {
   try {
-      const { fullName, email, phoneNumber, password } = req.body;
+      const { fullName, email, phone, password } = req.body;
 
       // Create a new user instance
       const user = new User({
           fullName: fullName,
           email: email,
-          phoneNumber: phoneNumber,
+          phoneNumber: phone,
           password: password  // The password will be hashed automatically due to the schema middleware
       });
-
+      
+      
+      console.log("Justbefore save")
+      console.log(user)
       // Save the user in the database
       await user.save();
 
