@@ -56,6 +56,10 @@ exports.myOrders = (req, res) => {
 }
 
 exports.otpPage = async (req, res) => {
+    if (!req.session.temp) {
+        req.session.temp = {}; // Initialize req.session.temp as an empty object
+    }
+
     if (!req.session.temp.otp || !req.session.temp.otpExpirationTime) {
         generateOtpForUser(req.session.temp);
 
@@ -68,6 +72,7 @@ exports.otpPage = async (req, res) => {
 
     res.render('user/emailOtp', { countdownExpirationTime: req.session.temp.otpExpirationTime });
 };
+
 
 exports.signup_POST = (req, res) => {
     const fullName = req.body.full_name;

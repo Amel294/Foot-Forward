@@ -48,6 +48,18 @@ const productSchema = new Schema({
             main: Boolean       // Indicates if it's the main image
         }
     ],
+    variants: [{
+        color: {
+            id: String,
+            name: String,
+            hex: String
+        },
+        size: {
+            id: String,
+            value: String
+        },
+        stock: Number
+    }]
 });
 
 // Middleware to convert image URLs to base64 and set content type

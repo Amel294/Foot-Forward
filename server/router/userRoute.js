@@ -12,6 +12,7 @@ const controller = require("../controller/userController")
 
 
 //signup
+router.get('/', controller.signUp);
 router.get('/signup', controller.signUp);
 router.get('/signin', controller.signIn);
 router.get('/emailOtp',controller.otpPage)

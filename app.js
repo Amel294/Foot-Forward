@@ -64,10 +64,24 @@ const orders = [
     { id: '95963', date: 'Jun 13, 2020', status: 'Cancelled', name: 'Jack Daniels', items: 1, amount: 90.00 }
 ];
 
-
-
+// Include route files
+const dashboardRoutes = require('./server/router/adminRoute/dashboard');
+const ordersRoutes = require('./server/router/adminRoute/orders');
+const productsRoutes = require('./server/router/adminRoute/products');
+const addProductsRoutes = require('./server/router/adminRoute/addProducts');
+const addVarientsRoutes = require('./server/router/adminRoute/addVarients');
+const customersRoutes = require('./server/router/adminRoute/customers');
+const attributesRoutes = require('./server/router/adminRoute/attributes');
+// Use route files
+app.use('/admin', dashboardRoutes);
+app.use('/admin', ordersRoutes);
+app.use('/admin', productsRoutes);
+app.use('/admin', addProductsRoutes);
+app.use('/admin', addVarientsRoutes);
+app.use('/admin', customersRoutes);
+app.use('/admin', attributesRoutes);
 // Routes
-app.use('/admin', require('./server/router/adminRouter'))
+// app.use('/admin', require('./server/router/adminRouter'))
 app.use('/attributes', require('./server/router/attributeRouter'))
 app.use('/', require('./server/router/userRoute'))
 

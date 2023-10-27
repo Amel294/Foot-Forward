@@ -89,7 +89,7 @@ function populateColors(colors, selector) {
     const dropdown = $(selector);
     dropdown.empty();
     colors.forEach(color => {
-        dropdown.append(`<option value="${ color._id.$oid }" data-color="${ color.hex }">${ color.name }</option>`);
+        dropdown.append(`<option value="${ color._id }" data-color="${ color.hex }">${ color.name }</option>`);
     });
 }
 

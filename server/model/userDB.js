@@ -1,28 +1,39 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const Counter = require('./counterDB'); // Import the Counter model
 
 const userSchema = new mongoose.Schema({
+    userId: Number, // Auto-incremented userId
     fullName: String,
     email: {
         type: String,
-        unique: true  // Ensures email is unique across all documents in the collection
+        unique: true,
     },
     phoneNumber: {
         type: String,
-        unique: true  // Ensures phone number is unique across all documents in the collection
+        unique: true,
     },
     password: String,
 });
 
-
-// Middleware to hash password before saving it
+// Middleware to auto-increment the userId and hash password before saving
 userSchema.pre('save', async function (next) {
-    // Only hash the password if it has been modified (or is new)
     if (!this.isModified('password')) return next();
 
     try {
         const salt = await bcrypt.genSalt(10); // Generate a salt
         this.password = await bcrypt.hash(this.password, salt); // Hash the password
+
+        if (!this.userId) {
+            const counter = await Counter.findByIdAndUpdate(
+                { _id: 'userId' },
+                { $inc: { sequence_value: 1 } },
+                { new: true, upsert: true }
+            );
+
+            this.userId = counter.sequence_value;
+        }
+
         next();
     } catch (err) {
         next(err);
@@ -30,13 +41,5 @@ userSchema.pre('save', async function (next) {
 });
 
 const User = mongoose.model('User', userSchema);
+
 module.exports = User;
-
-
-
-// const isMatch = await bcrypt.compare(userEnteredPassword, storedHashedPassword);
-// if (isMatch) {
-//     // Passwords match
-// } else {
-//     // Passwords don't match
-// }
