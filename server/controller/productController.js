@@ -49,8 +49,14 @@ exports.uploadImages = (req, res, next) => {
 exports.addProductWithVariants = async (req, res) => {
     console.log('Received files:', req.files);
     
-    const { name, brand, category, price, description, trending, productId, isEnabled, subcategory, variants } = req.body;
+    const { name, brand, category, price, description, isEnabled, subcategory, variants } = req.body;
+    
     const isTrending = req.body.trending === "on" ? true : false;
+     // Fetch the last added product's ID and increment it
+     const lastProduct = await Product.findOne().sort({ _id: -1 });
+     const productId = lastProduct ? parseInt(lastProduct.productId) + 1 : 1;
+ 
+     console.log('Generated productId:', productId); // Debugging statement for generated productId
 
 
     const parsedVariants = typeof variants === 'string' ? JSON.parse(variants) : variants;
@@ -80,6 +86,8 @@ exports.addProductWithVariants = async (req, res) => {
             });
         });
     }
+    console.log('Processed images:', product.images);
+
     // Process and save the uploaded images - END OF CHANGE
 
     try {
