@@ -50,21 +50,21 @@ function createVariantField(counter) {
         <div class="row">
             <!-- Color Dropdown -->
             <div class="col-md-4">
-                <select class="form-select js-select2" data-search="on" id="${colorDropdownId}" name="color">
+                <select class="form-select js-select2" data-search="on" id="${ colorDropdownId }" name="color">
                     <!-- Colors will be populated here using JavaScript -->
                 </select>
             </div>
             
             <!-- Size Dropdown -->
             <div class="col-md-4">
-                <select class="form-select js-select2" data-search="on" id="${sizeDropdownId}" name="size">
+                <select class="form-select js-select2" data-search="on" id="${ sizeDropdownId }" name="size">
                     <!-- Sizes will be populated here using JavaScript -->
                 </select>
             </div>
             
             <!-- Stock Input -->
             <div class="col-md-4">
-                <input type="text" class="form-control" id="${stockInputId}" placeholder="Enter stock quantity" name="stock">
+                <input type="text" class="form-control" id="${ stockInputId }" placeholder="Enter stock quantity" name="stock">
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@ $(document).on('click', '.dropdown-menu a', function (event) {
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('productForm');
 
     form.addEventListener('submit', async (e) => {
@@ -133,29 +133,39 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
         // Capture the dynamically generated variants
+        const variants = [];
         const variantElements = document.querySelectorAll('.preview-list > div');
         variantElements.forEach(variantElement => {
-            const color = variantElement.querySelector('[name="color"]').value;
-            const size = variantElement.querySelector('[name="size"]').value;
-            const stock = variantElement.querySelector('[name="stock"]').value;
+            const colorId = variantElement.querySelector('[name="color"]').value;
+            const sizeId = variantElement.querySelector('[name="size"]').value;
+            const stock = parseInt(variantElement.querySelector('[name="stock"]').value, 10);
 
             productData.variants.push({
-                color,
-                size,
-                stock
+                color: {
+                    _id: colorId,
+                    ref: 'Color'
+                },
+                size: {
+                    _id: sizeId,
+                    ref: 'Size'
+                },
+                stock: stock
             });
+            console.log("Varients are");
+            console.log(productData.variants);
         });
+
 
         // Send the structured product data to the server
         try {
-            const response = await fetch('/path-to-server-endpoint', { // Replace '/path-to-server-endpoint' with the actual server endpoint
+            const response = await fetch('http://localhost:3000/admin/addProduct', { // Replace '/path-to-server-endpoint' with the actual server endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(productData)
             });
-
+            
             const responseData = await response.json();
             if (response.ok) {
                 alert('Product saved successfully!');

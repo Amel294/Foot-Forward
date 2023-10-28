@@ -38,17 +38,16 @@ router.delete('/category/:mainCategory/:subcategoryName', productAttributeContro
 
 const storage = multer.memoryStorage(); // use memory storage to process image with sharp
 const upload = multer({ storage: storage });
-// router.post('/products', productController.addProduct);
+
+
 router.get('/productIDLastAdded',productController.getLastProductIDAdded)
 
 
-router.post('/product/addWithImage', productController.uploadImageMiddleware, productController.uploadWithImage);
 
 router.post('/test', (req, res) => {
     res.send('Test Route Works');
 });
 
 
-router.post('/addProduct', productController.addProductWithVariants);
 
 module.exports = router;

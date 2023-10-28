@@ -1,101 +1,36 @@
 const Product = require('../model/productDB');
 const multer = require('multer');
-const upload = multer(); // Initialize Multer
+const storage = multer.memoryStorage(); // Store files in memory as Buffers
+const upload = multer({ storage: storage })
 
-
-
-
-
-
-
-// In productController.js
+// Handle API request to get the last added product's ID
 exports.getLastProductIDAdded = async (req, res) => {
     try {
+        // Query the last added product by sorting based on '_id' in descending order
         const lastProduct = await Product.findOne().sort({ _id: -1 });
+
         if (lastProduct) {
             const lastProductID = parseInt(lastProduct.productId);
             const newProductID = lastProductID + 1;
-            res.json({ newProductID });
+            res.json({ newProductID }); // Respond with the new product ID
         } else {
             res.json({ newProductID: 1 });  // Assuming 1 if no products are found.
         }
     } catch (error) {
-        console.error(error);
+        console.error('Error in getLastProductIDAdded:', error);
         res.status(500).send('Server Error');
     }
 };
 
-exports.uploadImageMiddleware = upload.single('images');
+// Middleware for handling image uploads using Multer
+exports.uploadImages = upload.array('images', 5);
 
-
-exports.uploadWithImage = async (req, res) => {
-    console.log("Received the following data:", req.body);
-
-    try {
-        console.log('Route Handler: Uploading Product with Images');
-
-
-
-        // Retrieve form data from req.body
-        let { name, brand, category, price, description, trending, productId, isEnabled, subcategory } = req.body;
-        // Process the trending field
-        trending = req.body.trending === 'on';  // converts "on" to true, anything else to false
-
-        // Provide a default value for isEnabled if not provided
-        isEnabled = req.body.isEnabled || false; // default to false if not provided
-        // Validate required fields
-
-
-        console.log("brand:", brand);
-        console.log("name:", name);
-        console.log("price:", price);
-        console.log("category:", category);
-        console.log("description:", description);
-        console.log("productId:", productId);
-
-        if (!name || !brand || !category || !price || !description || !productId) {
-            console.log('Validation Error: All required fields must be provided');
-            return res.status(400).json({ error: 'All required fields must be provided' });
-        }
-
-        // Create a new product instance with the form data
-        const product = new Product({
-            name,
-            brand,
-            category,
-            subcategory,
-            price,
-            description,
-            trending,
-            productId,
-            isEnabled,
-        });
-
-        // Set the images array based on the uploaded image(s)
-        if (req.file) {
-            console.log('Processing Uploaded Image:', req.file.originalname);
-            const { buffer, mimetype } = req.file;
-            product.images.push({
-                data: buffer,
-                contentType: mimetype,
-                main: true, // Set to true for the main image
-            });
-        }
-
-        // Save the product to the database
-        const savedProduct = await product.save();
-        console.log('Product Added Successfully:', savedProduct);
-
-        res.status(201).json({ success: true, message: 'Product added successfully', product: savedProduct });
-    } catch (error) {
-        console.error('Route Handler Error:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
+// Handle the addition of a product with variants and images
 exports.addProductWithVariants = async (req, res) => {
     const { name, brand, category, price, description, trending, productId, isEnabled, subcategory, variants } = req.body;
+    const parsedVariants = typeof variants === 'string' ? JSON.parse(variants) : variants;
 
+    // Create a new product instance with the received data
     const product = new Product({
         name,
         brand,
@@ -105,15 +40,32 @@ exports.addProductWithVariants = async (req, res) => {
         description,
         trending,
         productId,
-        isEnabled,
-        variants: JSON.parse(variants) // Parse the variants string back to an array
+        isEnabled: isEnabled || true,
+        variants: parsedVariants
     });
 
+    // Process and save the uploaded images - START OF CHANGE
+    if (req.files && req.files.length > 0) {
+        req.files.forEach(file => {
+            const { buffer, mimetype } = file;
+            product.images.push({
+                data: buffer,
+                contentType: mimetype,
+            });
+        });
+        console.log('Images processed and added to product:', product.images); // Debugging line
+    } else {
+        console.log('No images uploaded.'); // Debugging line
+    }
+    // Process and save the uploaded images - END OF CHANGE
+
     try {
-        await product.save();
-        res.status(201).json({ success: true, message: 'Product with variants added successfully' });
+        // Save the product to MongoDB
+        const savedProduct = await product.save();
+        console.log('Product with variants and images added successfully:', savedProduct);
+        res.status(201).json({ success: true, message: 'Product with variants and images added successfully', product: savedProduct });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Internal Server Error' });
+        console.error('Error in addProductWithVariants:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
