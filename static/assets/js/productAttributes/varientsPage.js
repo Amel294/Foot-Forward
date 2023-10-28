@@ -115,7 +115,7 @@ $(document).on('click', '.dropdown-menu a', function (event) {
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('productForm');
 
-    form.addEventListener('addProductBtn', async (e) => {
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         alert('Form submitted!'); // Add this line
         // Capture the main product details

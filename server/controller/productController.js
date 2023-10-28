@@ -37,21 +37,21 @@ exports.uploadWithImage = async (req, res) => {
 
 
         // Retrieve form data from req.body
-        let { name, brand, category, price, description, trending, productId, isEnabled ,subcategory} = req.body;
+        let { name, brand, category, price, description, trending, productId, isEnabled, subcategory } = req.body;
         // Process the trending field
-    trending = req.body.trending === 'on';  // converts "on" to true, anything else to false
+        trending = req.body.trending === 'on';  // converts "on" to true, anything else to false
 
-// Provide a default value for isEnabled if not provided
-    isEnabled = req.body.isEnabled || false; // default to false if not provided
+        // Provide a default value for isEnabled if not provided
+        isEnabled = req.body.isEnabled || false; // default to false if not provided
         // Validate required fields
 
 
         console.log("brand:", brand);
-console.log("name:", name);
-console.log("price:", price);
-console.log("category:", category);
-console.log("description:", description);
-console.log("productId:", productId);
+        console.log("name:", name);
+        console.log("price:", price);
+        console.log("category:", category);
+        console.log("description:", description);
+        console.log("productId:", productId);
 
         if (!name || !brand || !category || !price || !description || !productId) {
             console.log('Validation Error: All required fields must be provided');

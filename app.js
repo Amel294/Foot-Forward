@@ -71,6 +71,7 @@ const productsRoutes = require('./server/router/adminRoute/products');
 const addVarientsRoutes = require('./server/router/adminRoute/addVarients');
 const customersRoutes = require('./server/router/adminRoute/customers');
 const attributesRoutes = require('./server/router/adminRoute/attributes');
+const addProduct = require('./server/router/adminRoute/addproduct')
 // Use route files
 app.use('/admin', dashboardRoutes);
 app.use('/admin', ordersRoutes);
@@ -78,6 +79,7 @@ app.use('/admin', productsRoutes);
 app.use('/admin', addVarientsRoutes);
 app.use('/admin', customersRoutes);
 app.use('/admin', attributesRoutes);
+app.use('/admin',addProduct)
 // Routes
 // app.use('/admin', require('./server/router/adminRouter'))
 app.use('/attributes', require('./server/router/attributeRouter'))
