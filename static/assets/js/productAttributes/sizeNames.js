@@ -38,6 +38,8 @@ $(document).ready(function() {
         type: 'GET',
         dataType: 'json',
         success: function(sizes) {
+            console.log("Fetched sizes:", sizes);  // Add this line
+
             populateSizes(sizes);
         },
         error: function(error) {

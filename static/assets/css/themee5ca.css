@@ -35,3 +35,21 @@
     margin: -.75rem
 }
 
+
+/* Add this CSS to your stylesheet */
+.variant-table {
+    width: 50%;
+    border-collapse: collapse;
+}
+
+
+
+.variant-row:last-child {
+    border-bottom: none;
+}
+
+.variant-row td {
+    padding: 5px 5px; /* Reduce padding to bring elements closer */
+    white-space: nowrap;
+}
+

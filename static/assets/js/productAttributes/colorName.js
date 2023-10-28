@@ -1,3 +1,4 @@
+console.log("inside sizesNames")
 function populateColors(colors) {
     const $container = $('#colorContainer');
 
@@ -36,6 +37,8 @@ $(document).ready(function() {
         type: 'GET',
         dataType: 'json',
         success: function(colors) {
+            console.log("Fetched colors:", colors);  // Add this line
+
             populateColors(colors);
         },
         error: function(error) {

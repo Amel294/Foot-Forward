@@ -60,7 +60,6 @@
                             <div class="nk-tb-col"><span>Price</span></div>
                             <div class="nk-tb-col"><span>Stock</span></div>
                             <div class="nk-tb-col tb-col-md"><span>Category</span></div>
-                            <div class="nk-tb-col tb-col-md"><em class="tb-asterisk icon ni ni-star-round"></em></div>
                             <div class="nk-tb-col nk-tb-col-tools">
                                 <ul class="nk-tb-actions gx-1 my-n1">
                                     <li class="me-n1">
@@ -113,7 +112,7 @@
                                 <div class="nk-tb-col"><span class="tb-sub">
                                         <%= product.productId %>
                                     </span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">₹ <%= product.price.toFixed(2) %></span>
+                                <div class="nk-tb-col"><span class="tb-lead">₹ <%= product.price %></span>
                                 </div>
 
                                 <!-- Display product's category and subcategory -->
@@ -122,17 +121,23 @@
                                     </span></div>
 
                                 <!-- Display product's variants details -->
-                                <div class="nk-tb-col">
-                                    <ul>
-                                        <% product.variants.forEach(variant => { %>
-                                            <li>
-                                                <span class="variant-detail">Color: <%= variant.color.name %></span>
-                                                <span class="variant-detail">Size: <%= variant.size.value %></span>
-                                                <span class="variant-detail">Stock: <%= variant.stock %></span>
-                                            </li>
-                                        <% }); %>
-                                    </ul>
-                                </div>
+<div class="nk-tb-col">
+    <table class="variant-table">
+        <tbody>
+            <% product.variants.forEach(variant => { %>
+                <tr">
+                    <td>Color: <%= variant.color.name %></td>
+                    <td>Size: <%= variant.size.value %></td>
+                    <td>Stock: <%= variant.stock %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+
+
+
+
                             </div>
                             <% }); %>
 
