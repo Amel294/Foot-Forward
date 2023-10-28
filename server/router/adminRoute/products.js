@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
+const Product = require("../../model/productDB")
+router.get('/products', async (req, res) => {
+    const products = await Product.find().populate('variants.color variants.size subcategory');
 
-router.get('/products', (req, res) => {
-    // Sample products data
-    const products = [
-        // ... Your products data ...
-    ];
     res.render('products', { products, activeRoute: 'products' });
 });
+
+
+
 
 router.get('/addProducts', (req, res) => {
     res.render('addProducts', { activeRoute: '' });
