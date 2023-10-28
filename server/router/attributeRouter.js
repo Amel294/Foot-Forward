@@ -43,7 +43,6 @@ const upload = multer({ storage: storage });
 router.get('/productIDLastAdded',productController.getLastProductIDAdded)
 
 
-
 router.post('/test', (req, res) => {
     res.send('Test Route Works');
 });

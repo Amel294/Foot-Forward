@@ -117,22 +117,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        alert('Form submitted!'); // Add this line
-        // Capture the main product details
-        const productData = {
-            brand: form.brand.value,
-            name: form.name.value,
-            price: form.price.value,
-            trending: form.trending.checked,
-            productId: form.productId.value,
-            category: form.category.value,
-            subcategory: form.subcategory.value,
-            description: form.description.value,
-            images: form.images.files,
-            variants: []
-        };
+        
+        // Create a new FormData object
+        const formData = new FormData(form);
 
-        // Capture the dynamically generated variants
+        // Add the dynamically generated variants to the FormData
         const variants = [];
         const variantElements = document.querySelectorAll('.preview-list > div');
         variantElements.forEach(variantElement => {
@@ -140,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const sizeId = variantElement.querySelector('[name="size"]').value;
             const stock = parseInt(variantElement.querySelector('[name="stock"]').value, 10);
 
-            productData.variants.push({
+            variants.push({
                 color: {
                     _id: colorId,
                     ref: 'Color'
@@ -151,19 +140,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 stock: stock
             });
-            console.log("Varients are");
-            console.log(productData.variants);
         });
 
+        // Add the variants to the FormData
+        formData.append('variants', JSON.stringify(variants));
 
-        // Send the structured product data to the server
+        // Send the FormData to the server
         try {
-            const response = await fetch('http://localhost:3000/admin/addProduct', { // Replace '/path-to-server-endpoint' with the actual server endpoint
+            const response = await fetch('http://localhost:3000/admin/addProduct', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(productData)
+                body: formData  // Use formData here
             });
             
             const responseData = await response.json();
@@ -178,3 +164,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
