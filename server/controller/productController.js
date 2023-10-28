@@ -93,4 +93,27 @@ console.log("productId:", productId);
     }
 };
 
+exports.addProductWithVariants = async (req, res) => {
+    const { name, brand, category, price, description, trending, productId, isEnabled, subcategory, variants } = req.body;
 
+    const product = new Product({
+        name,
+        brand,
+        category,
+        subcategory,
+        price,
+        description,
+        trending,
+        productId,
+        isEnabled,
+        variants: JSON.parse(variants) // Parse the variants string back to an array
+    });
+
+    try {
+        await product.save();
+        res.status(201).json({ success: true, message: 'Product with variants added successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};

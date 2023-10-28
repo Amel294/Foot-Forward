@@ -108,3 +108,63 @@ $(document).on('click', '.dropdown-menu a', function (event) {
     dropdownButton.text($(this).text());
     // Additional logic can be added here if needed
 });
+
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('productForm');
+
+    form.addEventListener('addProductBtn', async (e) => {
+        e.preventDefault();
+        alert('Form submitted!'); // Add this line
+        // Capture the main product details
+        const productData = {
+            brand: form.brand.value,
+            name: form.name.value,
+            price: form.price.value,
+            trending: form.trending.checked,
+            productId: form.productId.value,
+            category: form.category.value,
+            subcategory: form.subcategory.value,
+            description: form.description.value,
+            images: form.images.files,
+            variants: []
+        };
+
+        // Capture the dynamically generated variants
+        const variantElements = document.querySelectorAll('.preview-list > div');
+        variantElements.forEach(variantElement => {
+            const color = variantElement.querySelector('[name="color"]').value;
+            const size = variantElement.querySelector('[name="size"]').value;
+            const stock = variantElement.querySelector('[name="stock"]').value;
+
+            productData.variants.push({
+                color,
+                size,
+                stock
+            });
+        });
+
+        // Send the structured product data to the server
+        try {
+            const response = await fetch('/path-to-server-endpoint', { // Replace '/path-to-server-endpoint' with the actual server endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(productData)
+            });
+
+            const responseData = await response.json();
+            if (response.ok) {
+                alert('Product saved successfully!');
+            } else {
+                alert('Error saving product: ' + responseData.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while saving the product.');
+        }
+    });
+});

@@ -116,41 +116,7 @@ $(document).ready(function() {
 </script>
 
 
-<script>
-$(document).ready(function () {
-    $('#addProductBtn').click(function () {
-      
-      console.log('Button Clicked: Initiating Product Upload');
-      const productForm = $('#productForm')[0];
-      const formData = new FormData(productForm);
-      formData.append('productId', $('#default-1-03').val());  // Ensure productId is added
 
-      // Loop to log each key-value pair from the formData
-      for (var pair of formData.entries()) {
-          console.log(pair[0] + ': ' + pair[1]);
-      }
-      $.ajax({
-        url: 'http://localhost:3000/attributes/product/addWithImage',
-        method: 'POST',
-        data: formData,
-        processData: false, // Don't process data
-        contentType: false, // Don't set content type (let jQuery handle it)
-
-        success: function (data) {
-          if (data.success) {
-            console.log('Product uploaded successfully');
-            // Clear form fields or perform other actions as needed
-          } else {
-            console.error('Error uploading product:', data.message);
-          }
-        },
-        error: function (xhr, status, error) {
-          console.error('Network error:', error);
-        }
-      });
-    });
-  });
-</script>
 
 
 

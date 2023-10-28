@@ -49,5 +49,6 @@ router.post('/test', (req, res) => {
 });
 
 
+router.post('/addProduct', productController.addProductWithVariants);
 
 module.exports = router;
