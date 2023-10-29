@@ -43,11 +43,12 @@ router.get('/customers', async (req, res) => {
 
 // Define a route to toggle the isActive property
 router.post('/toggleIsActive/:userId', async (req, res) => {
-    const userId = req.params.userId;
-
+    const userId =req.params.userId;
+    console.log("User ID from param is " + userId)
     try {
         // Find the user by userId
         const user = await User.findOne({ userId });
+        
 
         if (!user) {
             return res.json({ success: false, message: 'User not found' });

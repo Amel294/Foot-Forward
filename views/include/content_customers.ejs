@@ -109,11 +109,14 @@
                                     <span>Last Order Date</span>
                                 </div>
                                 <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-switch checked">
-                                        <input type="checkbox" class="custom-control-input" id="<%= user.userId %>"
-                                            <% if (user.isActive) { %>checked<% } %>
-                                            onclick="toggleIsActive('<%= user.userId %>')">
-                                        <label class="custom-control-label" for="<%= user.userId %>"></label>
+                                    <div class="custom-control custom-switch">
+                                        <input type="checkbox" class="custom-control-input"
+                                               id="toggleIsActive<%= user.userId %>"
+                                               <%= user.isActive ? 'checked' : '' %>
+                                               data-user-id="<%= user.userId %>"
+                                               onchange="toggleIsActive(this)">
+                                        <label class="custom-control-label"
+                                               for="toggleIsActive<%= user.userId %>"></label>
                                     </div>
                                 </div>
                             </div>

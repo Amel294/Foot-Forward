@@ -19,30 +19,31 @@
 <!-- JavaScript for Select2 -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
 <script>
-  function toggleIsActive(userId) {
-        // Send an AJAX request to update the isActive property in the database
-        // You can use a JavaScript library like Axios or fetch for this purpose
+  function toggleIsActive(checkbox) {
+    const userId = checkbox.dataset.userId;
+    const isActive = checkbox.checked;
 
-        // For example, using fetch:
-        fetch(`http://localhost:3000/admin/toggleIsActive/${userId}`, {
-            method: 'POST', // Use POST to update the database
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId }),
+    // Send an AJAX request to update the isActive property in the database
+    fetch(`/admin/toggleIsActive/${userId}`, {
+        method: 'POST', // Use POST to update the database
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ isActive }),
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                // Optionally update the UI to reflect the new isActive state
+            } else {
+                // Handle errors if necessary
+            }
         })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    // Update the UI to reflect the new isActive state if needed
-                } else {
-                    // Handle errors if necessary
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-    }
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
+
 </script>
 
 
