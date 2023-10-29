@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zxx" class="js">
+<head>
+    <meta charset="utf-8">
+    <meta name="author" content="Softnio">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="A powerful and conceptual apps base dashboard template that especially build for developers and programmers.">
+    <link rel="shortcut icon" href="/static/images/favicon.png">
+    <title>e-Commerce Home | DashLite Admin Template</title>
+    <link rel="stylesheet" href="/static/assets/css/dashlitee5ca.css">
+    <link id="skin-default" rel="stylesheet" href="/static/assets/css/themee5ca.css">
+    <!-- CSS for Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Center the .nk-auth-body element within the viewport */
+        body {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Make it take up the full viewport height */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="nk-auth-body">
+        <div class="nk-block-head">
+            <div class="nk-block-head-content">
+                <h5 class="nk-block-title">Sign-In</h5>
+            </div>
+        </div>
+        <form action="/admin/loginAdmins" method="POST" class="form-validate is-alter" autocomplete="off" novalidate="novalidate">
+            <div class="form-group">
+                <div class="form-label-group"><label class="form-label" for="Admin_email-address">Email or Username</label></div>
+                <div class="form-control-wrap"><input type="text" name="email" class="form-control form-control-lg" required="" id="Admin_email-address" placeholder="Enter your email address or username"></div>
+            </div>
+            <div class="form-group">
+                <div class="form-label-group"><label class="form-label" for="Adminpassword">Passcode</label></div>
+                <div class="form-control-wrap"><a tabindex="-1" href="#" class="form-icon form-icon-right passcode-switch lg" data-target="password"></a><input type="password" name="password" class="form-control form-control-lg" required="" id="Adminpassword" placeholder="Enter your passcode"></div>
+            </div>
+            <div class="form-group"><button type="submit" class="btn btn-lg btn-primary btn-block">Sign in</button></div>
+        </form>
+    </div>
+    
+    <!-- Import jQuery from a CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+    <!-- <script src="/static/assets/js/scriptse5ca.js?ver=3.2.3"></script> -->
+    <!-- <script src="/static/assets/js/demo-settingse5ca.js?ver=3.2.3"></script> -->
+    <!-- <script src="/static/assets/js/charts/chart-ecommercee5ca.js?ver=3.2.3"></script> -->
+    <!-- JavaScript for Select2 -->
+</body>
+
+</html>

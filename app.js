@@ -30,6 +30,7 @@ app.use(session({
 
 
 
+
 dotenv.config({ path: '.env' });
 app.use(morgan('dev'));
 app.use(nocache());
@@ -64,6 +65,17 @@ const orders = [
     { id: '95963', date: 'Jun 13, 2020', status: 'Cancelled', name: 'Jack Daniels', items: 1, amount: 90.00 }
 ];
 
+
+
+
+function checkAdminSession(req, res, next) {
+    if (req.session.admin && req.session.admin.verified) {
+        next()
+    } else {
+        res.redirect('admin/login');
+    }
+}
+
 // Include route files
 const dashboardRoutes = require('./server/router/adminRoute/dashboard');
 const ordersRoutes = require('./server/router/adminRoute/orders');
@@ -72,14 +84,19 @@ const addVarientsRoutes = require('./server/router/adminRoute/addVarients');
 const customersRoutes = require('./server/router/adminRoute/customers');
 const attributesRoutes = require('./server/router/adminRoute/attributes');
 const addProduct = require('./server/router/adminRoute/addproduct')
+const adminlogin = require('./server/router/adminRoute/login')
+
+
 // Use route files
-app.use('/admin', dashboardRoutes);
-app.use('/admin', ordersRoutes);
-app.use('/admin', productsRoutes);
-app.use('/admin', addVarientsRoutes);
-app.use('/admin', customersRoutes);
-app.use('/admin', attributesRoutes);
-app.use('/admin',addProduct)
+app.use('/admin', adminlogin)
+app.use('/admin',checkAdminSession, dashboardRoutes);
+app.use('/admin',checkAdminSession, ordersRoutes);
+app.use('/admin',checkAdminSession, productsRoutes);
+app.use('/admin',checkAdminSession, addVarientsRoutes);
+app.use('/admin',checkAdminSession, customersRoutes);
+app.use('/admin',checkAdminSession, attributesRoutes);
+app.use('/admin',checkAdminSession, addProduct)
+
 // Routes
 // app.use('/admin', require('./server/router/adminRouter'))
 app.use('/attributes', require('./server/router/attributeRouter'))
