@@ -1,0 +1,69 @@
+<div class="nk-footer">
+  <div class="container-fluid">
+    <div class="nk-footer-wrap">
+      <div class="nk-footer-copyright"> &copy;Foot Forward </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Import jQuery from a CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/static/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<!-- <script src="/static/assets/js/scriptse5ca.js?ver=3.2.3"></script> -->
+<!-- <script src="/static/assets/js/demo-settingse5ca.js?ver=3.2.3"></script> -->
+<!-- <script src="/static/assets/js/charts/chart-ecommercee5ca.js?ver=3.2.3"></script> -->
+<!-- JavaScript for Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script>
+  function toggleIsActive(userId) {
+        // Send an AJAX request to update the isActive property in the database
+        // You can use a JavaScript library like Axios or fetch for this purpose
+
+        // For example, using fetch:
+        fetch(`http://localhost:3000/admin/toggleIsActive/${userId}`, {
+            method: 'POST', // Use POST to update the database
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    // Update the UI to reflect the new isActive state if needed
+                } else {
+                    // Handle errors if necessary
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

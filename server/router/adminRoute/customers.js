@@ -41,7 +41,28 @@ router.get('/customers', async (req, res) => {
     }
 });
 
+// Define a route to toggle the isActive property
+router.post('/toggleIsActive/:userId', async (req, res) => {
+    const userId = req.params.userId;
 
+    try {
+        // Find the user by userId
+        const user = await User.findOne({ userId });
+
+        if (!user) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
+        // Toggle the isActive property
+        user.isActive = !user.isActive;
+        await user.save();
+
+        return res.json({ success: true, isActive: user.isActive });
+    } catch (error) {
+        console.error('Error:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 
 module.exports = router;
