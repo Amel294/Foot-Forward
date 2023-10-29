@@ -68,13 +68,6 @@ const orders = [
 
 
 
-function checkAdminSession(req, res, next) {
-    if (req.session.admin && req.session.admin.verified) {
-        next()
-    } else {
-        res.redirect('admin/login');
-    }
-}
 
 // Include route files
 const dashboardRoutes = require('./server/router/adminRoute/dashboard');
@@ -86,7 +79,13 @@ const attributesRoutes = require('./server/router/adminRoute/attributes');
 const addProduct = require('./server/router/adminRoute/addproduct')
 const adminlogin = require('./server/router/adminRoute/login')
 
-
+function checkAdminSession(req, res, next) {
+    if (req.session.admin) {
+        next();
+    } else {
+        res.redirect('/admin/login');
+    }
+}
 // Use route files
 app.use('/admin', adminlogin)
 app.use('/admin',checkAdminSession, dashboardRoutes);
@@ -96,6 +95,7 @@ app.use('/admin',checkAdminSession, addVarientsRoutes);
 app.use('/admin',checkAdminSession, customersRoutes);
 app.use('/admin',checkAdminSession, attributesRoutes);
 app.use('/admin',checkAdminSession, addProduct)
+
 
 // Routes
 // app.use('/admin', require('./server/router/adminRouter'))

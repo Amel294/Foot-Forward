@@ -5,23 +5,7 @@ router.get('/login', (req, res) => {
     res.render('admin_login');
 });
 
-router.get('/:email', async (req, res) => {
-    const email = req.params.email;
-    console.log(email)
-    try {
-        // Find the admin by email
-        const admin = await Admin.findOne({ email });
-        console.log(admin)
-        if (!admin) {
-            return res.status(404).json({ message: 'Admin not found' });
-        }
-        // If admin is found, send it as a response
-        res.status(200).json(admin);
-    } catch (error) {
-        console.error('Error:', error);
-        res.status(500).json({ message: 'Internal server error' });
-    }
-});
+
 
 router.post('/createAdmin', async (req, res) => {
     // Get the data from the request body
@@ -71,12 +55,23 @@ router.post('/loginAdmin', async (req, res) => {
         
         
         // Successful login
-        res.status(200).json({ message: 'Login successful', admin });
+        res.redirect('dashboard')
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
 
+router.get('/adminLogout', (req, res) => {
+    // Destroy the session
+    req.session.destroy(err => {
+        if (err) {
+            console.error('Error destroying session:', err);
+            return res.status(500).send('Internal server error');
+        }
+        // Redirect the user to the login page or any other page
+        res.redirect('/admin/login');
+    });
+});
 
 module.exports = router;
