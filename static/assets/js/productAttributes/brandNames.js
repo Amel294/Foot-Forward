@@ -1,3 +1,6 @@
+
+
+
 function populateBrands(brands) {
     const $container = $('#brandContainer'); // The container where brand cards will be appended
 
