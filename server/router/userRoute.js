@@ -17,8 +17,10 @@ router.get('/signup', controller.signUp);
 router.get('/signin', controller.signIn);
 router.get('/emailOtp',controller.otpPage)
 
-
-
+//product
+router.get('/product',(req,res)=>{
+    res.render('user/productSingle')
+})
 
 
 
