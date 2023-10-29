@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         required:true
     },
     password: String,
+    isActive: {
+        type: Boolean,
+        default: true
+    }
 });
 
 // Middleware to auto-increment the userId and hash password before saving
