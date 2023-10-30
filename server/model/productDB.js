@@ -34,7 +34,7 @@ const productSchema = new Schema({
         default: false
     },
     productId: {
-        type: String,
+        type: Number,
         required: true,
         unique: true
     },

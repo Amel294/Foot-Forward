@@ -1,0 +1,391 @@
+<section class="section-b-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-4">
+                <div class="category-option">
+                    <div class="button-close mb-3">
+                        <button class="btn p-0"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left">
+                                <line x1="19" y1="12" x2="5" y2="12"></line>
+                                <polyline points="12 19 5 12 12 5"></polyline>
+                            </svg> Close</button>
+                    </div>
+                    <div class="accordion category-name" id="accordionExample">
+
+                        <div class="accordion-item category-rating">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseTwo">
+                                    Brand
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse show"
+                                data-bs-parent="#accordionExample">
+                                <div class="accordion-body category-scroll">
+                                    <ul class="category-list">
+                                        <% brands.forEach(brand=> { %>
+                                            <li>
+                                                <div class="form-check ps-0 custome-form-check">
+                                                    <input class="checkbox_animated check-it" type="checkbox"
+                                                        id="<%= brand._id %>">
+                                                    <label class="form-check-label" for="<%= brand._id %>">
+                                                        <%= brand.name %>
+                                                    </label>
+                                                    <p class="font-light">(25)</p>
+                                                </div>
+                                            </li>
+                                            <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="accordion-item category-color">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree">
+                                    Color
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse show"
+                                aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <ul class="category-list">
+                                        <% colors.forEach(color=> { %>
+                                            <li>
+                                                <a href="javascript:void(0)">
+                                                    <i class="fas fa-check" style="color: <%= color.hex %>;"></i>
+                                                    <!-- Apply color based on hex code -->
+                                                </a>
+                                            </li>
+                                            <% }); %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="accordion-item category-price">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseFour">Price</button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse show"
+                                aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    <div class="range-slider category-list">
+                                        <span class="irs irs--flat js-irs-0"><span class="irs"><span class="irs-line"
+                                                    tabindex="0"></span><span class="irs-min"
+                                                    style="visibility: hidden;">$ 0</span><span class="irs-max"
+                                                    style="visibility: visible;">$ 5.000</span><span class="irs-from"
+                                                    style="visibility: visible; left: 0%;">$ 0</span><span
+                                                    class="irs-to" style="visibility: visible; left: 51.8002%;">$
+                                                    3.000</span><span class="irs-single"
+                                                    style="visibility: hidden; left: 21.8893%;">$ 0 - $
+                                                    3.000</span></span><span class="irs-grid"></span><span
+                                                class="irs-bar"
+                                                style="left: 2.8169%; width: 56.6197%;"></span></span><span
+                                            class="irs irs--flat js-irs-0"><span class="irs"><span class="irs-line"
+                                                    tabindex="0"></span><span class="irs-min"
+                                                    style="visibility: hidden;">$ 0</span><span class="irs-max"
+                                                    style="visibility: visible;">$ 5.000</span><span class="irs-from"
+                                                    style="visibility: visible; left: 0%;">$ 0</span><span
+                                                    class="irs-to" style="visibility: visible; left: 51.8002%;">$
+                                                    3.000</span><span class="irs-single"
+                                                    style="visibility: hidden; left: 21.8893%;">$ 0 - $
+                                                    3.000</span></span><span class="irs-grid"></span><span
+                                                class="irs-bar" style="left: 2.8169%; width: 56.6197%;"></span><span
+                                                class="irs-shadow shadow-from" style="display: none;"></span><span
+                                                class="irs-shadow shadow-to" style="display: none;"></span></span><input
+                                            type="text" class="js-range-slider irs-hidden-input" value="" tabindex="-1"
+                                            readonly="" style="display: none;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item category-rating">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseOne">
+                                    Category
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
+                                <div class="accordion-body category-scroll">
+                                  <ul class="category-list">
+                                    <% subcategories.forEach(subcategory => { %>
+                                      <li>
+                                        <div class="form-check ps-0 custome-form-check">
+                                          <input class="checkbox_animated check-it" type="checkbox" id="flexCheckDefault<%= subcategory %>">
+                                          <label class="form-check-label" for="flexCheckDefault<%= subcategory %>"><%= subcategory %></label>
+                                          <p class="font-light">(25)</p>
+                                        </div>
+                                      </li>
+                                    <% }); %>
+                                  </ul>
+                                </div>
+                              </div>
+                              
+                        </div>
+
+
+
+                        <!-- Slider section start -->
+
+                        <!-- Slider Section End -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-9 col-12 ratio_30">
+
+                <div class="row g-4">
+                    <!-- filter button -->
+                    <div class="filter-button">
+                        <button class="btn filter-btn p-0"><svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round" class="feather feather-align-left">
+                                <line x1="17" y1="10" x2="3" y2="10"></line>
+                                <line x1="21" y1="6" x2="3" y2="6"></line>
+                                <line x1="21" y1="14" x2="3" y2="14"></line>
+                                <line x1="17" y1="18" x2="3" y2="18"></line>
+                            </svg> Filter</button>
+                    </div>
+                    <!-- filter button -->
+
+                    <!-- label and featured section -->
+                    <!-- <div class="col-md-12">
+                        <ul class="short-name">
+                            <li>
+                                <div class="label-tag">
+                                    <span>Shirts</span>
+                                    <button type="button" class="btn-close" aria-label="Close"></button>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="label-tag">
+                                    <span>Kurtas</span>
+                                    <button type="button" class="btn-close" aria-label="Close"></button>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="label-tag">
+                                    <span>Jackets</span>
+                                    <button type="button" class="btn-close" aria-label="Close"></button>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="label-tag">
+                                    <span>Blazers</span>
+                                    <button type="button" class="btn-close" aria-label="Close"></button>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="label-tag">
+                                    <a href="javascript:void(0)"><span>Clear All</span></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div> -->
+
+
+                </div>
+                <!-- label and featured section -->
+
+                <!-- Prodcut setion -->
+                <div class="row g-sm-4 g-3 mt-1 custom-gy-5 product-style-2 ratio_asos product-list-section row-cols-lg-4 row-cols-md-3 row-cols-2">
+                    <% products.forEach(product => { %>
+                      <div>
+                        <div class="product-box">
+                          <!-- Replace the image URL with the actual image data -->
+                          <div class="img-wrapper">
+                            <div class="front">
+                              <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded"
+                                style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: cover; background-position: center center; background-repeat: no-repeat; display: block;">
+                                <img src="assets/images/fashion/product/front/2.jpg" class="bg-img blur-up lazyload" alt=""
+                                  style="display: none;">
+                              </a>
+                            </div>
+                            <!-- Add similar code for the back image if needed -->
+                          </div>
+                          <div class="cart-wrap">
+                            <ul>
+                              <li>
+                                <a href="javascript:void(0)" class="addtocart-btn" data-bs-toggle="modal" data-bs-target="#addtocart">
+                                  <!-- Add your cart icon SVG here -->
+                                </a>
+                              </li>
+                              <!-- Add similar code for other buttons (quick view, compare, wishlist) -->
+                            </ul>
+                          </div>
+                          <div class="product-details">
+                            <div class="rating-details">
+                              <span class="font-light grid-content"><%= product.name %></span>
+                              <!-- Add code to display the product's rating -->
+                            </div>
+                            <div class="main-price">
+                              <a href="product-left-sidebar.html" class="font-default">
+                                <h5 class="ms-0"><%= product.name %></h5>
+                              </a>
+                              <div class="listing-content">
+                                <span class="font-light"><%= product.category %></span>
+                                <p class="font-light"><%= product.description %></p>
+                              </div>
+                              <h3 class="theme-color">$<%= product.price.toFixed(2) %></h3>
+                              <button onclick="location.href = 'cart.html';" class="btn listing-content">Add To Cart</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% }); %>
+                  </div>
+                    
+
+                  <!-- <div>
+                    <div class="product-box">
+                        <div class="img-wrapper">
+                            <div class="front">
+                                <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded "
+                                    style="background-image: url(&quot;assets/images/fashion/product/front/2.jpg&quot;); background-size: cover; background-position: center center; background-repeat: no-repeat; display: block;">
+                                    <img src="assets/images/fashion/product/front/2.jpg"
+                                        class="bg-img blur-up lazyload" alt="" style="display: none;">
+                                </a>
+                            </div>
+                            <div class="back">
+                                <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded "
+                                    style="background-image: url(&quot;assets/images/fashion/product/back/2.jpg&quot;); background-size: cover; background-position: center center; background-repeat: no-repeat; display: block;">
+                                    <img src="assets/images/fashion/product/back/2.jpg"
+                                        class="bg-img blur-up lazyload" alt="" style="display: none;">
+                                </a>
+                            </div>
+                            <div class="cart-wrap">
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0)" class="addtocart-btn" data-bs-toggle="modal"
+                                            data-bs-target="#addtocart">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-shopping-bag">
+                                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                                <line x1="3" y1="6" x2="21" y2="6"></line>
+                                                <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0)" data-bs-toggle="modal"
+                                            data-bs-target="#quick-view">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-eye">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                                <circle cx="12" cy="12" r="3"></circle>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="compare.html">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-refresh-cw">
+                                                <polyline points="23 4 23 10 17 10"></polyline>
+                                                <polyline points="1 20 1 14 7 14"></polyline>
+                                                <path
+                                                    d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="wishlist.html" class="wishlist">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="feather feather-heart">
+                                                <path
+                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                                </path>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-details">
+                            <div class="rating-details">
+                                <span class="font-light grid-content">Jacket</span>
+                                <ul class="rating mt-0">
+                                    <li>
+                                        <i class="fas fa-star theme-color"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-star theme-color"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-star theme-color"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-star theme-color"></i>
+                                    </li>
+                                    <li>
+                                        <i class="fas fa-star"></i>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="main-price">
+                                <a href="product-left-sidebar.html" class="font-default">
+                                    <h5 class="ms-0">Blue Leather Jacket</h5>
+                                </a>
+                                <div class="listing-content">
+                                    <span class="font-light">Jacket</span>
+                                    <p class="font-light">Lorem ipsum, dolor sit amet consectetur adipisicing
+                                        elit. Sit, deserunt? Asperiores aliquam voluptatum culpa aliquid ab
+                                        ducimus eaque illum, quibusdam reiciendis id ad consectetur quis, animi
+                                        qui, minus quidem eveniet! Dolorum magnam numquam, asperiores
+                                        accusantium architecto placeat quam officia, tempore repellendus.</p>
+                                </div>
+                                <h3 class="theme-color">$60.00</h3>
+                                <button onclick="location.href = 'cart.html';" class="btn listing-content">Add
+                                    To Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+
+                <nav class="page-section">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0)" aria-label="Previous">
+                                <span aria-hidden="true">
+                                    <i class="fas fa-chevron-left"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="javascript:void(0)">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0)">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0)">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" aria-label="Next">
+                                <span aria-hidden="true">
+                                    <i class="fas fa-chevron-right"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>

@@ -13,3 +13,8 @@
     font-size: 12px;
     margin-top: 4px;
 }
+.color-square {
+    width: 70%;
+    height: 70%;
+    border-radius: 25px;
+}
