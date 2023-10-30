@@ -32,7 +32,7 @@
                                                     <label class="form-check-label" for="<%= brand._id %>">
                                                         <%= brand.name %>
                                                     </label>
-                                                    <p class="font-light">(25)</p>
+                                                    <p class="font-light"></p>
                                                 </div>
                                             </li>
                                             <% }); %>
@@ -121,7 +121,7 @@
                                         <div class="form-check ps-0 custome-form-check">
                                           <input class="checkbox_animated check-it" type="checkbox" id="flexCheckDefault<%= subcategory %>">
                                           <label class="form-check-label" for="flexCheckDefault<%= subcategory %>"><%= subcategory %></label>
-                                          <p class="font-light">(25)</p>
+                                          <p class="font-light"></p>
                                         </div>
                                       </li>
                                     <% }); %>
@@ -202,41 +202,38 @@
                         <div class="product-box">
                           <!-- Replace the image URL with the actual image data -->
                           <div class="img-wrapper">
-                            <div class="front">
-                              <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded"
-                                style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: cover; background-position: center center; background-repeat: no-repeat; display: block;">
-                                <img src="assets/images/fashion/product/front/2.jpg" class="bg-img blur-up lazyload" alt=""
-                                  style="display: none;">
-                              </a>
-                            </div>
+                            <div class="heart-icon" onclick="toggleHeart(this)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
+                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                </svg>
+                              </div>
+                              <div class="front">
+                                <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded"
+                                   style="background-image: url(data:image/jpeg;base64,<%= product.images[4].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
+                                  <!-- Image is for fallback purpose, it's hidden as the background image is used -->
+                                  <img src="assets/images/fashion/product/front/2.jpg" class="bg-img blur-up lazyload" alt="" style="display: none;">
+                                </a>
+                              </div>
+                              
                             <!-- Add similar code for the back image if needed -->
                           </div>
-                          <div class="cart-wrap">
-                            <ul>
-                              <li>
-                                <a href="javascript:void(0)" class="addtocart-btn" data-bs-toggle="modal" data-bs-target="#addtocart">
-                                  <!-- Add your cart icon SVG here -->
-                                </a>
-                              </li>
-                              <!-- Add similar code for other buttons (quick view, compare, wishlist) -->
-                            </ul>
-                          </div>
+                          
                           <div class="product-details">
+                            
                             <div class="rating-details">
-                              <span class="font-light grid-content"><%= product.name %></span>
                               <!-- Add code to display the product's rating -->
                             </div>
+                            <h3 class="theme-color"><%= product.name %></h3>
                             <div class="main-price">
-                              <a href="product-left-sidebar.html" class="font-default">
-                                <h5 class="ms-0"><%= product.name %></h5>
-                              </a>
-                              <div class="listing-content">
-                                <span class="font-light"><%= product.category %></span>
-                                <p class="font-light"><%= product.description %></p>
-                              </div>
-                              <h3 class="theme-color">₹<%= product.price.toFixed(2) %></h3>
-                              <button onclick="location.href = 'cart.html';" class="btn listing-content">Add To Cart</button>
-                            </div>
+                              <h5 class="font-light">₹<%= product.price %></h5>
+                              <button onclick="location.href = 'cart.html';" class="btn add-to-cart-button">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                              </svg>
+                              Add To Cart
+                            </button>                            </div>
                           </div>
                         </div>
                       </div>
