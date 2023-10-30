@@ -55,10 +55,10 @@
                                     <ul class="category-list">
                                         <% colors.forEach(color=> { %>
                                             <li>
-                                                <a href="javascript:void(0)">
-                                                    <i class="fas fa-check" style="color: <%= color.hex %>;"></i>
-                                                    <!-- Apply color based on hex code -->
-                                                </a>
+                                                <a href="javascript:void(0)" class="color-circle" style="background-color: <%= color.hex %>;">
+                                                    <i class="fas fa-check"></i>
+                                                  </a>
+                                                  
                                             </li>
                                             <% }); %>
                                     </ul>
@@ -78,23 +78,23 @@
                                     <div class="range-slider category-list">
                                         <span class="irs irs--flat js-irs-0"><span class="irs"><span class="irs-line"
                                                     tabindex="0"></span><span class="irs-min"
-                                                    style="visibility: hidden;">$ 0</span><span class="irs-max"
-                                                    style="visibility: visible;">$ 5.000</span><span class="irs-from"
-                                                    style="visibility: visible; left: 0%;">$ 0</span><span
-                                                    class="irs-to" style="visibility: visible; left: 51.8002%;">$
+                                                    style="visibility: hidden;">₹ 0</span><span class="irs-max"
+                                                    style="visibility: visible;">₹ 5.000</span><span class="irs-from"
+                                                    style="visibility: visible; left: 0%;">₹ 0</span><span
+                                                    class="irs-to" style="visibility: visible; left: 51.8002%;">₹
                                                     3.000</span><span class="irs-single"
-                                                    style="visibility: hidden; left: 21.8893%;">$ 0 - $
+                                                    style="visibility: hidden; left: 21.8893%;">₹ 0 - ₹
                                                     3.000</span></span><span class="irs-grid"></span><span
                                                 class="irs-bar"
                                                 style="left: 2.8169%; width: 56.6197%;"></span></span><span
                                             class="irs irs--flat js-irs-0"><span class="irs"><span class="irs-line"
                                                     tabindex="0"></span><span class="irs-min"
-                                                    style="visibility: hidden;">$ 0</span><span class="irs-max"
-                                                    style="visibility: visible;">$ 5.000</span><span class="irs-from"
-                                                    style="visibility: visible; left: 0%;">$ 0</span><span
-                                                    class="irs-to" style="visibility: visible; left: 51.8002%;">$
+                                                    style="visibility: hidden;">₹ 0</span><span class="irs-max"
+                                                    style="visibility: visible;">₹ 5.000</span><span class="irs-from"
+                                                    style="visibility: visible; left: 0%;">₹ 0</span><span
+                                                    class="irs-to" style="visibility: visible; left: 51.8002%;">₹
                                                     3.000</span><span class="irs-single"
-                                                    style="visibility: hidden; left: 21.8893%;">$ 0 - $
+                                                    style="visibility: hidden; left: 21.8893%;">₹ 0 - ₹
                                                     3.000</span></span><span class="irs-grid"></span><span
                                                 class="irs-bar" style="left: 2.8169%; width: 56.6197%;"></span><span
                                                 class="irs-shadow shadow-from" style="display: none;"></span><span
@@ -234,7 +234,7 @@
                                 <span class="font-light"><%= product.category %></span>
                                 <p class="font-light"><%= product.description %></p>
                               </div>
-                              <h3 class="theme-color">$<%= product.price.toFixed(2) %></h3>
+                              <h3 class="theme-color">₹<%= product.price.toFixed(2) %></h3>
                               <button onclick="location.href = 'cart.html';" class="btn listing-content">Add To Cart</button>
                             </div>
                           </div>
@@ -350,7 +350,7 @@
                                         qui, minus quidem eveniet! Dolorum magnam numquam, asperiores
                                         accusantium architecto placeat quam officia, tempore repellendus.</p>
                                 </div>
-                                <h3 class="theme-color">$60.00</h3>
+                                <h3 class="theme-color">₹60.00</h3>
                                 <button onclick="location.href = 'cart.html';" class="btn listing-content">Add
                                     To Cart</button>
                             </div>

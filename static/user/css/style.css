@@ -18,3 +18,18 @@
     height: 70%;
     border-radius: 25px;
 }
+
+.color-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px; /* Example size */
+    height: 30px; /* Example size */
+    border-radius: 50%; /* This makes it round */
+    margin: 5px; /* Add some space around the circles */
+  }
+  
+  .color-circle .fa-check {
+    color: white; /* You might want to change the icon color */
+  }
+  

@@ -86,6 +86,9 @@ $('#addColorBtn').click(function() {
 
 // Show the Add Color Modal when the plus button is clicked
 $(document).on('click', '#addColorTrigger', function(e) {
+    console.log('Add color button clicked');
+    var colorName = $('#newColorName').val().trim();
+    var colorHex = $('#newColorHex').val().trim();
     e.preventDefault();
     $('#addColorModal').modal('show');
 });

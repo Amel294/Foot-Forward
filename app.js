@@ -80,11 +80,11 @@ const addProduct = require('./server/router/adminRoute/addproduct')
 const adminlogin = require('./server/router/adminRoute/login')
 
 function checkAdminSession(req, res, next) {
-    if (req.session.admin) {
+    // if (req.session.admin) {
         next();
-    } else {
-        res.redirect('/admin/login');
-    }
+    // } else {
+    //     res.redirect('/admin/login');
+    // }
 }
 // Use route files
 app.use('/admin', adminlogin)
