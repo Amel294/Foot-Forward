@@ -48,7 +48,6 @@ exports.signUp = (req, res) => {
 }
 
 exports.signIn = (req, res) => {
-    
     res.render('user/signIn')
 }
 

@@ -1,141 +1,137 @@
 <section>
     <div class="container">
         <div class="row gx-4 gy-5 md-4">
-            <div class="col-lg-12 col-12 mt-6">
-                <div class="details-items">
-                    <div class="row g-4 mt-4">
-                        <div class="col-lg-6">
-                            <div class="row g-4">
-                                <!-- Main images -->
-                                <div class="col-sm-10">
-                                  <div class="details-image-1 ratio_asos slick-slider-main">
-                                    <% for(let index = 0; index < productData.images.length && index < 5; index++) { %>
-                                      <% let image = productData.images[index]; %>
-                                      <% if (image.contentType && image.data) { %>
-                                        <div class="slide">
-                                          <img src="data:<%= image.contentType %>;base64,<%= image.data.toString('base64') %>"
-                                               class="img-fluid w-100"
-                                               alt="Product Image <%= index + 1 %>">
+            <div class="col-lg-12">
+                <div class="details-items image-container display_flex">
+                    <div class="col-lg-6">
+                        <!-- Main images -->
+                        <div class="col-sm-8">
+                            <div id="mainCarousel" class="carousel slide details-image-1 ratio_asos" data-bs-ride="false">
+                                <div class="carousel-inner">
+                                    <% for(let index=0; index < productData.images.length && index < 5; index++) { %>
+                                        <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                            <a href="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
+                                               class="elevatezoom-gallery">
+                                                <img src="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
+                                                     class="d-block w-100"
+                                                     data-zoom-image="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
+                                                     alt="Product Image <%= index + 1 %>"
+                                                     id="zoom_<%= index %>">
+                                            </a>
                                         </div>
-                                      <% } %>
                                     <% } %>
-                                  </div>
                                 </div>
-                                
-                                <!-- Thumbnails -->
-                                <div class="col-sm-2 image-container slick-slider-nav">
-                                  <% for(let i = 0; i < productData.images.length; i++) { %>
-                                    <% if (productData.images[i].contentType && productData.images[i].data) { %>
-                                      <div>
-                                        <img src="data:<%= productData.images[i].contentType %>;base64,<%= productData.images[i].data.toString('base64') %>"
-                                             class="img-fluid w-100"
-                                             alt="">
-                                      </div>
-                                    <% } %>
-                                  <% } %>
-                                </div>
-                              </div>
+                            </div>
                         </div>
+                        
+                        <!-- Thumbnails -->
+                        <div class="col-sm-6 mt-2 display_flex image-container">
+                            <% for(let i=0; i < productData.images.length; i++) { %>
+                                <div data-bs-target="#mainCarousel" data-bs-slide-to="<%= i %>"
+                                    class="thumb <%= i === 0 ? 'active' : '' %>">
+                                    <img src="data:<%= productData.images[i].contentType %>;base64,<%= productData.images[i].data.toString('base64') %>"
+                                        class="img-fluid" alt="Thumbnail <%= i + 1 %>">
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
 
-                        <div class="col-lg-6">
-                            <div class="cloth-details-size">
-                                <div class="details-image-concept">
-                                    <h2>
-                                        <%= productData.name %>
-                                    </h2> <!-- Use 'name' instead of 'productName' -->
+
+                    <div class="col-lg-6">
+                        <div class="cloth-details-size">
+                            <div class="details-image-concept">
+                                <h2>
+                                    <%= productData.name %>
+                                </h2> <!-- Use 'name' instead of 'productName' -->
+                            </div>
+
+                            <h3 class="price-detail">
+                                ₹<%= productData.price %> <del>
+                                        <%= productData.originalPrice %>
+                                    </del><span>
+                                        <%= productData.discount %>
+                                    </span>
+                            </h3> <!-- Updated variable names -->
+
+                            <div class="color-image">
+                                <div class="image-select">
+                                    <h5>Color :</h5>
+                                    <ul class="image-section">
+                                        <% let renderedColors={}; productData.variants.forEach(function(variant) { if
+                                            (!renderedColors[variant.color.hex]) {
+                                            renderedColors[variant.color.hex]=true; %>
+                                            <li style="margin-right: 0px;">
+                                                <div class="color-square"
+                                                    style="background-color: <%= variant.color.hex %>;"></div>
+                                            </li>
+                                            <% } }); %>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div id="selectSize" class="addeffect-section product-description border-product">
+                                <h6 class="error-message">Please select size</h6>
+                                <div class="size-box">
+                                    <ul>
+                                        <% let renderedSizes={}; productData.variants.forEach(function(variant) { if
+                                            (!renderedSizes[variant.size.value]) {
+                                            renderedSizes[variant.size.value]=true; %>
+                                            <li>
+                                                <%= variant.size.value %>
+                                            </li>
+                                            <% } }); %>
+                                    </ul>
                                 </div>
 
-                                <h3 class="price-detail">
-                                    ₹<%= productData.price %> <del>
-                                            <%= productData.originalPrice %>
-                                        </del><span>
-                                            <%= productData.discount %> 
+                                <h6 class="product-title product-title-2 d-block">Quantity</h6>
+
+                                <div class="qty-box">
+                                    <div class="input-group">
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn quantity-left-minus" data-type="minus"
+                                                data-field="">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
                                         </span>
-                                </h3> <!-- Updated variable names -->
-
-                                <div class="color-image">
-                                    <div class="image-select">
-                                        <h5>Color :</h5>
-                                        <ul class="image-section">
-                                            <% productData.variants.forEach(function(variant) { %>
-                                                <li style="margin-right: 0px;">
-                                                    <div class="color-square"
-                                                        style="background-color: <%= variant.color.hex %>;"></div>
-                                                </li>
-                                                <% }); %>
-                                        </ul>
-
-
+                                        <input type="text" name="quantity" class="form-control input-number" value="1">
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn quantity-right-plus" data-type="plus"
+                                                data-field="">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </span>
                                     </div>
                                 </div>
+                            </div>
 
-
-
-                                <div id="selectSize" class="addeffect-section product-description border-product">
-                                    <h6 class="error-message">Please select size</h6>
-
-                                    <div class="size-box">
-                                        <ul>
-                                            <% productData.variants.forEach(function(variant) { %>
-                                                <li>
-                                                    <%= variant.size.value %></a>
-                                                </li>
-                                                <% }); %>
-                                        </ul>
-                                    </div>
-
-                                    <h6 class="product-title product-title-2 d-block">Quantity</h6>
-
-                                    <div class="qty-box">
-                                        <div class="input-group">
-                                            <span class="input-group-prepend">
-                                                <button type="button" class="btn quantity-left-minus" data-type="minus"
-                                                    data-field="">
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
-                                            </span>
-                                            <input type="text" name="quantity" class="form-control input-number"
-                                                value="1">
-                                            <span class="input-group-prepend">
-                                                <button type="button" class="btn quantity-right-plus" data-type="plus"
-                                                    data-field="">
-                                                    <i class="fas fa-plus"></i>
-                                                </button>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="product-buttons">
-                                    <a href="wishlist.html" class="btn btn-solid">
-                                        <i class="fa fa-bookmark fz-16 me-2"></i>
-                                        <span>Wishlist</span>
-                                    </a>
-                                    <a href="javascript:void(0)" id="cartEffect"
-                                        class="btn btn-solid hover-solid btn-animation">
-                                        <i class="fa fa-shopping-cart"></i>
-                                        <span>Add To Cart</span>
-                                    </a>
-                                </div>
+                            <div class="product-buttons">
+                                <a href="wishlist.html" class="btn btn-solid">
+                                    <i class="fa fa-bookmark fz-16 me-2"></i>
+                                    <span>Wishlist</span>
+                                </a>
+                                <a href="javascript:void(0)" id="cartEffect"
+                                    class="btn btn-solid hover-solid btn-animation">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    <span>Add To Cart</span>
+                                </a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-12 md-6">
-                <div class="cloth-review">
-                    <div class="tab-pane fade active show" id="desc">
-                        <div class="shipping-chart">
-                            <div class="align-items-center">
-                                <div class="col-lg-12">
-                                    <div class="part mt-3">
-                                        <h2 class="mb-2">Description</h2>
-                                        <p class="font-normal">
-                                            <%= productData.description %>
-                                        </p>
-                                    </div>
+        <div class="col-12 md-6">
+            <div class="cloth-review">
+                <div class="tab-pane fade active show" id="desc">
+                    <div class="shipping-chart">
+                        <div class="align-items-center">
+                            <div class="col-lg-12">
+                                <div class="part mt-3">
+                                    <h2 class="mb-2">Description</h2>
+                                    <p class="font-normal">
+                                        <%= productData.description %>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -144,4 +140,6 @@
             </div>
         </div>
     </div>
+</div>
+</div>
 </section>

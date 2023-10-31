@@ -29,68 +29,22 @@ function checkSession(req, res, next) {
   next();
 }
 
+function signedin(req, res, next) {
+  if (req.session && req.session.user) {
+    // Reload the current page (client-side) using JavaScript
+    res.redirect('/products')
+  }
+  next(); // Continue to the next middleware or route handler
+}
 
 
 //signup
 router.get('/', controller.signUp);
-router.get('/signup', controller.signUp);
-router.get('/signin', controller.signIn);
+router.get('/signup',signedin, controller.signUp);
+router.get('/signin',signedin, controller.signIn);
 router.get('/emailOtp',controller.otpPage)
 
-//product
-// router.get('/product', (req, res) => {
-//     // Placeholder data
-//     const productData = {
-//         productName: 'Brand New T-Shirt',
-//         productPrice: '$19.99',
-//         originalPrice: '$29.99',
-//         discount: '35%',
-//         images: [
-//             'https://via.placeholder.com/400x400?text=Product+Image+1',
-//             'https://via.placeholder.com/400x400?text=Product+Image+2',
-//             'https://via.placeholder.com/400x400?text=Product+Image+3',
-//             'https://via.placeholder.com/400x400?text=Product+Image+4',
-//         ],
-//         colors: [
-//             { name: 'Red', imageUrl: 'red_placeholder_image_url' },
-//             { name: 'Blue', imageUrl: 'blue_placeholder_image_url' },
-//             { name: 'Green', imageUrl: 'green_placeholder_image_url' },
-//         ],
-//         sizes: ['1', '7', '8', '9'],
-//         description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit...',
-//         // Add more placeholder data as needed
-//     };
 
-//     res.render('user/productSingle', { productData });
-// });
-
-
-// router.get('/product/:productId', async (req, res) => {
-//      const productId = req.params.productId;
-
-//     try {
-//         // Create a Mongoose query to find the product by ID
-//         await const productQuery = Product.findOne({ productId: productId });
-//         const color = color.findOne({ color: productId.variants.color });
-//         // console.log(color)
-//         // // Populate the referenced fields on the query
-//         // productQuery.populate(productId.variants.color).populate(productId.variants.size).populate(productId.subcategory).populate(productId.brand);
-
-//         // // Execute the query to fetch the product with the populated fields
-//         // const populatedProduct = await productQuery.exec();
-
-//         if (!populatedProduct) {
-//             return res.status(404).json({ message: 'Product not found' });
-//         }
-//         console.log(populatedProduct)
-//         // Now, 'populatedProduct' will contain the populated values
-//         // You can send 'populatedProduct' in the response
-//         res.json(populatedProduct);
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-// });
 router.get('/products',async  (req,res)=>{
     try {
         // Fetch the list of brands from the database
