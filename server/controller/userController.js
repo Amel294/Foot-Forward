@@ -48,6 +48,7 @@ exports.signUp = (req, res) => {
 }
 
 exports.signIn = (req, res) => {
+    
     res.render('user/signIn')
 }
 
@@ -187,28 +188,60 @@ exports.postUser = async (req, res) => {
 
 
 exports.authenticatePassword = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // Find the user by email
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(404).send('User not found');
+    const { email, password } = req.body;
+  
+    try {
+      // Find the user by email
+      const user = await User.findOne({ email });
+  
+      if (!user) {
+        return res.status(404).send('User not found');
+      }
+  
+      // Compare the entered password with the stored hashed password
+      const isMatch = await bcrypt.compare(password, user.password);
+  
+      if (isMatch) {
+        // Passwords match - user is authenticated
+  
+        // Create a session to store user information
+        req.session.user = {
+          id: user._id, // You can store any user-related data here
+          email: user.email,
+          // Add any other user data you want to store in the session
+        };
+  
+         // Redirect to the /products route
+      return res.redirect('/products');
+      } else {
+        // Passwords don't match
+        return res.status(401).send('Authentication failed');
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send('Internal Server Error');
     }
-
-    // Compare the entered password with the stored hashed password
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (isMatch) {
-      // Passwords match - user is authenticated
-      return res.send('Authentication successful');
-    } else {
-      // Passwords don't match
-      return res.status(401).send('Authentication failed');
-    }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).send('Internal Server Error');
   }
-}
+
+  exports.logout = async (req, res) => {
+    try {
+      // Attempt to destroy the user session
+      await new Promise((resolve, reject) => {
+        req.session.destroy(err => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        });
+      });
+  
+      // If the session was destroyed without throwing an error, redirect to login
+      res.redirect('/products'); // Replace with your login route
+    } catch (err) {
+      // If there was an error destroying the session, handle it here
+      console.error('Logout failed:', err);
+      res.status(500).send('Error logging out. Please try again.');
+    }
+  };
+  

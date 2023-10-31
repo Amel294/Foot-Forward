@@ -12,7 +12,22 @@ const Size = require('../model/productAttribute/sizeDB');
 const Category = require('../model/productAttribute/categoryDB');
 const { findOne } = require('../model/counterDB');
 
+// Apply globally
+router.use(checkSession);
 
+
+
+function checkSession(req, res, next) {
+  // Check if session and user exists
+  if (req.session && req.session.user) {
+    // User is authenticated
+    res.locals.isAuthenticated = true;
+  } else {
+    // User is not authenticated
+    res.locals.isAuthenticated = false;
+  }
+  next();
+}
 
 
 
@@ -85,9 +100,24 @@ router.get('/products',async  (req,res)=>{
         const colors = await Color.find();
         const subcategories = await Category.find().distinct('Subcategory');
         const products = await Product.find().populate('brand').populate('subcategory').exec();
-
+        const priceRange = await Product.aggregate([
+            {
+              $group: {
+                _id: null,
+                minPrice: { $min: "$price" },
+                maxPrice: { $max: "$price" }
+              }
+            }
+          ]);
+      
+          const minPrice = priceRange[0].minPrice;
+          const maxPrice = priceRange[0].maxPrice;
         // Render your EJS template and pass the brands and colors data
-        res.render('user/productview', { brands, colors,subcategories,products  });
+          // Log the brand of each product
+          products.forEach((product) => {
+            console.log(product.brand);
+        });
+        res.render('user/productview', { brands, colors,subcategories,products,minPrice, maxPrice  });
       } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).send('Internal Server Error');
@@ -184,6 +214,6 @@ router.post('/verifyOtp', controller.verifyOTP);
 
 router.post('/postUser', controller.postUser);
 router.post('/authenticate', controller.authenticatePassword);
-  
+router.post('/logout',controller.logout)
 
 module.exports = router;

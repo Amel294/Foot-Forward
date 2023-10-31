@@ -67,5 +67,26 @@
   .heart-icon.active svg {
     fill: #ff0000; /* Red fill for the active state */
   }
+  .color-list-fix{
+    display: flex;
+    justify-content: space-between;
+  }
   
-  
+
+
+
+
+
+  /* Default styles, mobile first. Menu is invisible on mobile */
+.menu-right,
+.main-navbar {
+    display: none;
+}
+
+/* On tablet and desktop screens, show the menu */
+@media (min-width: 768px) { /* Adjust the pixel value based on when you want the menu to appear */
+    .menu-right,
+    .main-navbar {
+        display: block;
+    }
+}
