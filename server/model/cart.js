@@ -15,25 +15,19 @@ const cartSchema = new Schema({
                 ref: 'ProductDB', // Reference to the 'ProductDB' model
                 required: true
             },
+            variant: {
+                type: ObjectId, // Reference to the variant within the product
+                ref: 'ProductDB.variants', // Reference to the 'variants' subdocument within 'ProductDB'
+                required: true
+            },
             quantity: {
                 type: Number,
-                required: true
-            },
-            selectedColor: {
-                type: ObjectId, // Reference to Color object ID
-                ref: 'Color',   // Reference to the 'Color' model
-                required: true
-            },
-            selectedSize: {
-                type: ObjectId, // Reference to Size object ID
-                ref: 'Size',    // Reference to the 'Size' model
                 required: true
             }
         }
     ]
 });
 
-// Create a Cart model
 const Cart = mongoose.model('Cart', cartSchema);
 
 module.exports = Cart;

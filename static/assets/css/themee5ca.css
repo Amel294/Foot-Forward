@@ -62,3 +62,13 @@
 .custom-card {
     border-radius: 10px; /* Adjust the border-radius value as needed */
 }
+.color-option.selected {
+    border: 2px solid #000; /* Or any other style you prefer */
+}
+.selected-color{
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+}
+
+

@@ -95,3 +95,139 @@
 }
 
 
+
+/* Base Styles for the Product Detail Section */
+.cloth-details-size {
+  background-color: #f9f9f9; /* Light gray background to distinguish sections */
+  padding: 25px; /* Add some padding */
+  border-radius: 8px; /* Rounded corners for the card */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* A subtle shadow for depth */
+  margin-bottom: 30px; /* Space at the bottom */
+  border: 1px solid #eaeaea; /* A subtle border to define edges */
+}
+
+/* Title and Brand Styles */
+.details-image-concept h6,
+.details-image-concept h3 {
+  color: #333; /* Darker text for better readability */
+  margin-bottom: 15px; /* Space between elements */
+}
+
+/* Price Styles */
+.price-detail {
+  color: #000; /* Black color for the price */
+  font-weight: bold; /* Bold font for emphasis */
+  font-size: 1.5em; /* Larger font size for price */
+  margin-bottom: 15px; /* Space after price */
+}
+
+.price-detail del {
+  color: #999; /* Lighter color for the original price */
+  margin-left: 15px; /* Space from the main price */
+}
+
+.price-detail span {
+  color: #28a745; /* Green color for discount percentage */
+  margin-left: 15px; /* Space from the strikethrough price */
+}
+
+/* Color Selection Styles */
+.color-image .image-section {
+  list-style-type: none; /* Remove default list styling */
+  padding: 0; /* Reset padding */
+  margin: 0; /* Reset margins */
+  display: flex; /* Layout list items in a row */
+  gap: 15px; /* Consistent gap between items */
+}
+
+.color-image .image-section li {
+  cursor: pointer; /* Indicates the items are clickable */
+}
+
+.color-square {
+  border: 1px solid #ddd; /* Border for color squares */
+  border-radius: 50%; /* Circle shape for color options */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+}
+
+.selected-color .color-square {
+  border-color: #E44D26; /* Highlight for the selected color */
+}
+
+/* Button Styles */
+.product-buttons .btn {
+  margin-top: 20px; /* Space at the top of the buttons */
+  width: 100%; /* Full width buttons for better touch targets */
+  text-transform: uppercase; /* Capitalize button text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .cloth-details-size {
+      padding: 15px; /* Less padding on smaller screens */
+  }
+}
+
+/* Add some hover effect for interactivity */
+.color-image .image-section li:hover .color-square {
+  transform: scale(1.1); /* Slightly enlarge on hover */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Stronger shadow for lifted effect */
+}
+
+/* Quantity Box Styling */
+.qty-box {
+  display: flex; /* Align quantity box items in a row */
+  margin-top: 15px; /* Space from the above element */
+}
+
+.input-group {
+  width: 100%; /* Full width of the parent */
+  align-items: stretch; /* Stretch to fill the height */
+}
+
+.input-number {
+  text-align: center; /* Center the quantity number */
+}
+
+
+
+
+/* Existing styles */
+
+/* Style for size options */
+.size-box ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 10px; /* Adjust gap as needed */
+}
+
+.size-box li.size-option {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.size-box li.size-option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Style for selected size */
+.size-box li.size-option.selected {
+  border-color: #333;
+  background-color: #e7e7e7;
+  font-weight: bold;
+}
+
+
+.size-option {
+  cursor: pointer;
+  /* other styles */
+}
+
+.size-option.selected {
+  background-color: #ddd; /* or any highlight color you want */
+  /* other styles for selected size */
+}

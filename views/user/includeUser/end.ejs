@@ -108,7 +108,89 @@
   });
 
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var quantityInput = document.querySelector('.input-number');
 
+    document.querySelector('.quantity-left-minus').addEventListener('click', function(e) {
+      e.preventDefault();
+      var currentValue = parseInt(quantityInput.value, 10);
+      if (currentValue > 1) {
+        quantityInput.value = currentValue - 1;
+      }
+    });
+
+    document.querySelector('.quantity-right-plus').addEventListener('click', function(e) {
+      e.preventDefault();
+      var currentValue = parseInt(quantityInput.value, 10);
+      quantityInput.value = currentValue + 1;
+    });
+
+    // Optional: To prevent non-numeric input
+    quantityInput.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  });
+</script>
+
+
+<script>
+  // Assuming you have a JSON representation of your variants available
+  // This would ideally come from your server as JSON and could be inline in your EJS page or fetched via AJAX
+  var variants = <%- JSON.stringify(productData.variants) %>;
+  
+  function selectColor(colorHex, colorIndex) {
+      // Highlight the selected color
+      document.querySelectorAll('.color-option').forEach(function(el) {
+          el.classList.remove('selected-color');
+      });
+      document.querySelector(`li[onclick="selectColor('${colorHex}', ${colorIndex})"]`).classList.add('selected-color');
+  
+      // Filter sizes based on the selected color
+      var sizesForColor = variants.filter(function(variant) {
+          return variant.color.hex === colorHex;
+      });
+  
+      // Populate sizes and add click events for size selection
+      var sizeList = document.getElementById('size-list');
+      sizeList.innerHTML = ''; // Clear current sizes
+      var renderedSizes = {};
+      var firstSizeLi = null; // To store the first size li element
+      sizesForColor.forEach(function(variant, index) {
+          if (!renderedSizes[variant.size.value]) {
+              renderedSizes[variant.size.value] = true;
+              var li = document.createElement('li');
+              li.innerText = variant.size.value;
+              li.classList.add('size-option'); // Add a class for styling
+              li.addEventListener('click', function() {
+                  document.querySelectorAll('.size-option.selected').forEach(function(el) {
+                      el.classList.remove('selected'); // Remove from all before adding to clicked one
+                  });
+                  li.classList.add('selected'); // Add 'selected' class to clicked size
+              });
+              sizeList.appendChild(li);
+
+              // If it's the first size, store it to click later
+              if (index === 0) {
+                  firstSizeLi = li;
+              }
+          }
+      });
+
+      // Simulate a click on the first size, if it exists
+      if (firstSizeLi) {
+          firstSizeLi.click();
+      }
+  }
+
+  // Invoke `selectColor` for the initial setup if variants are available
+  if (variants.length > 0) {
+      selectColor(variants[0].color.hex, 0);
+  }
+</script>
+
+
+  
 
 
 

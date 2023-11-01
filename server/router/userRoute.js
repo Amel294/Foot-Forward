@@ -40,109 +40,134 @@ function signedin(req, res, next) {
 
 //signup
 router.get('/', controller.signUp);
-router.get('/signup', signedin, controller.signUp);
-router.get('/signin', signedin, controller.signIn);
-router.get('/emailOtp', controller.otpPage)
+router.get('/signup',signedin, controller.signUp);
+router.get('/signin',signedin, controller.signIn);
+router.get('/emailOtp',controller.otpPage)
 
 
-router.get('/products', async (req, res) => {
-  try {
-    // Fetch the list of brands from the database
-    const brands = await Brand.find();
-
-    // Fetch the list of colors from the database
-    const colors = await Color.find();
-    const subcategories = await Category.find().distinct('Subcategory');
-    const products = await Product.find().populate('brand').populate('subcategory').exec();
-    const priceRange = await Product.aggregate([
-      {
-        $group: {
-          _id: null,
-          minPrice: { $min: "$price" },
-          maxPrice: { $max: "$price" }
-        }
+router.get('/products',async  (req,res)=>{
+    try {
+        // Fetch the list of brands from the database
+        const brands = await Brand.find();
+    
+        // Fetch the list of colors from the database
+        const colors = await Color.find();
+        const subcategories = await Category.find().distinct('Subcategory');
+        const products = await Product.find().populate('brand').populate('subcategory').exec();
+        const priceRange = await Product.aggregate([
+            {
+              $group: {
+                _id: null,
+                minPrice: { $min: "$price" },
+                maxPrice: { $max: "$price" }
+              }
+            }
+          ]);
+      
+          const minPrice = priceRange[0].minPrice;
+          const maxPrice = priceRange[0].maxPrice;
+        // Render your EJS template and pass the brands and colors data
+          // Log the brand of each product
+          products.forEach((product) => {
+            console.log(product.brand);
+        });
+        res.render('user/productview', { brands, colors,subcategories,products,minPrice, maxPrice  });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Internal Server Error');
       }
-    ]);
-
-    const minPrice = priceRange[0].minPrice;
-    const maxPrice = priceRange[0].maxPrice;
-    // Render your EJS template and pass the brands and colors data
-    // Log the brand of each product
-    products.forEach((product) => {
-      console.log(product.brand);
-    });
-    res.render('user/productview', { brands, colors, subcategories, products, minPrice, maxPrice });
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).send('Internal Server Error');
-  }
 })
 
 router.get('/product/:productId', async (req, res) => {
   const productId = req.params.productId;
 
   try {
-    // Find the product by productId
-    const product = await Product.findOne({ productId: productId });
+      // Aggregation pipeline to find the product and populate related data
+      const pipeline = [
+          { $match: { productId: parseInt(productId, 10) } }, // Ensure to match the type (string or number)
+          {
+              $lookup: {
+                  from: 'brands', // Replace with your actual collection name for brands
+                  localField: 'brand',
+                  foreignField: '_id',
+                  as: 'brand'
+              }
+          },
+          { $unwind: '$brand' }, // Assuming there is only one brand per product
+          {
+              $lookup: {
+                  from: 'categories', // Replace with your actual collection name for categories
+                  localField: 'subcategory',
+                  foreignField: '_id',
+                  as: 'subcategory'
+              }
+          },
+          { $unwind: '$subcategory' }, // Assuming there is only one category per product
+          {
+              $lookup: {
+                  from: 'colors', // Replace with your actual collection name for colors
+                  localField: 'variants.color',
+                  foreignField: '_id',
+                  as: 'variantColors'
+              }
+          },
+          {
+              $lookup: {
+                  from: 'sizes', // Replace with your actual collection name for sizes
+                  localField: 'variants.size',
+                  foreignField: '_id',
+                  as: 'variantSizes'
+              }
+          },
+          {
+              $project: {
+                  name: 1,
+                  brand: 1,
+                  category: '$subcategory', // Use the populated 'subcategory' object
+                  price: 1,
+                  description: 1,
+                  trending: 1,
+                  productId: 1,
+                  isEnabled: 1,
+                  images: 1,
+                  variants: {
+                      $map: {
+                          input: '$variants',
+                          as: 'variant',
+                          in: {
+                              color: {
+                                  $arrayElemAt: [
+                                      '$variantColors',
+                                      { $indexOfArray: ['$variantColors._id', '$$variant.color'] }
+                                  ]
+                              },
+                              size: {
+                                  $arrayElemAt: [
+                                      '$variantSizes',
+                                      { $indexOfArray: ['$variantSizes._id', '$$variant.size'] }
+                                  ]
+                              },
+                              stock: '$$variant.stock'
+                          }
+                      }
+                  }
+              }
+          }
+      ];
 
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
+      // Execute the aggregation pipeline
+      const productData = await Product.aggregate(pipeline);
+      console.log(productData)
+      // Check if product data was found
+      if (!productData || productData.length === 0) {
+          return res.status(404).json({ message: 'Product not found' });
+      }
 
-    // Initialize an array to store variants
-    const variants = [];
-
-    // Iterate through each variant
-    for (const variant of product.variants) {
-      // Get the color ID for the current variant
-      const colorId = variant.color;
-
-      // Find the color by its ID
-      const color = await Color.findById(colorId); // Assuming you have a "Color" model
-
-      // Get the size ID for the current variant
-      const sizeId = variant.size;
-
-      // Find the size by its ID
-      const size = await Size.findById(sizeId); // Assuming you have a "Size" model
-
-      // Push the variant object with color, size, and stock to the variants array
-      variants.push({
-        color: color,
-        size: size,
-        stock: variant.stock,
-      });
-    }
-    console.log("varinets")
-    console.log(variants)
-
-    // Find the brand by its ID
-    const brand = await Brand.findById(product.brand); // Assuming you have a "Brand" model
-
-    // Find the category by its ID
-    const category = await Category.findById(product.subcategory); // Assuming you have a "Category" model
-
-    // Construct the response object with the populated data
-    const productData = {
-      name: product.name,
-      brand: brand, // Use the populated 'brand' object
-      category: category, // Use the populated 'category' object
-      subcategory: product.subcategory, // You can also keep the subcategory ID if needed
-      price: product.price,
-      description: product.description,
-      trending: product.trending,
-      productId: product.productId,
-      isEnabled: product.isEnabled,
-      images: product.images,
-      variants: variants,
-    };
-
-    console.log(productData);
-    // Send the response with the populated product
-    res.render('user/productSingle', { productData });
+      // Send the response with the populated product data
+      res.render('user/productSingle', { productData: productData[0] });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
   }
 });
 
@@ -152,15 +177,16 @@ router.get('/product/:productId', async (req, res) => {
 
 
 
+
 router.get('/myOrders', controller.myOrders);
-router.get('/cart', controller.cart)
+router.get('/cart',controller.cart)
 
 
 
 
 //api
 
-router.post('/signup', controller.signup_POST);
+router.post('/signup',controller.signup_POST );
 router.post('/resendOtp', controller.resend);
 router.post('/verifyOtp', controller.verifyOTP);
 
@@ -168,6 +194,6 @@ router.post('/verifyOtp', controller.verifyOTP);
 
 router.post('/postUser', controller.postUser);
 router.post('/authenticate', controller.authenticatePassword);
-router.post('/logout', controller.logout)
+router.post('/logout',controller.logout)
 
 module.exports = router;

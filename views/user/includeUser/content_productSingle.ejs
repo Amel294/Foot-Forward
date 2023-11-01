@@ -3,9 +3,9 @@
         <div class="row gx-4 gy-5 md-4">
             <div class="col-lg-12">
                 <div class="details-items image-container display_flex">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 col-md-3 col-sm-12">
                         <!-- Main images -->
-                        <div class="col-sm-8">
+                        <div class="col-lg-8 col-sm-6 ">
                             <div id="mainCarousel" class="carousel slide details-image-1 ratio_asos" data-bs-ride="false">
                                 <div class="carousel-inner">
                                     <% for(let index=0; index < productData.images.length && index < 5; index++) { %>
@@ -39,10 +39,12 @@
 
                     <div class="col-lg-6">
                         <div class="cloth-details-size">
-                            <div class="details-image-concept">
-                                <h2>
+                            <div class="details-image-concept" style="margin-top: 0px;">
+                                <% console.log(productData.brand) %>
+                                <h6><%= productData.brand.name %></h6>
+                                <h3>
                                     <%= productData.name %>
-                                </h2> <!-- Use 'name' instead of 'productName' -->
+                                </h3> <!-- Use 'name' instead of 'productName' -->
                             </div>
 
                             <h3 class="price-detail">
@@ -53,33 +55,31 @@
                                     </span>
                             </h3> <!-- Updated variable names -->
 
-                            <div class="color-image">
-                                <div class="image-select">
-                                    <h5>Color :</h5>
-                                    <ul class="image-section">
-                                        <% let renderedColors={}; productData.variants.forEach(function(variant) { if
-                                            (!renderedColors[variant.color.hex]) {
-                                            renderedColors[variant.color.hex]=true; %>
-                                            <li style="margin-right: 0px;">
-                                                <div class="color-square"
-                                                    style="background-color: <%= variant.color.hex %>;"></div>
+                            <div class="color-image ">
+                                <span class="align-baseline h5 me-3">Colors :</span>
+                                <ul class="image-section align-baseline">
+                                    
+                                    
+                                    <% let renderedColors = {}; %>
+                                    <% let index = 0; %>
+                                    <% productData.variants.forEach(function(variant) {
+                                        if (!renderedColors[variant.color.hex]) {
+                                            renderedColors[variant.color.hex] = true; %>
+                                            <li style="mx-4" onclick="selectColor('<%= variant.color.hex %>', <%= index %>)" class="<%= index === 0 ? 'selected-color' : '' %>">
+                                                <div class="color-square" style="background-color: <%= variant.color.hex %>; width: 40px; height:40px" ></div>
                                             </li>
-                                            <% } }); %>
-                                    </ul>
-                                </div>
+                                            <% index++;
+                                        }
+                                    }); %>
+                                </ul>
+                                
                             </div>
 
                             <div id="selectSize" class="addeffect-section product-description border-product">
                                 <h6 class="error-message">Please select size</h6>
                                 <div class="size-box">
-                                    <ul>
-                                        <% let renderedSizes={}; productData.variants.forEach(function(variant) { if
-                                            (!renderedSizes[variant.size.value]) {
-                                            renderedSizes[variant.size.value]=true; %>
-                                            <li>
-                                                <%= variant.size.value %>
-                                            </li>
-                                            <% } }); %>
+                                    <ul id="size-list">
+                                        <!-- Sizes will be populated by JavaScript -->
                                     </ul>
                                 </div>
 
