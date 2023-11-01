@@ -53,3 +53,12 @@
     white-space: nowrap;
 }
 
+/* Add this CSS to style the dull color box */
+.deleted-color {
+    background-color: rgba(255, 0, 0, 0.1); /* Adjust the rgba values and alpha (0.1) to control the red tint */
+}
+
+/* Add this CSS to make the card rounded */
+.custom-card {
+    border-radius: 10px; /* Adjust the border-radius value as needed */
+}

@@ -9,6 +9,10 @@ const colorSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true
+    },
+    isDeleted:{
+        type:Boolean,
+        default:false
     }
 });
 

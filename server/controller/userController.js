@@ -244,3 +244,8 @@ exports.authenticatePassword = async (req, res) => {
     }
   };
   
+
+
+  exports.cart = (req,res)=>{
+        res.render('user/cart')
+  }
