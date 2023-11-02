@@ -6,24 +6,24 @@
                     <div class="col-lg-6 col-md-3 col-sm-12">
                         <!-- Main images -->
                         <div class="col-lg-8 col-sm-6 ">
-                            <div id="mainCarousel" class="carousel slide details-image-1 ratio_asos" data-bs-ride="false">
+                            <div id="mainCarousel" class="carousel slide details-image-1 ratio_asos"
+                                data-bs-ride="false">
                                 <div class="carousel-inner">
                                     <% for(let index=0; index < productData.images.length && index < 5; index++) { %>
                                         <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
                                             <a href="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
-                                               class="elevatezoom-gallery">
+                                                class="elevatezoom-gallery">
                                                 <img src="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
-                                                     class="d-block w-100"
-                                                     data-zoom-image="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
-                                                     alt="Product Image <%= index + 1 %>"
-                                                     id="zoom_<%= index %>">
+                                                    class="d-block w-100"
+                                                    data-zoom-image="data:<%= productData.images[index].contentType %>;base64,<%= productData.images[index].data.toString('base64') %>"
+                                                    alt="Product Image <%= index + 1 %>" id="zoom_<%= index %>">
                                             </a>
                                         </div>
-                                    <% } %>
+                                        <% } %>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Thumbnails -->
                         <div class="col-sm-6 mt-2 display_flex image-container">
                             <% for(let i=0; i < productData.images.length; i++) { %>
@@ -32,7 +32,7 @@
                                     <img src="data:<%= productData.images[i].contentType %>;base64,<%= productData.images[i].data.toString('base64') %>"
                                         class="img-fluid" alt="Thumbnail <%= i + 1 %>">
                                 </div>
-                            <% } %>
+                                <% } %>
                         </div>
                     </div>
 
@@ -41,10 +41,12 @@
                         <div class="cloth-details-size">
                             <div class="details-image-concept" style="margin-top: 0px;">
                                 <% console.log(productData.brand) %>
-                                <h6><%= productData.brand.name %></h6>
-                                <h3>
-                                    <%= productData.name %>
-                                </h3> <!-- Use 'name' instead of 'productName' -->
+                                    <h6>
+                                        <%= productData.brand.name %>
+                                    </h6>
+                                    <h3>
+                                        <%= productData.name %>
+                                    </h3> <!-- Use 'name' instead of 'productName' -->
                             </div>
 
                             <h3 class="price-detail">
@@ -58,21 +60,23 @@
                             <div class="color-image ">
                                 <span class="align-baseline h5 me-3">Colors :</span>
                                 <ul class="image-section align-baseline">
-                                    
-                                    
-                                    <% let renderedColors = {}; %>
-                                    <% let index = 0; %>
-                                    <% productData.variants.forEach(function(variant) {
-                                        if (!renderedColors[variant.color.hex]) {
-                                            renderedColors[variant.color.hex] = true; %>
-                                            <li style="mx-4" onclick="selectColor('<%= variant.color.hex %>', <%= index %>)" class="<%= index === 0 ? 'selected-color' : '' %>">
-                                                <div class="color-square" style="background-color: <%= variant.color.hex %>; width: 40px; height:40px" ></div>
-                                            </li>
-                                            <% index++;
-                                        }
-                                    }); %>
+
+
+                                    <% let renderedColors={}; %>
+                                        <% let index=0; %>
+                                            <% productData.variants.forEach(function(variant) { if
+                                                (!renderedColors[variant.color.hex]) {
+                                                renderedColors[variant.color.hex]=true; %>
+                                                <li style="mx-4"
+                                                    onclick="selectColor('<%= variant.color.hex %>', <%= index %>)"
+                                                    class="<%= index === 0 ? 'selected-color' : '' %>">
+                                                    <div class="color-square"
+                                                        style="background-color: <%= variant.color.hex %>; width: 40px; height:40px">
+                                                    </div>
+                                                </li>
+                                                <% index++; } }); %>
                                 </ul>
-                                
+
                             </div>
 
                             <div id="selectSize" class="addeffect-section product-description border-product">
@@ -89,14 +93,14 @@
                                     <div class="input-group">
                                         <span class="input-group-prepend">
                                             <button type="button" class="btn quantity-left-minus" data-type="minus"
-                                                data-field="">
+                                                data-field="quantity">
                                                 <i class="fas fa-minus"></i>
                                             </button>
                                         </span>
                                         <input type="text" name="quantity" class="form-control input-number" value="1">
                                         <span class="input-group-prepend">
                                             <button type="button" class="btn quantity-right-plus" data-type="plus"
-                                                data-field="">
+                                                data-field="quantity">
                                                 <i class="fas fa-plus"></i>
                                             </button>
                                         </span>
@@ -105,10 +109,12 @@
                             </div>
 
                             <div class="product-buttons">
-                                <a href="wishlist.html" class="btn btn-solid">
+                                <a href="wishlist.html" class="btn btn-solid wishlist-button"
+                                    data-product-id="<%= productData._id %>">
                                     <i class="fa fa-bookmark fz-16 me-2"></i>
                                     <span>Wishlist</span>
                                 </a>
+
                                 <a href="javascript:void(0)" id="cartEffect"
                                     class="btn btn-solid hover-solid btn-animation">
                                     <i class="fa fa-shopping-cart"></i>
@@ -140,6 +146,6 @@
             </div>
         </div>
     </div>
-</div>
-</div>
+    </div>
+    </div>
 </section>

@@ -10,6 +10,8 @@ const Brand = require('../model/productAttribute/brandDB');
 const Color = require('../model/productAttribute/colorDB');
 const Size = require('../model/productAttribute/sizeDB');
 const Category = require('../model/productAttribute/categoryDB');
+const cart = require("../model/cart")
+const wishlist = require("../model/wishlist")
 const { findOne } = require('../model/counterDB');
 
 // Apply globally
@@ -135,6 +137,7 @@ router.get('/product/:productId', async (req, res) => {
                           input: '$variants',
                           as: 'variant',
                           in: {
+                              _id: '$$variant._id', 
                               color: {
                                   $arrayElemAt: [
                                       '$variantColors',
@@ -158,6 +161,23 @@ router.get('/product/:productId', async (req, res) => {
       // Execute the aggregation pipeline
       const productData = await Product.aggregate(pipeline);
       console.log(productData)
+      // Assuming productData is an array with one or more objects
+// Assuming productData is an array with one or more objects
+productData.forEach((product) => {
+  console.log("Product Name:", product.name);
+  console.log("Product Brand:", product.brand.name);
+  
+  product.variants.forEach((variant, index) => {
+    console.log(`Variant ${index + 1}:`);
+    console.log("Color:", variant.color);
+    console.log("Size:", variant.size);
+    console.log("Stock:", variant.stock);
+    console.log("Varient ID",variant._id)
+    console.log("---------------------------");
+  });
+})
+
+
       // Check if product data was found
       if (!productData || productData.length === 0) {
           return res.status(404).json({ message: 'Product not found' });
@@ -195,5 +215,7 @@ router.post('/verifyOtp', controller.verifyOTP);
 router.post('/postUser', controller.postUser);
 router.post('/authenticate', controller.authenticatePassword);
 router.post('/logout',controller.logout)
+//wishlist and cart
+
 
 module.exports = router;

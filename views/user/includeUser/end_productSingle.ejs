@@ -1,0 +1,230 @@
+<!-- tap to top Section Start -->
+
+<!-- tap to top Section End -->
+
+<div class="bg-overlay"></div>
+
+<!-- latest jquery-->
+
+<!-- Bootstrap js-->
+<script src="/static/user/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- feather icon js-->
+<script src="/static/user/js/feather/feather.min.js"></script>
+
+<!-- lazyload js-->
+<script src="/static/user/js/lazysizes.min.js"></script>
+
+<!-- Slick js-->
+<script src="/static/user/js/slick/slick.js"></script>
+<script src="/static/user/js/slick/slick-animation.min.js"></script>
+<script src="/static/user/js/slick/custom_slick.js"></script>
+
+<!-- newsletter js -->
+<script src="/static/user/js/newsletter.js"></script>
+
+<!-- add to cart modal resize -->
+<script src="/static/user/js/cart_modal_resize.js"></script>
+
+<!-- Add To Home js -->
+<script src="/static/user/js/pwa.js"></script>
+
+<!-- add to cart modal resize -->
+<script src="/static/user/js/cart_modal_resize.js"></script>
+
+<!-- feather icon js-->
+<!-- <script src="/static/user/js/timer1.js"></script> -->
+
+<!-- notify js -->
+<script src="/static/user/js/bootstrap/bootstrap-notify.min.js"></script>
+
+<!-- script js -->
+<script src="/static/user/js/theme-setting.js"></script>
+<script src="/static/user/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src=/static/user/js/custom/userValidation.js></script>
+<!-- Include Elevate Zoom -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+<script>
+  function toggleHeart(element) {
+    element.classList.toggle('active');
+  }
+
+</script>
+<!-- Add your Slick carousel initialization script at the bottom of your page -->
+<script>
+  $(document).ready(function () {
+    // Main slider
+    $('.slick-slider-main').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+      fade: true,
+      asNavFor: '.slick-slider-nav'
+    });
+
+    // Navigation slider
+    $('.slick-slider-nav').slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      asNavFor: '.slick-slider-main',
+      dots: true,
+      centerMode: true,
+      focusOnSelect: true
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutLink = document.getElementById("logout_main_nav");
+
+    logoutLink.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      // Send a POST request to /logout using fetch
+      fetch("/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // You can include any data you want to send with the request
+        // For example, you might want to include a CSRF token if your server requires it
+        body: JSON.stringify({}),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            // Successful logout, you can handle the redirection here if needed
+            window.location.href = "/products"; // Redirect to the homepage
+          } else {
+            // Handle other response statuses (e.g., error)
+            console.error("Logout failed");
+          }
+        })
+        .catch((error) => {
+          console.error("Error occurred during logout:", error);
+        });
+    });
+  });
+
+</script>
+
+
+<script>
+  var variants = <%- JSON.stringify(productData.variants) %>;
+
+  function selectColor(colorHex, colorIndex) {
+      document.querySelectorAll('.color-option').forEach(function(el) {
+          el.classList.remove('selected-color');
+      });
+      document.querySelector(`li[onclick="selectColor('${colorHex}', ${colorIndex})"]`).classList.add('selected-color');
+
+      var sizesForColor = variants.filter(function(variant) {
+          return variant.color.hex === colorHex;
+      });
+
+      var sizeList = document.getElementById('size-list');
+      sizeList.innerHTML = '';
+      var renderedSizes = {};
+      var firstSizeLi = null;
+      sizesForColor.forEach(function(variant, index) {
+          if (!renderedSizes[variant.size.value]) {
+              renderedSizes[variant.size.value] = true;
+              var li = document.createElement('li');
+              li.innerText = variant.size.value;
+              li.classList.add('size-option');
+              li.setAttribute('data-variant-id', variant._id); // Store the variant ID
+
+              li.addEventListener('click', function() {
+                  document.querySelectorAll('.size-option').forEach(function(el) {
+                      el.classList.remove('selected');
+                  });
+                  li.classList.add('selected');
+                  // Here you could do something with the variant ID, like:
+                  // console.log('Selected Variant ID:', li.getAttribute('data-variant-id'));
+              });
+
+              sizeList.appendChild(li);
+
+              if (index === 0) {
+                  firstSizeLi = li;
+              }
+          }
+      });
+
+      if (firstSizeLi) {
+          firstSizeLi.click();
+      }
+  }
+
+  if (variants.length > 0) {
+      selectColor(variants[0].color.hex, 0);
+  }
+</script>
+
+
+<script>
+  // Get the input element
+  var quantityInput = document.querySelector('input[name="quantity"]');
+
+  // Get the plus and minus buttons
+  var minusButton = document.querySelector('.quantity-left-minus');
+  var plusButton = document.querySelector('.quantity-right-plus');
+
+  // Add click event listeners to the plus and minus buttons
+  minusButton.addEventListener('click', function () {
+      var currentValue = parseInt(quantityInput.value);
+      if (currentValue > 1) {
+          quantityInput.value = currentValue - 1;
+      }
+  });
+
+  plusButton.addEventListener('click', function () {
+      var currentValue = parseInt(quantityInput.value);
+      quantityInput.value = currentValue + 1;
+  });
+</script>
+
+
+  
+<script>
+   // Get all "Wishlist" buttons
+   const wishlistButtons = document.querySelectorAll('.wishlist-button');
+
+   // Add click event listeners to each button
+   wishlistButtons.forEach(function(button) {
+       button.addEventListener('click', function(event) {
+           event.preventDefault();
+
+           // Get the product ID from the data-product-id attribute
+           const productId = button.getAttribute('data-product-id');
+
+           // Send an AJAX request to add the product to the wishlist
+           fetch('/api/add-to-wishlist', {
+               method: 'POST',
+               headers: {
+                   'Content-Type': 'application/json',
+               },
+               body: JSON.stringify({ productId }),
+           })
+           .then(response => response.json())
+           .then(data => {
+               if (data.success) {
+                   alert('Product added to wishlist successfully!');
+               } else {
+                   alert('Failed to add product to wishlist.');
+               }
+           })
+           .catch(error => {
+               console.error('Error:', error);
+           });
+       });
+   });
+</script>
+
+
+
+
+</body>
+
+</html>
