@@ -199,7 +199,7 @@ productData.forEach((product) => {
 
 
 router.get('/myOrders', controller.myOrders);
-router.get('/cart',controller.cart)
+
 
 
 
@@ -216,41 +216,22 @@ router.post('/postUser', controller.postUser);
 router.post('/authenticate', controller.authenticatePassword);
 router.post('/logout',controller.logout)
 //wishlist and cart
-
-router.post('/add-to-cart', async (req, res) => {
+router.get('/cart/total', async (req, res) => {
   try {
-      const userId = req.session.user.id; // Assuming you have the user in req.user
-      const { productId, variantId, quantity } = req.body; // These should be provided in the request
-      console.log(req.body)
-      // Find the user's cart or create a new one if it doesn't exist
-      let cart = await Cart.findOne({ user: userId });
-      if (!cart) {
-          cart = new Cart({ user: userId, items: [] });
-      }
-
-      // Check if the item already exists in the cart
-      const itemIndex = cart.items.findIndex(item => item.product.toString() === productId && item.variant.toString() === variantId);
-      
-      if (itemIndex > -1) {
-          // Update the quantity if the item already exists
-          cart.items[itemIndex].quantity += quantity;
-      } else {
-          // Add a new item if it doesn't exist
-          cart.items.push({ product: productId, variant: variantId, quantity });
-      }
-
-      // Save the updated cart
-      await cart.save();
-
-      // Send back a success response
-      res.status(200).send('Item added to cart');
+    // Assuming `Cart` is your Mongoose model for the cart collection
+    const cart = await Cart.findOne({ user: req.session.user.id }); // Find the cart for the current user
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    // Send the total as a response
+    res.json({ total: cart.total });
   } catch (error) {
-      console.error('Error adding to cart:', error);
-      res.status(500).send('Error adding to cart');
+    console.error('Error fetching cart total:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-
+router.get('/cart',controller.cart)
 router.get('/cart/items-count', async (req, res) => {
   try {
     console.log("Im here");
@@ -276,16 +257,64 @@ router.get('/cart/items-count', async (req, res) => {
   }
 });
 
-const mongoose = require('mongoose');
 
+
+async function calculateCartTotal(cartId) {
+  const cart = await Cart.findById(cartId).populate('items.product');
+  if (!cart) return;
+
+  let total = 0;
+  for (const item of cart.items) {
+    // console.log(`Price: ${item.product.price}, Quantity: ${item.quantity}`); // Add this line for debugging
+    total += item.product.price * item.quantity;
+  }
+
+  console.log(`Total: ${total}`); // Add this line for debugging
+  cart.total = total;
+  await cart.save();
+}
+
+
+// POST route to add items to the cart
+router.post('/add-to-cart', async (req, res) => {
+  try {
+    const userId = req.session.user.id;
+    const { productId, variantId, quantity } = req.body;
+
+    let cart = await Cart.findOne({ user: userId });
+    if (!cart) {
+      cart = new Cart({ user: userId, items: [] });
+    }
+
+    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId && item.variant.toString() === variantId);
+    
+    if (itemIndex > -1) {
+      cart.items[itemIndex].quantity += quantity;
+    } else {
+      cart.items.push({ product: productId, variant: variantId, quantity });
+    }
+
+    await cart.save();
+    await calculateCartTotal(cart._id);
+    res.status(200).send('Item added to cart');
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    res.status(500).send('Error adding to cart');
+  }
+});
+
+// DELETE route to remove an item from the cart
 router.delete('/cart/remove/:itemId', async (req, res) => {
   try {
-    console.log("In cart removal");
-    const itemId = req.params.itemId; // Assuming itemId is a string representation of an ObjectId
+    const userId = req.session.user.id;
+    const itemId = req.params.itemId;
+
     await Cart.updateOne(
-        { user: req.session.user.id },
-        { $pull: { items: { _id: itemId } } } // Directly use itemId here
+      { user: userId },
+      { $pull: { items: { _id: itemId } } }
     );
+
+    await calculateCartTotal(userId); // Assuming the user ID is the same as the cart ID
     res.json({ success: true });
   } catch (error) {
     console.error('Error removing item from cart:', error);
@@ -293,40 +322,39 @@ router.delete('/cart/remove/:itemId', async (req, res) => {
   }
 });
 
-
+// PUT route to update the quantity of an item in the cart
 router.put('/cart/update-quantity/:itemId', async (req, res) => {
   try {
-    console.log("In Qty updation");
+    const userId = req.session.user.id;
+    const itemId = req.params.itemId;
     const quantity = Math.min(10, Math.max(1, req.body.quantity));
 
-    const itemId = req.params.itemId; // If itemId is supposed to be an ObjectId, convert it: mongoose.Types.ObjectId(itemId)
-    
-    // Log to see what we are sending to the updateOne method
-    console.log(`Updating itemId: ${itemId} with quantity: ${quantity}`);
-    
+    // First, find the cart for the user
+    const userCart = await Cart.findOne({ user: userId });
+    if (!userCart) {
+      return res.status(404).json({ success: false, message: 'Cart not found' });
+    }
+
+    // Then, update the quantity of the item in the cart
     const updateResult = await Cart.updateOne(
-      { 'user': req.session.user.id, 'items._id': itemId }, // If the id is stored as _id within items array
+      { 'user': userId, 'items._id': itemId },
       { '$set': { 'items.$.quantity': quantity } }
     );
 
-    // Log to see what the updateOne method returns
-    console.log(updateResult);
-    
-    // Check if the document was found and updated
-    if (updateResult.matchedCount === 0) {
-      return res.status(404).json({ success: false, message: 'Item not found' });
+    // If the item quantity was updated, recalculate the cart total
+    if (updateResult.modifiedCount > 0) {
+      await calculateCartTotal(userCart._id); // Pass the cart ID instead of the user ID
     }
-    
-    if (updateResult.modifiedCount === 0) {
-      return res.status(400).json({ success: false, message: 'Quantity not updated' });
-    }
-    
+
     res.json({ success: true });
   } catch (error) {
     console.error('Error updating item quantity:', error);
     res.status(500).json({ success: false, message: 'Failed to update quantity' });
   }
 });
+
+
+
 
 
 

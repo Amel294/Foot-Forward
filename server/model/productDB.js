@@ -93,6 +93,14 @@ productSchema.pre('save', async function (next) {
     }
 });
 
+productSchema.statics.getPriceById = async function(productId) {
+    // Convert string to ObjectId
+    const objectId = new mongoose.Types.ObjectId(productId);
+    const product = await this.findOne({ _id: objectId });
+    return product ? product.price : null;
+};
+
+
 // You should implement the `fetchImageFromURL` function to retrieve the image data from the URL and return it as a base64 string.
 
 const Product = mongoose.model('ProductDB', productSchema);

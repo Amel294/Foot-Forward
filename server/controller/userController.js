@@ -249,8 +249,7 @@ exports.authenticatePassword = async (req, res) => {
   exports.cart = async (req, res) => {
     try {
       // Fetch the cart based on user session ID
-      // const cart = await Cart.findOne({ user: req.session.user.id });
-      const cart = await Cart.findOne({ user: '653df77f4777d658d578a495' });
+      const cart = await Cart.findOne({ user: req.session.user.id });
       if (!cart) {
         return res.status(404).send('Cart not found.');
       }

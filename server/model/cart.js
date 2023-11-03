@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, ObjectId } = mongoose;
+const Product = require('./productDB'); // Adjust the path to where your Product model is located
 
 // Define the cart schema
 const cartSchema = new Schema({
@@ -22,10 +23,39 @@ const cartSchema = new Schema({
             },
             quantity: {
                 type: Number,
-                required: true
+                required: true,
+                min: [1, 'Quantity cannot be less than 1.'],
+                max: [10, 'Quantity cannot be more than 1   0.']
             }
         }
-    ]
+    ],
+    total: {
+        type: Number,
+        default: 0
+    },
+    coupon: {
+        type: String,
+        required: false // Coupon is not required
+    }
+});
+
+// Middleware to calculate the total price
+cartSchema.pre('save', async function (next) {
+    let total = 0;
+    
+    // Loop through each item and calculate the total
+    for (const item of this.items) {
+        const productPrice = await Product.getPriceById(item.product);
+        if (productPrice) {
+            total += productPrice * item.quantity;
+        } else {
+            // Handle the case where the product price is not found
+            console.error('Product price not found for product ID:', item.product);
+        }
+    }
+    
+    this.total = total;
+    next();
 });
 
 const Cart = mongoose.model('Cart', cartSchema);
