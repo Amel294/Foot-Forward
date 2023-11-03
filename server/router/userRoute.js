@@ -265,7 +265,7 @@ async function calculateCartTotal(cartId) {
 
   let total = 0;
   for (const item of cart.items) {
-    // console.log(`Price: ${item.product.price}, Quantity: ${item.quantity}`); // Add this line for debugging
+    console.log(`Price: ${item.product.price}, Quantity: ${item.quantity}`); // Add this line for debugging
     total += item.product.price * item.quantity;
   }
 
@@ -309,18 +309,29 @@ router.delete('/cart/remove/:itemId', async (req, res) => {
     const userId = req.session.user.id;
     const itemId = req.params.itemId;
 
-    await Cart.updateOne(
+    // Find the cart, remove the item, and return the updated cart
+    const updatedCart = await Cart.findOneAndUpdate(
       { user: userId },
-      { $pull: { items: { _id: itemId } } }
+      { $pull: { items: { _id: itemId } } },
+      { new: true } // This option returns the updated document
     );
 
-    await calculateCartTotal(userId); // Assuming the user ID is the same as the cart ID
-    res.json({ success: true });
+    // If the cart is not found, send an error response
+    if (!updatedCart) {
+      return res.status(404).json({ success: false, message: 'Cart not found' });
+    }
+
+    // Recalculate the cart total using the cart ID
+    await calculateCartTotal(updatedCart._id);
+
+    // Send back the updated total
+    res.json({ success: true, total: updatedCart.total });
   } catch (error) {
     console.error('Error removing item from cart:', error);
     res.status(500).json({ success: false, message: 'Failed to remove item' });
   }
 });
+
 
 // PUT route to update the quantity of an item in the cart
 router.put('/cart/update-quantity/:itemId', async (req, res) => {

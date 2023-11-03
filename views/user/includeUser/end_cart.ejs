@@ -112,12 +112,13 @@
 
 <script>
   // Function to fetch and update the cart's total from the server
-  function fetchAndUpdateCartTotal() {
+function fetchAndUpdateCartTotal() {
   fetch('/cart/total', {
     method: 'GET',
   })
   .then(response => response.json())
   .then(data => {
+    console.log('Cart total response:', data); // Debugging log
     // Assuming you have an element with the id 'cart-total' for the total price
     const totalElement = document.getElementById('cart-total');
     if (totalElement) {
@@ -128,6 +129,7 @@
     console.error('Error:', error);
   });
 }
+
 
 
   // Function to update the quantity in the input field and send an update request
@@ -180,27 +182,31 @@
     });
   });
   
-  // Function to remove an item from the cart
-  function removeItemFromCart(itemId) {
-    fetch(`/cart/remove/${itemId}`, {
-      method: 'DELETE',
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Remove the item row from the table
-        document.getElementById(`item-row-${itemId}`).remove();
-        // Fetch and update the cart's total
-        fetchAndUpdateCartTotal();
-      } else {
-        // Handle error
-        alert('Could not remove the item');
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
+// Function to remove an item from the cart
+// Function to remove an item from the cart
+function removeItemFromCart(itemId) {
+  fetch(`/cart/remove/${itemId}`, {
+    method: 'DELETE',
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // Remove the item row from the table
+      document.getElementById(`item-row-${itemId}`).remove();
+      // Fetch and update the cart's total after the item has been removed
+      fetchAndUpdateCartTotal();
+    } else {
+      // Handle error
+      alert('Could not remove the item');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+
+
   
   // Attach event listeners to remove item buttons
   document.querySelectorAll('.remove-item').forEach(button => {
@@ -208,6 +214,7 @@
       event.preventDefault();
       const itemId = this.dataset.itemId;
       removeItemFromCart(itemId);
+      fetchAndUpdateCartTotal();
     });
   });
   
