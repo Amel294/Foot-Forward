@@ -36,165 +36,65 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
-                                <a href="product-left-sidebar.html">
-                                    <img src="assets/images/fashion/product/front/1.jpg" class="blur-up lazyloaded" alt="">
-                                </a>
-                            </td>
-                            <td>
-                                <a href="product-left-sidebar.html">Yellow Jacket</a>
-                                <div class="mobile-cart-content row">
-                                    <div class="col">
-                                        <div class="qty-box">
-                                            <div class="input-group">
-                                                <input type="text" name="quantity" class="form-control input-number" value="1">
-                                            </div>
-                                        </div>
+                        <% cart.items.forEach(function(item) { %>
+                            <tr id="item-row-<%= item._id %>">
+                                <td><a href="product-left-sidebar.html">
+                                        <img src="data:<%= item.product.images[0].contentType %>;base64,<%= item.product.images[0].data.toString('base64') %>"
+                                            class="blur-up lazyloaded" alt="">
+                                    </a>
+                                </td>
+                                <td id="name-<%= item.name %>"><%= item.product.name %>
+
+                                <td id="price-<%= item._id %>">₹<%= item.product.price %>
+                                </td>
+                                <td class="align-center">
+                                    <div style="display: flex;
+                                    align-items: center;
+                                    justify-content: space-around; b ">
+                                        <button type="button" class="btn quantity-left-minus" data-type="minus"
+                                            data-field="<%= item._id %>">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <input type="number" name="quantity" readonly="readonly"
+                                            class="form-control input-number" id="quantity-<%= item._id %>"
+                                            value="<%= item.quantity %>" data-item-id="<%= item._id %>"
+                                            onblur="validateQuantity(this)" min="1" max="10"
+                                            style="width: 60px; text-align: center; padding: .375rem .75rem;">
+
+                                        <button type="button" class="btn quantity-right-plus" data-type="plus"
+                                            data-field="<%= item._id %>">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
                                     </div>
-                                    <div class="col">
-                                        <h2>$63.00</h2>
-                                    </div>
-                                    <div class="col">
-                                        <h2 class="td-color">
-                                            <a href="javascript:void(0)">
-                                                <i class="fas fa-times"></i>
-                                            </a>
-                                        </h2>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h2>$63.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$3648.00</h2>
-                            </td>
-                        </tr>
+
+
+                                </td>
+                                <td>
+                                    <a href="#" class="remove-item" data-item-id="<%= item._id %>"><i
+                                            class="fas fa-times"></i></a>
+                                </td>
+                                <td id="total-<%= item._id %>" class="item-total">₹<%= (item.quantity *
+                                        item.product.price).toFixed(2) %>
+                                </td>
+                            </tr>
+
+                            <% }); %>
                     </tbody>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <a href="product-left-sidebar.html">
-                                    <img src="assets/images/fashion/product/front/2.jpg" class="blur-up lazyloaded" alt="">
-                                </a>
-                            </td>
-                            <td>
-                                <a href="product-left-sidebar.html">Blue Jeans Color Jacket</a>
-                                <div class="mobile-cart-content row">
-                                    <div class="col">
-                                        <div class="qty-box">
-                                            <div class="input-group">
-                                                <input type="number" name="quantity" class="form-control input-number" value="1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <h2>$69.00</h2>
-                                    </div>
-                                    <div class="col">
-                                        <h2 class="td-color">
-                                            <a href="javascript:void(0)">
-                                                <i class="fas fa-times"></i>
-                                            </a>
-                                        </h2>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h2>$69.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$3219.00</h2>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <a href="product-left-sidebar.html">
-                                    <img src="assets/images/fashion/product/front/3.jpg" class="blur-up lazyloaded" alt=""></a>
-                            </td>
-                            <td>
-                                <a href="product-left-sidebar.html">Dawnbreaker Jacket</a>
-                                <div class="mobile-cart-content row">
-                                    <div class="col">
-                                        <div class="qty-box">
-                                            <div class="input-group">
-                                                <input type="number" name="quantity" class="form-control input-number" value="1">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col">
-                                        <h2>$69.00</h2>
-                                    </div>
-                                    <div class="col">
-                                        <h2 class="td-color">
-                                            <a href="javascript:void(0)">
-                                                <i class="fas fa-times"></i>
-                                            </a>
-                                        </h2>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <h2>$69.00</h2>
-                            </td>
-                            <td>
-                                <div class="qty-box">
-                                    <div class="input-group">
-                                        <input type="number" name="quantity" class="form-control input-number" value="1">
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <a href="javascript:void(0)">
-                                    <i class="fas fa-times"></i>
-                                </a>
-                            </td>
-                            <td>
-                                <h2 class="td-color">$4215.00</h2>
-                            </td>
-                        </tr>
-                    </tbody>
+
                 </table>
             </div>
             <div class="cart-checkout-section">
                 <div class="row g-4">
-                    
+
                     <div class="col-lg-12">
                         <div class="cart-box">
                             <div class="cart-box-details">
                                 <div class="total-details">
                                     <div class="top-details">
                                         <h3>Cart Totals</h3>
-                                        <h6>Total MRP <span>$250.00</span></h6>
-                                        <h6>Coupon Discount <span>-$25.00</span></h6>
-                                        <h6>Convenience Fee <span><del>$25.00</del></span></h6>
+                                        <h6>Total MRP <span>₹250.00</span></h6>
+                                        <h6>Coupon Discount <span>-₹25.00</span></h6>
+                                        <h6>Convenience Fee <span><del>₹25.00</del></span></h6>
                                     </div>
                                     <div class="bottom-details">
                                         <a href="checkout.html">Proceed to Checkout</a>
@@ -206,6 +106,6 @@
                 </div>
             </div>
         </div>
-        
+
     </div>
 </section>

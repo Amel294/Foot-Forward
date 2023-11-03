@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const User = require("../model/userDB");
 const bcrypt = require('bcrypt');
-
-
+const Cart = require("../model/cart")
+const ProductDB = require('../model/productDB');
 // SMTP configuration
 let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -209,7 +209,7 @@ exports.authenticatePassword = async (req, res) => {
           email: user.email,
           // Add any other user data you want to store in the session
         };
-  
+        console.log("User Created : " + req.session.user)
          // Redirect to the /products route
       return res.redirect('/products');
       } else {
@@ -246,6 +246,26 @@ exports.authenticatePassword = async (req, res) => {
   
 
 
-  exports.cart = (req,res)=>{
-        res.render('user/cart')
-  }
+  exports.cart = async (req, res) => {
+    try {
+      // Fetch the cart based on user session ID
+      // const cart = await Cart.findOne({ user: req.session.user.id });
+      const cart = await Cart.findOne({ user: '653df77f4777d658d578a495' });
+      if (!cart) {
+        return res.status(404).send('Cart not found.');
+      }
+  
+      // Fetch each product and its variants
+      for (let item of cart.items) {
+        item.product = await ProductDB.findById(item.product);
+        // Assuming 'variants' is an array in ProductDB, find the variant manually
+        item.variant = item.product.variants.find(v => v._id.toString() === item.variant.toString());
+      }
+      
+      res.render('user/cart', { cart });
+    } catch (error) {
+      console.error('Error fetching the cart:', error);
+      res.status(500).send('Error fetching the cart');
+    }
+  };
+  

@@ -75,6 +75,7 @@
     });
   });
 </script>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const logoutLink = document.getElementById("logout_main_nav");
@@ -108,85 +109,6 @@
   });
 
 </script>
-
-<script>
-  // Add event listener for all remove links
-document.querySelectorAll('.cart-table .fa-times').forEach(item => {
-    item.addEventListener('click', function (e) {
-        e.preventDefault();
-        const itemId = this.getAttribute('data-item-id');
-        fetch(`/cart/remove/${itemId}`, {
-            method: 'POST'
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  // Remove the item from the DOM or update the page content
-              }
-          });
-    });
-});
-
-</script>
-<script>
-  $(document).ready(function() {
-      // Function to update the total price for a specific item
-      function updateItemTotal(itemId) {
-          const price = parseFloat($(`#price-${itemId}`).text().replace('₹', ''));
-          const quantity = parseInt($(`#quantity-${itemId}`).val());
-          const total = price * quantity;
-          $(`#total-${itemId}`).text(`₹${total.toFixed(2)}`);
-      }
-  
-      // Function to update the grand total price for the entire cart
-      function updateGrandTotal() {
-          let grandTotal = 0;
-          $('.item-total').each(function() {
-              const total = parseFloat($(this).text().replace('₹', ''));
-              grandTotal += total;
-          });
-          $('#grand-total').text(`₹${grandTotal.toFixed(2)}`);
-      }
-  
-      // Update quantity in cart
-      $('.input-number').on('change', function() {
-          const itemId = $(this).closest('tr').data('item-id');
-          const quantity = $(this).val();
-  
-          $.ajax({
-              url: '/cart/update-quantity/' + itemId,
-              type: 'PUT',
-              data: { quantity: quantity },
-              success: function(response) {
-                  // Update the item total and grand total
-                  updateItemTotal(itemId);
-                  updateGrandTotal();
-              }
-          });
-      });
-  
-      // Remove item from cart
-      $('.remove-item').click(function(e) {
-          e.preventDefault();
-          const itemId = $(this).data('item-id');
-  
-          $.ajax({
-              url: '/cart/remove/' + itemId,
-              type: 'PUT',
-              success: function(response) {
-                  $(`#item-row-${itemId}`).remove(); // Remove the item row from the table
-                  updateGrandTotal();
-              }
-          });
-      });
-  });
-  </script>
-  
-
-
-
-
-  
-
 
 
 

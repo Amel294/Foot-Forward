@@ -187,6 +187,8 @@
 
 .input-number {
   text-align: center; /* Center the quantity number */
+  pointer-events: none;
+  background-color: #e9e9e9;
 }
 
 
@@ -230,4 +232,21 @@
 .size-option.selected {
   background-color: #ddd; /* or any highlight color you want */
   /* other styles for selected size */
+}
+
+
+.input-group-flex {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Adjust the space between items */
+}
+
+.input-group-flex > .btn {
+  flex: 0 0 auto; /* Do not grow or shrink */
+}
+
+.input-group-flex > .input-number {
+  flex: 0 1 auto; /* Grow and shrink as needed */
+  text-align: center;
+  /* Set width if needed */
 }

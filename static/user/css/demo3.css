@@ -253,7 +253,7 @@ button:focus {
   .form-control:focus {
     -webkit-box-shadow: none;
             box-shadow: none; }
-
+    
 h1 {
   font-size: calc(40px + (70 - 40) * ((100vw - 320px) / (1920 - 320)));
   font-weight: 600;

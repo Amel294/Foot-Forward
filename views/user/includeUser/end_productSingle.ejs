@@ -222,7 +222,40 @@
    });
 </script>
 
+<script>
+  document.getElementById('cartEffect').addEventListener('click', function() {
+    const productId = this.getAttribute('data-product-id');
+    const variantId = document.querySelector('.size-option.selected').getAttribute('data-variant-id');
+    const quantity = parseInt(document.querySelector('input[name="quantity"]').value, 10);
 
+    fetch('/add-to-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            // You need to include headers for authentication if required
+        },
+        body: JSON.stringify({
+            productId,
+            variantId,
+            quantity
+        })
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        }
+        throw new Error('Network response was not ok.');
+    })
+    .then(text => {
+        console.log('Item added to cart:', text);
+        // Handle the UI updates or redirection as needed
+    })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+});
+
+</script>
 
 
 </body>

@@ -10,7 +10,7 @@ const Brand = require('../model/productAttribute/brandDB');
 const Color = require('../model/productAttribute/colorDB');
 const Size = require('../model/productAttribute/sizeDB');
 const Category = require('../model/productAttribute/categoryDB');
-const cart = require("../model/cart")
+const Cart = require("../model/cart")
 const wishlist = require("../model/wishlist")
 const { findOne } = require('../model/counterDB');
 
@@ -216,6 +216,119 @@ router.post('/postUser', controller.postUser);
 router.post('/authenticate', controller.authenticatePassword);
 router.post('/logout',controller.logout)
 //wishlist and cart
+
+router.post('/add-to-cart', async (req, res) => {
+  try {
+      const userId = req.session.user.id; // Assuming you have the user in req.user
+      const { productId, variantId, quantity } = req.body; // These should be provided in the request
+      console.log(req.body)
+      // Find the user's cart or create a new one if it doesn't exist
+      let cart = await Cart.findOne({ user: userId });
+      if (!cart) {
+          cart = new Cart({ user: userId, items: [] });
+      }
+
+      // Check if the item already exists in the cart
+      const itemIndex = cart.items.findIndex(item => item.product.toString() === productId && item.variant.toString() === variantId);
+      
+      if (itemIndex > -1) {
+          // Update the quantity if the item already exists
+          cart.items[itemIndex].quantity += quantity;
+      } else {
+          // Add a new item if it doesn't exist
+          cart.items.push({ product: productId, variant: variantId, quantity });
+      }
+
+      // Save the updated cart
+      await cart.save();
+
+      // Send back a success response
+      res.status(200).send('Item added to cart');
+  } catch (error) {
+      console.error('Error adding to cart:', error);
+      res.status(500).send('Error adding to cart');
+  }
+});
+
+
+router.get('/cart/items-count', async (req, res) => {
+  try {
+    console.log("Im here");
+    // Assuming you have a middleware that sets req.user to the logged-in user's info
+    if (!req.session.user.id) {
+      return res.status(401).json({ message: "User is not authenticated." });
+    }
+    console.log("Im here");
+    // Find the cart for the logged-in user
+    const cart = await Cart.findOne({ user: req.session.user.id });
+    if (!cart) {
+      return res.status(200).json({ count: 0 }); // No cart means 0 items
+    }
+    console.log("Im here");
+    // Calculate the total number of items in the cart
+    const itemCount = cart.items.reduce((total, item) => total + item.quantity, 0);
+
+    // Respond with the count
+    res.status(200).json({ count: itemCount });
+  } catch (error) {
+    console.error('Error getting cart items count:', error);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+const mongoose = require('mongoose');
+
+router.delete('/cart/remove/:itemId', async (req, res) => {
+  try {
+    console.log("In cart removal");
+    const itemId = req.params.itemId; // Assuming itemId is a string representation of an ObjectId
+    await Cart.updateOne(
+        { user: req.session.user.id },
+        { $pull: { items: { _id: itemId } } } // Directly use itemId here
+    );
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error removing item from cart:', error);
+    res.status(500).json({ success: false, message: 'Failed to remove item' });
+  }
+});
+
+
+router.put('/cart/update-quantity/:itemId', async (req, res) => {
+  try {
+    console.log("In Qty updation");
+    const quantity = Math.min(10, Math.max(1, req.body.quantity));
+
+    const itemId = req.params.itemId; // If itemId is supposed to be an ObjectId, convert it: mongoose.Types.ObjectId(itemId)
+    
+    // Log to see what we are sending to the updateOne method
+    console.log(`Updating itemId: ${itemId} with quantity: ${quantity}`);
+    
+    const updateResult = await Cart.updateOne(
+      { 'user': req.session.user.id, 'items._id': itemId }, // If the id is stored as _id within items array
+      { '$set': { 'items.$.quantity': quantity } }
+    );
+
+    // Log to see what the updateOne method returns
+    console.log(updateResult);
+    
+    // Check if the document was found and updated
+    if (updateResult.matchedCount === 0) {
+      return res.status(404).json({ success: false, message: 'Item not found' });
+    }
+    
+    if (updateResult.modifiedCount === 0) {
+      return res.status(400).json({ success: false, message: 'Quantity not updated' });
+    }
+    
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error updating item quantity:', error);
+    res.status(500).json({ success: false, message: 'Failed to update quantity' });
+  }
+});
+
+
 
 
 module.exports = router;
