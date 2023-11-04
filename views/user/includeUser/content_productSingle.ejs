@@ -46,7 +46,7 @@
                                     </h6>
                                     <h3>
                                         <%= productData.name %>
-                                    </h3> <!-- Use 'name' instead of 'productName' -->
+                                    </h3> 
                             </div>
 
                             <h3 class="price-detail">
@@ -115,11 +115,13 @@
                                     <span>Wishlist</span>
                                 </a>
 
-                                <a href="javascript:void(0)" id="cartEffect" class="btn btn-solid hover-solid btn-animation" data-product-id="<%= productData._id %>">
+                                <a href="javascript:void(0)" id="cartEffect"
+                                    class="btn btn-solid hover-solid btn-animation"
+                                    data-product-id="<%= productData._id %>">
                                     <i class="fa fa-shopping-cart"></i>
                                     <span>Add To Cart</span>
                                 </a>
-                                
+
                             </div>
                         </div>
                     </div>

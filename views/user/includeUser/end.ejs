@@ -182,11 +182,75 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
   </script>
   
 
+//catagory filter
 
+<script>
+  function nextPage() {
+    if (currentPage < totalPages) {
+      currentPage++;
+      updateProductList();
+    }
+  }
+  function updateProductList() {
+    const selectedBrands = [];
+    const selectedColors = [];
+    const selectedCategories = [];
+    let minPrice = $('#minPrice').val();
+    let maxPrice = $('#maxPrice').val();
+
+    // Get the selected checkboxes
+    $('input[type="checkbox"].check-it:checked').each(function() {
+        const id = $(this).attr('id');
+        if (id.startsWith('brand-')) {
+            selectedBrands.push(id.replace('brand-', ''));
+        } else if (id.startsWith('category-')) {
+            selectedCategories.push(id.replace('category-', ''));
+        } else if (id.startsWith('color-')) {
+            selectedColors.push(id.replace('color-', ''));
+        }
+    });
+
+    // Debugging: Log selected items
+    console.log('Selected Brands:', selectedBrands);
+    console.log('Selected Categories:', selectedCategories);
+    console.log('Selected Colors:', selectedColors);
+    console.log('Min Price:', minPrice);
+    console.log('Max Price:', maxPrice);
+
+    // Now, you can use the selectedBrands and selectedCategories in your AJAX request
+    // You can also use minPrice and maxPrice for filtering products by price range
+    $.ajax({
+        url: '/products/filter',
+        type: 'GET',
+        data: {
+            brand: selectedBrands.join(','), // Backend expects comma-separated values
+            category: selectedCategories.join(','), // Backend expects comma-separated values for categories
+            color: selectedColors.join(','), // Adjust accordingly if you have color filters
+            minPrice: minPrice,
+            maxPrice: maxPrice
+        },
+        success: function(response) {
+            // Update the product list in the DOM with the response
+            $('#product-container').html(response); // Update the "product-container" div
+        },
+        error: function(err) {
+            console.error('Error fetching data:', err);
+        }
+    });
+}
+
+// Event listeners
+$('input[type="checkbox"].check-it').on('change', updateProductList);
+$('#minPrice, #maxPrice').on('input', updateProductList);
+
+// Initial call to populate products based on default filters if needed
+// Uncomment this if you want to load products on page load
+updateProductList();
+
+</script>
 
 
   
-
 
 
 

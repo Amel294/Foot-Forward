@@ -1,0 +1,57 @@
+<% products.forEach(product=> { %>
+    <div>
+        <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
+            <!-- Replace the image URL with the actual image data -->
+            <div class="img-wrapper">
+                <div class="heart-icon" onclick="toggleHeart(this)" style="z-index: 100;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round"
+                        class="feather feather-heart">
+                        <path
+                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                        </path>
+                    </svg>
+                </div>
+                <div class="front">
+                    <a href="/product/<%= product.productId %>"" class=" bg-size blur-up lazyloaded"
+                        style="background-image: url(data:image/jpeg;base64,<%= product.images[3].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
+                    </a>
+                </div>
+
+                <!-- Add similar code for the back image if needed -->
+            </div>
+
+            <div class="product-details">
+
+                <div class="rating-details">
+                    <!-- Add code to display the product's rating -->
+                </div>
+                <h6 class="theme-color">
+                    <%= product.brand.name %>
+                </h6>
+                <h3 class="theme-color">
+                    <%= product.name %>
+                </h3>
+                <div class="main-price">
+                    <h5 class="font-light theme-color">₹<%= product.price %>
+                    </h5>
+
+                    <button type="button" class="btn m-1 btn-primary btn-sm rounded-3 "
+                        style="background-color: var(--theme-color); border: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"
+                            class="feather feather-shopping-cart">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path
+                                d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6">
+                            </path>
+                        </svg><span class="ms-2">Add To Cart</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% }); %>
+    

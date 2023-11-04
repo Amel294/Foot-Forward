@@ -28,7 +28,7 @@
                                             <li>
                                                 <div class="form-check ps-0 custome-form-check">
                                                     <input class="checkbox_animated check-it" type="checkbox"
-                                                        id="<%= brand._id %>">
+                                                        id="brand-<%= brand._id %>">
                                                     <label class="form-check-label" for="<%= brand._id %>">
                                                         <%= brand.name %>
                                                     </label>
@@ -44,49 +44,34 @@
 
                         <div class="accordion-item category-color">
                             <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseThree">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
                                     Color
                                 </button>
                             </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse show"
-                                aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <ul class="category-list color-list-fix">
-                                        <% colors.forEach(color=> { %>
+                                        <% colors.forEach(color => { %>
                                             <li>
-                                                <a href="javascript:void(0)" class="color-circle shadow  mb-3 " style="background-color: <%= color.hex %>;">
-                                                    <i class="fas fa-check"></i>
-                                                  </a>
-                                                  
+                                              <div class="custom-color-selector">
+                                                <input class="checkbox-animated check-it visually-hidden" type="checkbox" id="color-<%= color._id %>" data-hex="<%= color.hex %>">
+                                                <label style="background-color: <%= color.hex %>" class="color-circle shadow mb-3" for="color-<%= color._id %>">
+                                                  <i class="fas fa-check"></i>
+                                                </label>
+                                              </div>
+                                              <div class="color-circle-preview make_hidden" style="background-color: <%= color.hex %>;"></div>
                                             </li>
-                                            <% }); %>
+                                          <% }); %>
                                     </ul>
                                 </div>
                             </div>
                         </div>
+                        
+                        
 
 
-                        <div class="accordion-item category-price">
-                            <h2 class="accordion-header" id="headingFour">
-                              <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour">
-                                Price
-                              </button>
-                            </h2>
-                            <div id="collapseFour" class="accordion-collapse collapse show" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                              <div class="accordion-body">
-                                <div class="range-slider category-list">
-                                  <!-- Simple range slider for price -->
-                                  <!-- ... other HTML ... -->
-<input type="range" class="form-range mx-2" id="priceRange" min="<%= minPrice %>" max="<%= maxPrice %>" step="1" oninput="priceOutput.value = this.value">
-<output id="priceOutput"><%= (minPrice + maxPrice) / 2 %></output>
-<!-- ... other HTML ... -->
+                        
 
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          
 
                         <div class="accordion-item category-rating">
                             <h2 class="accordion-header" id="headingOne">
@@ -97,20 +82,24 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne">
                                 <div class="accordion-body category-scroll">
-                                  <ul class="category-list">
-                                    <% subcategories.forEach(subcategory => { %>
-                                      <li>
-                                        <div class="form-check ps-0 custome-form-check">
-                                          <input class="checkbox_animated check-it" type="checkbox" id="flexCheckDefault<%= subcategory %>">
-                                          <label class="form-check-label" for="flexCheckDefault<%= subcategory %>"><%= subcategory %></label>
-                                          <p class="font-light"></p>
-                                        </div>
-                                      </li>
-                                    <% }); %>
-                                  </ul>
+                                    <ul class="category-list">
+                                        <% subcategories.forEach(subcategory=> { %>
+                                            
+                                            <li>
+                                                <div class="form-check ps-0 custome-form-check">
+                                                    <input class="checkbox_animated check-it" type="checkbox" id="category-<%= subcategory._id %>">
+                                                    <label class="form-check-label" for="category-<%= subcategory._id %>">
+                                                        <%= subcategory.category %>
+                                                    </label>
+                                                    <p class="font-light"></p>
+                                                </div>
+                                            </li>
+                                              
+                                            <% }); %>
+                                    </ul>
                                 </div>
-                              </div>
-                              
+                            </div>
+
                         </div>
 
 
@@ -138,232 +127,49 @@
                     </div>
                     <!-- filter button -->
 
-                    <!-- label and featured section -->
-                    <!-- <div class="col-md-12">
-                        <ul class="short-name">
-                            <li>
-                                <div class="label-tag">
-                                    <span>Shirts</span>
-                                    <button type="button" class="btn-close" aria-label="Close"></button>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="label-tag">
-                                    <span>Kurtas</span>
-                                    <button type="button" class="btn-close" aria-label="Close"></button>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="label-tag">
-                                    <span>Jackets</span>
-                                    <button type="button" class="btn-close" aria-label="Close"></button>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="label-tag">
-                                    <span>Blazers</span>
-                                    <button type="button" class="btn-close" aria-label="Close"></button>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="label-tag">
-                                    <a href="javascript:void(0)"><span>Clear All</span></a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> -->
 
 
                 </div>
                 <!-- label and featured section -->
 
                 <!-- Prodcut setion -->
-                <div class="row g-sm-4 g-3 mt-1 custom-gy-5 product-style-2 ratio_asos product-list-section row-cols-lg-4 row-cols-md-3 row-cols-2">
-                    <% products.forEach(product => { %>
-                      <div>
-                        <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
-                          <!-- Replace the image URL with the actual image data -->
-                          <div class="img-wrapper">
-                            <div class="heart-icon" onclick="toggleHeart(this)" style="z-index: 100;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
-                                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                                </svg>
-                              </div>
-                              <div class="front">
-                                <a href="/product/<%= product.productId %>"" class="bg-size blur-up lazyloaded"
-                                   style="background-image: url(data:image/jpeg;base64,<%= product.images[3].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
-                                </a>
-                              </div>
-                              
-                            <!-- Add similar code for the back image if needed -->
-                          </div>
-                          
-                          <div class="product-details">
-                            
-                            <div class="rating-details">
-                              <!-- Add code to display the product's rating -->
-                            </div>
-                            <h6 class="theme-color"><%= product.brand.name %></h6>
-                            <h3 class="theme-color"><%= product.name %></h3>
-                            <div class="main-price">
-                              <h5 class="font-light theme-color">₹<%= product.price %></h5>
-                              
-                            <button type="button" class="btn m-1 btn-primary btn-sm rounded-3 " style="background-color: var(--theme-color); border: none;" >
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
-                                <circle cx="9" cy="21" r="1"></circle>
-                                <circle cx="20" cy="21" r="1"></circle>
-                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                              </svg><span class="ms-2">Add To Cart</span></button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    <% }); %>
-                  </div>
+                <div id="product-container"
+                    class="row g-sm-4 g-3 mt-1 custom-gy-5 product-style-2 ratio_asos product-list-section row-cols-lg-4 row-cols-md-3 row-cols-2">
                     
-
-                  <!-- <div>
-                    <div class="product-box">
-                        <div class="img-wrapper">
-                            <div class="front">
-                                <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded "
-                                    style="background-image: url(&quot;assets/images/fashion/product/front/2.jpg&quot;); background-size: cover; background-position: center center; background-repeat: no-repeat; display: block;">
-                                    <img src="assets/images/fashion/product/front/2.jpg"
-                                        class="bg-img blur-up lazyload" alt="" style="display: none;">
-                                </a>
-                            </div>
-                            <div class="back">
-                                <a href="product-left-sidebar.html" class="bg-size blur-up lazyloaded "
-                                    style="background-image: url(&quot;assets/images/fashion/product/back/2.jpg&quot;); background-size: cover; background-position: center center; background-repeat: no-repeat; display: block;">
-                                    <img src="assets/images/fashion/product/back/2.jpg"
-                                        class="bg-img blur-up lazyload" alt="" style="display: none;">
-                                </a>
-                            </div>
-                            <div class="cart-wrap">
-                                <ul>
-                                    <li>
-                                        <a href="javascript:void(0)" class="addtocart-btn" data-bs-toggle="modal"
-                                            data-bs-target="#addtocart">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-shopping-bag">
-                                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0)" data-bs-toggle="modal"
-                                            data-bs-target="#quick-view">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-eye">
-                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                                <circle cx="12" cy="12" r="3"></circle>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="compare.html">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-refresh-cw">
-                                                <polyline points="23 4 23 10 17 10"></polyline>
-                                                <polyline points="1 20 1 14 7 14"></polyline>
-                                                <path
-                                                    d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="wishlist.html" class="wishlist">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                class="feather feather-heart">
-                                                <path
-                                                    d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                                </path>
-                                            </svg>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="product-details">
-                            <div class="rating-details">
-                                <span class="font-light grid-content">Jacket</span>
-                                <ul class="rating mt-0">
-                                    <li>
-                                        <i class="fas fa-star theme-color"></i>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-star theme-color"></i>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-star theme-color"></i>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-star theme-color"></i>
-                                    </li>
-                                    <li>
-                                        <i class="fas fa-star"></i>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="main-price">
-                                <a href="product-left-sidebar.html" class="font-default">
-                                    <h5 class="ms-0">Blue Leather Jacket</h5>
-                                </a>
-                                <div class="listing-content">
-                                    <span class="font-light">Jacket</span>
-                                    <p class="font-light">Lorem ipsum, dolor sit amet consectetur adipisicing
-                                        elit. Sit, deserunt? Asperiores aliquam voluptatum culpa aliquid ab
-                                        ducimus eaque illum, quibusdam reiciendis id ad consectetur quis, animi
-                                        qui, minus quidem eveniet! Dolorum magnam numquam, asperiores
-                                        accusantium architecto placeat quam officia, tempore repellendus.</p>
-                                </div>
-                                <h3 class="theme-color">₹60.00</h3>
-                                <button onclick="location.href = 'cart.html';" class="btn listing-content">Add
-                                    To Cart</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-
-                <nav class="page-section">
-                    <ul class="pagination">
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0)" aria-label="Previous">
-                                <span aria-hidden="true">
-                                    <i class="fas fa-chevron-left"></i>
-                                </span>
-                            </a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" href="javascript:void(0)">1</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0)">2</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="javascript:void(0)">3</a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" aria-label="Next">
-                                <span aria-hidden="true">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+                        <!-- content_productView_singleProduct will be rendered by js -->
+                
             </div>
+
+
+
+            <nav class="page-section">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)" aria-label="Previous">
+                            <span aria-hidden="true">
+                                <i class="fas fa-chevron-left"></i>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="javascript:void(0)">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="javascript:void(0)">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" aria-label="Next">
+                            <span aria-hidden="true">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
+    </div>
     </div>
 </section>

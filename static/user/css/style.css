@@ -250,3 +250,48 @@
   text-align: center;
   /* Set width if needed */
 }
+.custom-color-selector {
+  position: relative;
+}
+
+.visually-hidden {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.color-circle {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+}
+
+.color-circle i {
+  display: none;
+}
+
+.checkbox-animated:checked + label i {
+  display: block;
+  position: absolute;
+  color: white;
+  font-size: 18px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Add a subtle white shadow to the checkmark */
+}
+
+.color-circle-preview {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-top: 10px;
+}
+
+.make_hidden{
+  display: none;
+}
