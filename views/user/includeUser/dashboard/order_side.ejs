@@ -1,0 +1,49 @@
+<div class="tab-pane fade table-dashboard dashboard wish-list-section" id="order">
+    <div class="box-head mb-3">
+        <h3>My Order</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="table cart-table">
+            <thead>
+                <tr class="table-head">
+                    <th scope="col">image</th>
+                    <th scope="col">Order Id</th>
+                    <th scope="col">Product Details</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Cancel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.reverse().forEach(function(order) { %>
+                    <% order.items.forEach(function(item) { %>
+                        <tr>
+                            <td>
+                                <a href="product-left-sidebar.html">
+                                    <img src="<%= item.product.images[0] %>"
+                                </a>
+                            </td>
+                            <td>
+                                <p class="mt-0"><%= order._id %></p>
+                            </td>
+                            <td>
+                                <p class="fs-6 m-0"><%= item.product.name %> x<%= item.quantity %></p>
+                            </td>
+                            <td>
+                                <p class="<%= order.orderStatus === 'Shipped' ? 'success-button' : (order.orderStatus === 'Pending' ? 'danger-button' : '') %> btn btn-sm"><%= order.orderStatus %></p>
+                            </td>
+                            <td>
+                                <p class="theme-color fs-6">$<%= order.total.toFixed(2) %></p>
+                            </td>
+                            <td>
+                                <a href="javascript:void(0)">
+                                    <i class="far fa-eye"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>

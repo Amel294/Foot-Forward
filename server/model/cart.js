@@ -21,6 +21,7 @@ const cartSchema = new Schema({
                 ref: 'ProductDB.variants', // Reference to the 'variants' subdocument within 'ProductDB'
                 required: true
             },
+            
             quantity: {
                 type: Number,
                 required: true,
@@ -57,7 +58,11 @@ cartSchema.pre('save', async function (next) {
     this.total = total;
     next();
 });
-
+cartSchema.methods.clearCart = async function () {
+    this.items = []; // Clear the items array
+    this.total = 0;  // Reset the total to 0
+    await this.save(); // Save the updated cart
+  };
 const Cart = mongoose.model('Cart', cartSchema);
 
 module.exports = Cart;

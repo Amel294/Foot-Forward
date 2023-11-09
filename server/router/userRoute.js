@@ -13,6 +13,8 @@ const Category = require('../model/productAttribute/categoryDB');
 const Cart = require("../model/cart")
 const wishlist = require("../model/wishlist")
 const { findOne } = require('../model/counterDB');
+const Address = require("../model/address")
+const Order = require('../model/order'); // Adjust the path to your Order model
 
 // Apply globally
 router.use(checkSession);
@@ -285,6 +287,7 @@ router.get('/cart/total', async (req, res) => {
 });
 
 router.get('/cart', controller.cart)
+router.get('/small-cart' , controller.smallcart)
 router.get('/cart/items-count', async (req, res) => {
   try {
     console.log("Im here");
@@ -424,13 +427,81 @@ router.put('/cart/update-quantity/:itemId', async (req, res) => {
 
 
 
-router.get('/userDashboard', (req, res) => {
-  res.render('user/userDashboard')
-})
+router.get('/userDashboard', async (req, res) => {
+  try {
+    const id = req.session.user.id;
+    const addresses = await Address.find({ userId: req.session.user.id });
+    const user = await userDB.findOne({ _id: id });
+    const orders = await Order.find({ user: id }).populate('items.product');
+
+    // Fetch product images for each product in the orders
+    for (const order of orders) {
+      for (const item of order.items) {
+        const product = await Product.findById(item.product._id);
+        item.product.images = product.images;
+      }
+    }
+
+    // Reverse the orders array to display the latest order first
+
+    // Render the 'userDashboard' EJS template and pass the addresses and orders to it.
+    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders });
+  } catch (error) {
+    console.error("Failed to get addresses and orders for user:", error);
+    res.status(500).render('error', { message: 'Unable to fetch addresses and orders.' });
+  }
+});
+
+
 
 router.post('/wishlist', (req, res) => {
 
 })
 
+router.get('/checkout', async(req, res) => {
+  const id = req.session.user.id
+    const addresses = await Address.find({ userId: req.session.user.id });
+    const user = await userDB.findOne({ _id: id });
+
+    // Render the 'userDashboard' EJS template and pass the addresses to it.
+    res.render('user/checkout', { addresses: addresses,user: user });
+})
+
+router.post('/place-order', async (req, res) => {
+  try {
+    const userId = req.session.user.id; // Assuming you have a session with user information
+
+    // Get the selected address and payment method from the form data
+    const { selectedAddress, paymentMethod } = req.body;
+
+    // Retrieve the user's cart based on the userId
+    const userCart = await Cart.findOne({ user: userId }).populate('items.product');
+
+    if (!userCart || userCart.items.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty or not found' });
+    }
+    // Create a new order using the cart data
+    const order = new Order({
+      user: userId,
+      items: userCart.items,
+      total: userCart.total,
+      paymentMethod: paymentMethod,
+      shippingAddress: selectedAddress,
+    });
+
+    // Save the order to the database
+    await order.save();
+
+    // Clear the user's cart after placing the order (you may have a method for this in your Cart model)
+    await userCart.clearCart();
+
+    // Send a response indicating the order was successfully placed
+    return res.status(201).json({ message: 'Order placed successfully' });
+  } catch (error) {
+    // Handle any errors that occur during the process
+    console.error('Error placing order:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 module.exports = router;

@@ -1,0 +1,79 @@
+<div class="tab-pane  dashboard" id="save">
+  <div class="box-head">
+    <h3>Save Address</h3>
+    <button class="btn btn-solid-default btn-sm fw-bold ms-auto" data-bs-toggle="modal" data-bs-target="#addAddress"
+      id="addNewAddressButton"><i class="fas fa-plus"></i>
+      Add New Address</button>
+  </div>
+  <div class="save-details-box">
+    <div class="row g-3">
+      <% if (addresses.length > 0) { %>
+        <% addresses.forEach(function(address) { %>
+          <div class="col-xl-4 col-md-6">
+            <div class="save-details">
+              <div class="save-name">
+                <h5><%= address.fullName %></h5>
+                <div class="save-position">
+                  <h6>Home</h6> <!-- This can be dynamic as well if you have it in your model -->
+                </div>
+              </div>
+      
+              <div class="save-address">
+                <p class="font-light"><%= address.address.street %></p>
+                <p class="font-light"><%= address.address.city %>, <%= address.address.state %></p>
+                <p class="font-light"><%= address.address.zipCode %></p>
+              </div>
+      
+              <div class="mobile">
+                <p class="font-light mobile">Mobile No. <%= address.mobile %></p>
+              </div>
+      
+              <div class="button">
+                <!-- You can also pass the address ID to the edit and remove links if needed -->
+                <a href="javascript:void(0)" class="btn btn-sm">Edit</a>
+                <a href="javascript:void(0)" class="btn btn-sm">Remove</a>
+              </div>
+            </div>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No addresses found.</p>
+      <% } %>
+      
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+
+<div class="modal" id="add_new_address" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Add Address</h3>
+      <button id="closeModal" class="close-button">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-outline mb-4">
+        <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" placeholder="Full name">
+      </div>
+      <div class="form-outline mb-4">
+        <input type="text" id="street" name="street" class="form-control form-control-lg" placeholder="Street">
+      </div>
+      <div class="form-outline mb-4">
+        <input type="text" id="city" name="city" class="form-control form-control-lg" placeholder="City">
+      </div>
+      <div class="form-outline mb-4">
+        <input type="text" id="state" name="state" class="form-control form-control-lg" placeholder="State">
+      </div>
+      <div class="form-outline mb-4">
+        <input type="text" id="zipCode" name="zipCode" class="form-control form-control-lg" placeholder="Zip Code">
+      </div>
+      <div class="form-outline mb-4">
+        <input type="text" id="mobile" name="mobile" class="form-control form-control-lg" placeholder="Mobile">
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="saveAddress" class="btn btn-success">Save Address</button>
+      </div>
+    </div>
+  </div>
+</div>

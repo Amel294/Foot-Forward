@@ -101,6 +101,7 @@ app.use('/admin',checkAdminSession, addProduct)
 // app.use('/admin', require('./server/router/adminRouter'))
 app.use('/attributes', require('./server/router/attributeRouter'))
 app.use('/', require('./server/router/userRoute'))
+app.use('/user',require('./server/router/userDashboard'))
 
 
 

@@ -1,0 +1,128 @@
+<!-- tap to top Section Start -->
+
+<!-- tap to top Section End -->
+
+<div class="bg-overlay"></div>
+
+<!-- latest jquery-->
+
+<!-- Bootstrap js-->
+<script src="/static/user/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- feather icon js-->
+<script src="/static/user/js/feather/feather.min.js"></script>
+
+<!-- lazyload js-->
+<script src="/static/user/js/lazysizes.min.js"></script>
+
+<!-- Slick js-->
+<script src="/static/user/js/slick/slick.js"></script>
+<script src="/static/user/js/slick/slick-animation.min.js"></script>
+<script src="/static/user/js/slick/custom_slick.js"></script>
+
+<!-- newsletter js -->
+<script src="/static/user/js/newsletter.js"></script>
+
+<!-- add to cart modal resize -->
+<script src="/static/user/js/cart_modal_resize.js"></script>
+
+<!-- Add To Home js -->
+<script src="/static/user/js/pwa.js"></script>
+
+<!-- add to cart modal resize -->
+<script src="/static/user/js/cart_modal_resize.js"></script>
+
+<!-- feather icon js-->
+<!-- <script src="/static/user/js/timer1.js"></script> -->
+
+<!-- notify js -->
+<script src="/static/user/js/bootstrap/bootstrap-notify.min.js"></script>
+
+<!-- script js -->
+<script src="/static/user/js/theme-setting.js"></script>
+<script src="/static/user/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src=/static/user/js/custom/userValidation.js></script>
+<!-- Include Elevate Zoom -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/elevatezoom/3.0.8/jquery.elevatezoom.min.js"></script>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="/static/user/js/custom/dashboard_address.js"></script>
+<script>
+  function toggleHeart(element) {
+    element.classList.toggle('active');
+  }
+
+</script>
+<!-- Add your Slick carousel initialization script at the bottom of your page -->
+<script>
+  $(document).ready(function () {
+    // Main slider
+    $('.slick-slider-main').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      arrows: true,
+      fade: true,
+      asNavFor: '.slick-slider-nav'
+    });
+
+    // Navigation slider
+    $('.slick-slider-nav').slick({
+      slidesToShow: 3,
+      slidesToScroll: 1,
+      asNavFor: '.slick-slider-main',
+      dots: true,
+      centerMode: true,
+      focusOnSelect: true
+    });
+  });
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const logoutLink = document.getElementById("logout_main_nav");
+
+    logoutLink.addEventListener("click", function (event) {
+      event.preventDefault();
+
+      // Send a POST request to /logout using fetch
+      fetch("/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // You can include any data you want to send with the request
+        // For example, you might want to include a CSRF token if your server requires it
+        body: JSON.stringify({}),
+      })
+        .then((response) => {
+          if (response.status === 200) {
+            // Successful logout, you can handle the redirection here if needed
+            window.location.href = "/products"; // Redirect to the homepage
+          } else {
+            // Handle other response statuses (e.g., error)
+            console.error("Logout failed");
+          }
+        })
+        .catch((error) => {
+          console.error("Error occurred during logout:", error);
+        });
+    });
+  });
+
+</script>
+
+
+
+
+
+  
+
+
+
+</body>
+
+</html>

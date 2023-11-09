@@ -1,0 +1,120 @@
+<section class="section-b-space">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-8">
+        <h3 class="mb-3">Billing address</h3>
+        <div class="tab-pane dashboard" id="save">
+          <div class="box-head">
+            <h3>Save Address</h3>
+            <button class="btn btn-solid-default btn-sm fw-bold ms-auto" data-bs-toggle="modal"
+              data-bs-target="#add_new_address" id="addNewAddressButton"><i class="fas fa-plus"></i> Add New Address
+            </button>
+          </div>
+          <div class="save-details-box">
+            <div class="row g-3">
+              <% if (addresses.length > 0) { %>
+                <% addresses.forEach(function(address) { %>
+                  <div class="col-xl-12 col-md-6">
+                    <div class="save-details">
+                      <div class="save-name">
+                        <h5>
+                          <%= address.fullName %>
+                        </h5>
+                        <div class="save-position">
+                          <label>
+                            <input type="radio" name="selectedAddress" value="<%= address.id %>" class="address-radio">
+                            <span>Select Address</span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="save-address">
+                        <p class="font-light">
+                          <%= address.address.street %>
+                        </p>
+                        <p class="font-light">
+                          <%= address.address.city %>, <%= address.address.state %>
+                        </p>
+                        <p class="font-light">
+                          <%= address.address.zipCode %>
+                        </p>
+                      </div>
+
+                      <div class="mobile">
+                        <p class="font-light mobile">Mobile No. <%= address.mobile %></p>
+                      </div>
+
+                      <div class="button">
+                        <a href="javascript:void(0)" class="btn btn-sm">Edit</a>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              <% } else { %>
+                <p>No addresses found.</p>
+              <% } %>
+
+              <div class="choose-payment-method">
+                <h2 class="mb-4">Choose Payment Method</h2>
+                <form action="/place-order" method="POST">
+                  <!-- Payment method selection -->
+                  <label class="h5">
+                    <input type="radio" name="paymentMethod" value="COD" checked> COD
+                  </label>
+                  <label class="h5">
+                    <input type="radio" name="paymentMethod" value="PayOnline"> Pay Online
+                  </label>
+
+                  <!-- Place Order button -->
+                  <button type="submit" id="placeOrderButton" class="btn btn-solid-default btn-sm fw-bold">Place Order</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal -->
+
+        <div class="modal" id="add_new_address" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+          aria-hidden="true">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 class="modal-title">Add Address</h3>
+              <button id="closeModal" class="close-button">×</button>
+            </div>
+            <div class="modal-body">
+              <form action="/add-address" method="POST">
+                <!-- Address form fields -->
+                <div class="form-outline mb-4">
+                  <input type="text" id="fullName" name="fullName" class="form-control form-control-lg" placeholder="Full name" required>
+                </div>
+                <div class="form-outline mb-4">
+                  <input type="text" id="street" name="street" class="form-control form-control-lg" placeholder="Street" required>
+                </div>
+                <div class="form-outline mb-4">
+                  <input type="text" id="city" name="city" class="form-control form-control-lg" placeholder="City" required>
+                </div>
+                <div class="form-outline mb-4">
+                  <input type="text" id="state" name="state" class="form-control form-control-lg" placeholder="State" required>
+                </div>
+                <div class="form-outline mb-4">
+                  <input type="text" id="zipCode" name="zipCode" class="form-control form-control-lg" placeholder="Zip Code" required>
+                </div>
+                <div class="form-outline mb-4">
+                  <input type="text" id="mobile" name="mobile" class="form-control form-control-lg" placeholder="Mobile" required>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" id="saveAddress" class="btn btn-success">Save Address</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="small_cart" class="col-lg-4">
+        <!-- Cart content (unchanged) -->
+      </div>
+    </div>
+  </div>
+</section>
