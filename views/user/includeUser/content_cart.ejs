@@ -9,18 +9,7 @@
                                 <i class="fas fa-arrow-left"></i> Continue Shopping</a>
                         </div>
                     </div>
-                    <div class="col-sm-7 col-5">
-                        <div class="promo-section float-end">
-                            <form class="row g-3">
-                                <div class="col-7">
-                                    <input type="text" class="form-control" id="number" placeholder="Coupon Code">
-                                </div>
-                                <div class="col-5">
-                                    <button class="btn btn-solid-default rounded btn">Apply Coupon</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <div class="col-sm-12 table-responsive mt-4">
@@ -91,9 +80,10 @@
                             <div class="cart-box-details">
                                 <div class="total-details">
                                     <div class="top-details">
-                                        <h6>Total MRP <span id ="cart-total"><%= cart.total %></span></h6>
-                                        <h6>Coupon Discount <span>-₹00.00</span></h6>
-                                        <h6>Convenience Fee <span><del>₹00.00</del></span></h6>
+                                        <h6>Products Total <span id ="cart-total">₹<%= cart.total %></span></h6>
+                                        <h6>Free Shipping  <span><del>-₹00.00</del></span></h6>
+                                        <hr>
+                                        <h4>TOTAL<span>₹<%= cart.total %></span></h4>
                                         <!-- <h3 class="mt-4">Cart Totals<span id ="cart-total">₹<%= cart.total %></span></h3> -->
                                     </div>
                                     <div class="bottom-details">

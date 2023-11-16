@@ -1,0 +1,76 @@
+<!-- tap to top Section Start -->
+
+<!-- tap to top Section End -->
+
+<div class="bg-overlay"></div>
+
+<!-- latest jquery-->
+
+<!-- Bootstrap js-->
+<script src="/static/user/js/bootstrap/bootstrap.bundle.min.js"></script>
+
+<!-- feather icon js-->
+<script src="/static/user/js/feather/feather.min.js"></script>
+
+<!-- lazyload js-->
+<script src="/static/user/js/lazysizes.min.js"></script>
+
+<!-- Slick js-->
+<script src="/static/user/js/slick/slick.js"></script>
+<script src="/static/user/js/slick/slick-animation.min.js"></script>
+<script src="/static/user/js/slick/custom_slick.js"></script>
+
+<!-- newsletter js -->
+<script src="/static/user/js/newsletter.js"></script>
+
+<!-- add to cart modal resize -->
+<script src="/static/user/js/cart_modal_resize.js"></script>
+
+<!-- Add To Home js -->
+<script src="/static/user/js/pwa.js"></script>
+
+<!-- add to cart modal resize -->
+<script src="/static/user/js/cart_modal_resize.js"></script>
+
+<!-- feather icon js-->
+<!-- <script src="/static/user/js/timer1.js"></script> -->
+
+<!-- notify js -->
+<script src="/static/user/js/bootstrap/bootstrap-notify.min.js"></script>
+
+<!-- script js -->
+<script src="/static/user/js/theme-setting.js"></script>
+<script src="/static/user/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src=/static/user/js/custom/userValidation.js></script>
+
+<script>
+    $(document).ready(function () {
+        // Initialize variables
+        var currentBanner = 0;
+        var banners = $(".banner-slide");
+        
+        // Function to show the next banner and hide the current one
+        function showNextBanner() {
+            banners.eq(currentBanner).hide();
+            currentBanner = (currentBanner + 1) % banners.length;
+            banners.eq(currentBanner).show();
+        }
+        
+        // Show the first banner
+        banners.eq(0).show();
+        
+        // Start the banner rotation interval (change every 5 seconds)
+        var interval = setInterval(showNextBanner, 5000);
+        
+        // Stop the interval when the page is unloaded
+        $(window).on("unload", function () {
+            clearInterval(interval);
+        });
+    });
+</script>
+  
+
+</body>
+
+</html>

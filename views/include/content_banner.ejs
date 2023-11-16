@@ -1,0 +1,123 @@
+<div class="nk-content">
+    <div class="container-fluid">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+                <div class="nk-block-head nk-block-head-sm">
+                    <div class="nk-block-between g-3">
+                        <div class="nk-block-head-content">
+                            <h3 class="nk-block-title page-title">Add Banner</h3>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+
+
+            </div>
+            <div class="nk-block">
+                <div class="card">
+                    <div class="card-inner">
+                        <form id="bannerForm" enctype="multipart/form-data" action="/admin/banner" method="post">
+                            <div class="row gy-4">
+                                <!-- Title -->
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="banner_title">Title</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" id="banner_title"
+                                                placeholder="Enter title name" name="title" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Hyperlink -->
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="form-label" for="banner_hyperlink">Hyperlink</label>
+                                        <div class="form-control-wrap">
+                                            <input type="text" class="form-control" id="banner_hyperlink"
+                                                placeholder="Enter Link URL" name="hyperlink" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Active Checkbox -->
+                                <div class="col-md-1">
+                                    <label class="form-label">Active</label>
+                                    <div class="preview-block">
+                                        <div class="custom-control custom-switch checked">
+                                            <input type="checkbox" class="custom-control-input" checked="true" id="banner_active" name="active">
+
+                                            <label class="custom-control-label" for="banner_active"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Image Upload -->
+                                <div class="col-md-3">
+                                    <label class="form-label">Image</label>
+                                    <input type="file" id="imageInput" accept="image/*" name="image" required>
+                                    <img id="imagePreview" style="max-width: 100%; display: none;">
+                                </div>
+                                <!-- Submit Button -->
+                                <div class="col-sm-12 mt-4">
+                                    <ul class="preview-list2">
+                                        <li class="preview-item">
+                                            <button type="submit" class="btn btn-primary"
+                                                id="addBannerBtn">Submit</button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Section to display existing banners -->
+            <div class="nk-block ">
+                <div class="card">
+                    <div class="card-inner">
+                        <h4 class="mb-3">Existing Banners</h4>
+                        <ul class="banner-list ">
+                            <% if (existingBanners.length> 0) { %>
+                                <!-- Loop through and display existing banners with their images -->
+                                <!-- Loop through and display existing banners with their images and delete button -->
+                                <% existingBanners.forEach((banner)=> { %>
+                                    <li class="shadow p-3 mb-5 bg-white rounded">
+                                        <h5>
+                                            <%= banner.title %>
+                                        </h5>
+                                        <p>Hyperlink: <%= banner.hyperlink %>
+                                        </p>
+                                        <p>Active: <%= banner.active ? 'Yes' : 'No' %>
+                                        </p>
+                                        <!-- Image Display -->
+                                        <% if (banner.images && banner.images.length> 0) { %>
+                                            <img src="data:<%= banner.images[0].contentType %>;base64,<%= banner.images[0].data %>"
+                                                alt="Banner Image" style="max-width: 200px;" />
+                                            <% } else { %>
+                                                <p>No image available</p>
+                                                <% } %>
+                                                    <!-- Delete Button -->
+                                                    <form method="POST"
+                                                        action="/admin/banner/delete/<%= banner._id %>">
+                                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                                    </form>
+                                    </li>
+                                    <% }); %>
+
+                                        <% } else { %>
+                                            <p>No banners available</p>
+                                            <% } %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        </div>
+    </div>
+</div>
+</div>

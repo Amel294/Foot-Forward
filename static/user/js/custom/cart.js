@@ -18,6 +18,8 @@
   }
   
   
+
+
   
     // Function to update the quantity in the input field and send an update request
     function updateQuantity(itemId, newQuantity) {
@@ -93,7 +95,16 @@
   }
   
   
-  
+  function enforceMaxValue(input, maxValue) {
+    const value = parseInt(input.value, 10); // Parse the input value as an integer
+
+    // Check if the value exceeds the maximum allowed value
+    if (isNaN(value) || value > maxValue) {
+        // Reset the input value to the maximum allowed value
+        input.value = maxValue;
+    }
+}
+
     
     // Attach event listeners to remove item buttons
     document.querySelectorAll('.remove-item').forEach(button => {

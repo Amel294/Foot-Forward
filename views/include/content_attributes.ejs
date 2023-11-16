@@ -98,34 +98,32 @@
                                     <!-- Modal -->
 
                                     <!-- Category Modal -->
-                                    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="addCategoryModalLabel">Add Category</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label for="categoryType" class="form-label">Main Category</label>
-                                                        <select class="form-control" id="categoryType">
-                                                            <option value="Men">Men</option>
-                                                            <option value="Women">Women</option>
-                                                            <option value="Unisex">Unisex</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="newCategoryName" class="form-label">Category Name</label>
-                                                        <input type="text" class="form-control" id="newCategoryName" placeholder="Enter category name">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" id="addCategoryBtn" class="btn btn-primary">Add Category</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editCategoryModalLabel">Edit Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editCategoryForm">
+                    <div class="mb-3">
+                        <label for="editCategoryName" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="editCategoryName" name="name" required>
+                    </div>
+                    <!-- Add other fields as required -->
+                    <input type="hidden" id="editCategoryId" name="id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="updateCategoryBtn">Update Category</button>
+            </div>
+        </div>
+    </div>
+</div>
+
                                     <!-- Category Modal -->
                                 </div>
                             </div>
@@ -143,7 +141,8 @@
                                             <div class="card-title">
                                                 <h5 class="title">Add Category</h5>
                                             </div>
-                                            <a href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal" class="btn btn-dim btn-primary float-right">
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#addCategoryModal"
+                                                class="btn btn-dim btn-primary float-right">
                                                 <em class="icon ni ni-plus"></em>
                                             </a>
                                         </div>
@@ -161,10 +160,10 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
+
                                                     </div>
                                                 </div>
-                        
+
                                                 <!-- Woman Category -->
                                                 <div class="col-lg-4 mb-2">
                                                     <div class="card card-full card-bordered">
@@ -175,11 +174,11 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
-                                                        
+
+
                                                     </div>
                                                 </div>
-                        
+
                                                 <!-- Unisex Category -->
                                                 <div class="col-lg-4 mb-2">
                                                     <div class="card card-full card-bordered">
@@ -190,8 +189,8 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        
-                                                        
+
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -200,7 +199,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
                 <div class="card card-bordered card-preview mb-3">
@@ -213,13 +212,14 @@
                                             <div class="card-title">
                                                 <h5 class="title">Sizes</h5> <!-- Changed "Colors" to "Sizes" -->
                                             </div>
-                                            <a href="#" id="addSizeTrigger" class="btn btn-dim btn-primary"><em class="icon ni ni-plus"></em></a>
+                                            <a href="#" id="addSizeTrigger" class="btn btn-dim btn-primary"><em
+                                                    class="icon ni ni-plus"></em></a>
 
                                         </div>
                                     </div>
                                     <div class="card-inner">
                                         <div class="row g-2" id="sizeContainer">
-                                           <!-- sizes -->
+                                            <!-- sizes -->
                                         </div>
                                     </div>
                                     <!-- Modal -->
@@ -258,100 +258,123 @@
                                             <div class="card-title">
                                                 <h5 class="title">Colors</h5>
                                             </div>
-                                            <a href="#" id="addColorTrigger" class="btn btn-dim btn-primary"><em class="icon ni ni-plus"></em></a>
+                                            <a href="#" id="addColorTrigger" class="btn btn-dim btn-primary"><em
+                                                    class="icon ni ni-plus"></em></a>
                                         </div>
                                     </div>
                                     <div class="card-inner">
-                                        <div class="row g-2" id="colorContainer" >
-                                            
+                                        <div class="row g-2" id="colorContainer">
+
                                         </div>
                                     </div>
 
 
                                     <!-- Add Color Modal -->
-<div class="modal fade"  id="addColorModal" tabindex="-1" aria-labelledby="addColorModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addColorModalLabel">Add New Color</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="newColorName" class="form-control mb-2" placeholder="Color Name">
-                <input type="text" id="newColorHex" class="form-control mb-2" placeholder="Color HEX (e.g., #FF5733)">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="addColorBtn" class="btn btn-primary">Add Color</button>
-            </div>
-        </div>
-    </div>
-</div>
+                                    <div class="modal fade" id="addColorModal" tabindex="-1"
+                                        aria-labelledby="addColorModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="addColorModalLabel">Add New Color</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="text" id="newColorName" class="form-control mb-2"
+                                                        placeholder="Color Name">
+                                                    <input type="text" id="newColorHex" class="form-control mb-2"
+                                                        placeholder="Color HEX (e.g., #FF5733)">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="button" id="addColorBtn" class="btn btn-primary">Add
+                                                        Color</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <!-- Add Color Modal -->
 
 
                                     <!-- Edit Color Modal -->
-<div class="modal fade" id="editColorModal" tabindex="-1" aria-labelledby="editColorModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editColorModalLabel">Edit Color</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="editColorName" class="form-control mb-2" placeholder="Color Name">
-                <input type="text" id="editColorHex" class="form-control mb-2" placeholder="Color HEX (e.g., #FF5733)">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="updateColorBtn" class="btn btn-primary">Update Color</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Edit Color Modal -->
+                                    <div class="modal fade" id="editColorModal" tabindex="-1"
+                                        aria-labelledby="editColorModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editColorModalLabel">Edit Color</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="text" id="editColorName" class="form-control mb-2"
+                                                        placeholder="Color Name">
+                                                    <input type="text" id="editColorHex" class="form-control mb-2"
+                                                        placeholder="Color HEX (e.g., #FF5733)">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="button" id="updateColorBtn"
+                                                        class="btn btn-primary">Update Color</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Edit Color Modal -->
 
 
 
-<!-- Add Size Modal -->
-<div class="modal fade" id="addSizeModal" tabindex="-1" aria-labelledby="addSizeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addSizeModalLabel">Add New Size</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="newSizeValue" class="form-control mb-2" placeholder="Size Value (e.g., L)">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="submitSizeBtn" class="btn btn-primary">Add Size</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Add Size Modal -->
+                                    <!-- Add Size Modal -->
+                                    <div class="modal fade" id="addSizeModal" tabindex="-1"
+                                        aria-labelledby="addSizeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="addSizeModalLabel">Add New Size</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="text" id="newSizeValue" class="form-control mb-2"
+                                                        placeholder="Size Value (e.g., L)">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="button" id="submitSizeBtn" class="btn btn-primary">Add
+                                                        Size</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Add Size Modal -->
 
-<!-- Edit Size Modal -->
-<div class="modal fade" id="editSizeModal" tabindex="-1" aria-labelledby="editSizeModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editSizeModalLabel">Edit Size</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <input type="text" id="editSizeValue" class="form-control mb-2" placeholder="Size Value (e.g., L)">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" id="updateSizeBtn" class="btn btn-primary">Update Size</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Edit Size Modal -->
+                                    <!-- Edit Size Modal -->
+                                    <div class="modal fade" id="editSizeModal" tabindex="-1"
+                                        aria-labelledby="editSizeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="editSizeModalLabel">Edit Size</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="text" id="editSizeValue" class="form-control mb-2"
+                                                        placeholder="Size Value (e.g., L)">
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Cancel</button>
+                                                    <button type="button" id="updateSizeBtn"
+                                                        class="btn btn-primary">Update Size</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Edit Size Modal -->
 
 
 
@@ -381,6 +404,25 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Alert</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- The alert message will be displayed here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

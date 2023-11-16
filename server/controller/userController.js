@@ -6,6 +6,8 @@ const ProductDB = require('../model/productDB');
 const mongoose = require('mongoose');
 const Color = require('../model/productAttribute/colorDB');
 const Size = require('../model/productAttribute/sizeDB');
+const Banner = require('../model/banner');
+
 // SMTP configuration
 let transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -45,6 +47,25 @@ async function sendOtpEmail(session, isResend = false) {
     throw error;
   }
 }
+
+exports.home = async (req, res) => {
+  try {
+      // Fetch existing banners from the database
+      const existingBanners = await Banner.find({active:true});
+      console.log(existingBanners)
+      const products =await ProductDB.find();
+      // Render the banner page and pass the existing banners
+      res.render('user/home', {  banners: existingBanners ,products :products });
+  } catch (error) {
+      // Handle errors
+      console.error('Error:', error);
+      res.status(500).send('Internal Server Error');
+  }
+}
+
+
+
+
 
 exports.signUp = (req, res) => {
   res.render('user/signUp')

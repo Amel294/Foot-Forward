@@ -38,7 +38,7 @@
 
 /* Add this CSS to your stylesheet */
 .variant-table {
-    width: 50%;
+    width: 100%;
     border-collapse: collapse;
 }
 
@@ -70,5 +70,25 @@
     height: 40px;
     border-radius: 20px;
 }
+.marked-for-deletion {
+    opacity: 0.4;
+    position: relative;
+  }
+  .marked-for-deletion::after {
+    content: "Marked for deletion";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: red;
+    font-size: 20px;
+    z-index: 1;
+  }
 
 
+
+  .panel {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}

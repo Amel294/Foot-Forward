@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 const Admin = require("../../model/adminDB")
 router.get('/login', (req, res) => {
-    res.render('admin_login');
+    if(req.session.admin){
+        res.redirect('dashboard')
+    }else{
+        res.render('admin_login');
+
+    }
 });
 
 

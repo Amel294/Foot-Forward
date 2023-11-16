@@ -1,577 +1,154 @@
 <div class="nk-content ">
-    <div class="container-fluid">
-        <div class="nk-content-inner">
-            <div class="nk-content-body">
-                <div class="nk-block-head nk-block-head-sm">
-                    <div class="nk-block-between">
-                        <div class="nk-block-head-content">
-                            <h3 class="nk-block-title page-title">Orders</h3>
-                        </div>
-                        <div class="nk-block-head-content">
-                            <div class="toggle-wrap nk-block-tools-toggle"><a href="#" class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em class="icon ni ni-more-v"></em></a>
-                                <div class="toggle-expand-content" data-content="pageMenu">
-                                    <ul class="nk-block-tools g-3">
-                                        <li>
-                                            <div class="form-control-wrap">
-                                                <div class="form-icon form-icon-right"><em class="icon ni ni-search"></em></div><input type="text" class="form-control" id="default-04" placeholder="Quick search by id">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="drodown"><a href="#" class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white" data-bs-toggle="dropdown">Status</a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><span>On Hold</span></a></li>
-                                                        <li><a href="#"><span>Delevired</span></a></li>
-                                                        <li><a href="#"><span>Rejected</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li class="nk-block-tools-opt"><a href="#" class="btn btn-icon btn-primary d-md-none"><em class="icon ni ni-plus"></em></a><a href="#" class="btn btn-primary d-none d-md-inline-flex"><em class="icon ni ni-plus"></em><span>Add Order</span></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="nk-block">
-                    <div class="nk-tb-list is-separate is-medium mb-3">
-                        <div class="nk-tb-item nk-tb-head">
-                            <div class="nk-tb-col nk-tb-col-check">
-                                <div class="custom-control custom-control-sm custom-checkbox notext"><input type="checkbox" class="custom-control-input" id="oid"><label class="custom-control-label" for="oid"></label></div>
-                            </div>
-                            <div class="nk-tb-col"><span>Order</span></div>
-                            <div class="nk-tb-col tb-col-md"><span>Date</span></div>
-                            <div class="nk-tb-col"><span class="d-none d-sm-block">Status</span></div>
-                            <div class="nk-tb-col tb-col-sm"><span>Customer</span></div>
-                            <div class="nk-tb-col tb-col-md"><span>Purchased</span></div>
-                            <div class="nk-tb-col"><span>Total</span></div>
-                            <div class="nk-tb-col nk-tb-col-tools">
-                                <ul class="nk-tb-actions gx-1 my-n1">
-                                    <li>
-                                        <div class="drodown"><a href="#" class="dropdown-toggle btn btn-icon btn-trigger me-n1" data-bs-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <ul class="link-list-opt no-bdr">
-                                                    <li><a href="#"><em class="icon ni ni-edit"></em><span>Update
-                                                                Status</span></a></li>
-                                                    <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as
-                                                                Delivered</span></a></li>
-                                                    <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as
-                                                                Paid</span></a></li>
-                                                    <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send
-                                                                Invoice</span></a></li>
-                                                    <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove
-                                                                Orders</span></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95954">
-                                        <label class="custom-control-label" for="oid95954"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95954</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 4, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">On Hold</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Arnold Armstrong</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">3 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 249.75</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95955">
-                                        <label class="custom-control-label" for="oid95955"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95955</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 5, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Delivered</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Bella Swan</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">2 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 150</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95956">
-                                        <label class="custom-control-label" for="oid95956"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95956</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 6, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Shipped</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Charlie Chaplin</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">5 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 400</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95957">
-                                        <label class="custom-control-label" for="oid95957"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95957</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 7, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Processing</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Diana Prince</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">1 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 100</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95958">
-                                        <label class="custom-control-label" for="oid95958"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95958</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 8, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Cancelled</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Edward Cullen</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">4 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 320.5</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95959">
-                                        <label class="custom-control-label" for="oid95959"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95959</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 9, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">On Hold</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Frank Sinatra</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">2 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 180</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95960">
-                                        <label class="custom-control-label" for="oid95960"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95960</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 10, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Delivered</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Grace Kelly</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">6 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 460</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95961">
-                                        <label class="custom-control-label" for="oid95961"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95961</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 11, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Shipped</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Hank Moody</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">3 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 260</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95962">
-                                        <label class="custom-control-label" for="oid95962"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95962</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 12, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Processing</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Irene Adler</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">4 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 300</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                            <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="oid95963">
-                                        <label class="custom-control-label" for="oid95963"></label>
-                                    </div>
-                                </div>
-                                <div class="nk-tb-col"><span class="tb-lead"><a href="#">95963</a></span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub">Jun 13, 2020</span></div>
-                                <div class="nk-tb-col">
-                                    <span class="dot bg-warning d-sm-none"></span>
-                                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Cancelled</span>
-                                </div>
-                                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">Jack Daniels</span></div>
-                                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">1 Items</span></div>
-                                <div class="nk-tb-col"><span class="tb-lead">$ 90</span></div>
-                                
-                                <div class="nk-tb-col nk-tb-col-tools">
-                                    <ul class="nk-tb-actions gx-1">
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="Mark as Delivered" data-bs-original-title="Mark as Delivered">
-                                                <em class="icon ni ni-truck"></em>
-                                            </a>
-                                        </li>
-                                        <li class="nk-tb-action-hidden">
-                                            <a href="#" class="btn btn-icon btn-trigger btn-tooltip" aria-label="View Order" data-bs-original-title="View Order">
-                                                <em class="icon ni ni-eye"></em>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="dropdown me-n1">
-                                                <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
-                                                    <em class="icon ni ni-more-h"></em>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-end">
-                                                    <ul class="link-list-opt no-bdr">
-                                                        <li><a href="#"><em class="icon ni ni-eye"></em><span>Order Details</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-truck"></em><span>Mark as Delivered</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-money"></em><span>Mark as Paid</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-report-profit"></em><span>Send Invoice</span></a></li>
-                                                        <li><a href="#"><em class="icon ni ni-trash"></em><span>Remove Order</span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        
-                        
-                        
-                    </div>
-                    <div class="card">
-                        <div class="card-inner">
-                            <div><ul class="pagination">    <li class="page-item"><a class="page-link" href="#">Prev</a></li>    <li class="page-item"><a class="page-link" href="#">1</a></li>    <li class="page-item"><a class="page-link" href="#">2</a></li>    <li class="page-item"><span class="page-link"><em class="icon ni ni-more-h"></em></span></li>    <li class="page-item"><a class="page-link" href="#">6</a></li>    <li class="page-item"><a class="page-link" href="#">7</a></li>    <li class="page-item"><a class="page-link" href="#">Next</a></li></ul></div>
-
-                        </div>
-                    </div>
-
-                </div>
+  <div class="container-fluid">
+    <div class="nk-content-inner">
+      <div class="nk-content-body">
+        <div class="nk-block-head nk-block-head-sm">
+          <div class="nk-block-between">
+            <div class="nk-block-head-content">
+              <h3 class="nk-block-title page-title">Orders</h3>
             </div>
+            <div class="nk-block-head-content">
+              <div class="toggle-wrap nk-block-tools-toggle"><a href="#"
+                  class="btn btn-icon btn-trigger toggle-expand me-n1" data-target="pageMenu"><em
+                    class="icon ni ni-more-v"></em></a>
+                <div class="toggle-expand-content" data-content="pageMenu">
+                  <ul class="nk-block-tools g-3">
+                    <li>
+                      <div class="form-control-wrap">
+                        <div class="form-icon form-icon-right"><em class="icon ni ni-search"></em></div><input
+                          type="text" class="form-control" id="default-04" placeholder="Quick search by id">
+                      </div>
+                    </li>
+                    <li>
+                      <div class="drodown"><a href="#"
+                          class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white"
+                          data-bs-toggle="dropdown">Status</a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <ul class="link-list-opt no-bdr">
+                            <li><a href="#"><span>On Hold</span></a></li>
+                            <li><a href="#"><span>Delevired</span></a></li>
+                            <li><a href="#"><span>Rejected</span></a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="nk-block-tools-opt"><a href="#" class="btn btn-icon btn-primary d-md-none"><em
+                          class="icon ni ni-plus"></em></a><a href="#"
+                        class="btn btn-primary d-none d-md-inline-flex"><em class="icon ni ni-plus"></em><span>Add
+                          Order</span></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="nk-block">
+          <div class="nk-tb-list is-separate is-medium mb-3">
+            <div class="nk-tb-item nk-tb-head">
+              <div class="nk-tb-col"><span>Order</span></div>
+              <div class="nk-tb-col tb-col-md"><span>Date</span></div>
+              <div class="nk-tb-col"><span class="d-none d-sm-block">Status</span></div>
+              <div class="nk-tb-col tb-col-sm"><span>Customer</span></div>
+              <div class="nk-tb-col tb-col-md"><span>Purchased</span></div>
+              <div class="nk-tb-col"><span>Total</span></div>
+              <div class="nk-tb-col nk-tb-col-tools"><span>Action</span></div>
+            </div>
+
+            <% orders.forEach(order=> { %>
+              <div class="nk-tb-item">
+                <div class="nk-tb-col"><span class="tb-lead"><a href="#">
+                      <%= order._id %>
+                    </a></span></div>
+                <div class="nk-tb-col tb-col-md"><span class="tb-sub">
+                    <%= order.orderDate.toDateString() %>
+                  </span></div>
+                <!-- Display order status -->
+                <div class="nk-tb-col">
+                  <% if (order.orderStatus==='Pending' ) { %>
+                    <span class="dot bg-warning d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Pending</span>
+                    <% } else if (order.orderStatus==='Processing' ) { %>
+                      <span class="dot bg-info d-sm-none"></span>
+                      <span class="badge badge-sm badge-dot has-bg bg-info d-none d-sm-inline-flex">Processing</span>
+                      <% } else if (order.orderStatus==='Shipped' ) { %>
+                        <span class="dot bg-primary d-sm-none"></span>
+                        <span class="badge badge-sm badge-dot has-bg bg-primary d-none d-sm-inline-flex">Shipped</span>
+                        <% } else if (order.orderStatus==='Delivered' ) { %>
+                          <span class="dot bg-success d-sm-none"></span>
+                          <span
+                            class="badge badge-sm badge-dot has-bg bg-success d-none d-sm-inline-flex">Delivered</span>
+                          <% } else if (order.orderStatus==='Cancelled' ) { %>
+                            <span class="dot bg-danger d-sm-none"></span>
+                            <span
+                              class="badge badge-sm badge-dot has-bg bg-danger d-none d-sm-inline-flex">Cancelled</span>
+                            <% } %>
+                </div>
+
+                <div class="nk-tb-col tb-col-sm"><span class="tb-sub">
+                    <%= order.user.fullName %>
+                  </span></div>
+                <div class="nk-tb-col tb-col-md"><span class="tb-sub text-primary">
+                    <%= order.items.length %> Items
+                  </span></div>
+                <div class="nk-tb-col"><span class="tb-lead">$ <%= order.total.toFixed(2) %></span></div>
+                <!-- Display order actions -->
+                <div class="nk-tb-col nk-tb-col-tools">
+                  <ul class="nk-tb-actions gx-1">
+                    <li>
+                      <div class="dropdown me-n1">
+                        <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-bs-toggle="dropdown">
+                          <em class="icon ni ni-more-h"></em>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                          <ul class="link-list-opt no-bdr">
+                            <li>
+                              <% if (order.orderStatus==='Pending' ) { %>
+                                <a href="#" class="mark-delivered-btn" data-order-id="<%= order._id %>">
+                                  <em class="icon ni ni-truck"></em>
+                                  <span>Mark as Delivered</span>
+                                </a>
+                                <% } else if (order.orderStatus==='Delivered' ) { %>
+                                  <a href="#" class="mark-paid-btn" data-order-id="<%= order._id %>">
+                                    <em class="icon ni ni-money"></em>
+                                    <span>Mark as Paid</span>
+                                  </a>
+                                  <% } %>
+                            </li>
+                            <li>
+                              <a href="#" class="remove-order-btn" data-order-id="<%= order._id %>">
+                                <em class="icon ni ni-trash"></em>
+                                <span>Remove Order</span>
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+
+              </div>
+              <% }) %>
+          </div>
+          <div class="card">
+            <div class="card-inner">
+              <div>
+                <ul class="pagination">
+                  <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#">2</a></li>
+                  <li class="page-item"><span class="page-link"><em class="icon ni ni-more-h"></em></span></li>
+                  <li class="page-item"><a class="page-link" href="#">6</a></li>
+                  <li class="page-item"><a class="page-link" href="#">7</a></li>
+                  <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
+  </div>
 </div>

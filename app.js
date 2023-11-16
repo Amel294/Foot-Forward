@@ -9,6 +9,7 @@ const cors = require("cors")
 const multer = require('multer')
 const sharp = require('sharp')
 const session = require('express-session');
+const mongoose = require('mongoose');
 
 
 
@@ -52,19 +53,7 @@ connectDB();
 app.use('/static', express.static('static'));
 // app.use(express.static('static'));
 
-const orders = [
-    { id: '95954', date: 'Jun 4, 2020', status: 'On Hold', name: 'Arnold Armstrong', items: 3, amount: 249.75 },
-    { id: '95955', date: 'Jun 5, 2020', status: 'Delivered', name: 'Bella Swan', items: 2, amount: 150.00 },
-    { id: '95956', date: 'Jun 6, 2020', status: 'Shipped', name: 'Charlie Chaplin', items: 5, amount: 400.00 },
-    { id: '95957', date: 'Jun 7, 2020', status: 'Processing', name: 'Diana Prince', items: 1, amount: 100.00 },
-    { id: '95958', date: 'Jun 8, 2020', status: 'Cancelled', name: 'Edward Cullen', items: 4, amount: 320.50 },
-    { id: '95959', date: 'Jun 9, 2020', status: 'On Hold', name: 'Frank Sinatra', items: 2, amount: 180.00 },
-    { id: '95960', date: 'Jun 10, 2020', status: 'Delivered', name: 'Grace Kelly', items: 6, amount: 460.00 },
-    { id: '95961', date: 'Jun 11, 2020', status: 'Shipped', name: 'Hank Moody', items: 3, amount: 260.00 },
-    { id: '95962', date: 'Jun 12, 2020', status: 'Processing', name: 'Irene Adler', items: 4, amount: 300.00 },
-    { id: '95963', date: 'Jun 13, 2020', status: 'Cancelled', name: 'Jack Daniels', items: 1, amount: 90.00 }
-];
-
+ 
 
 
 
@@ -78,30 +67,42 @@ const customersRoutes = require('./server/router/adminRoute/customers');
 const attributesRoutes = require('./server/router/adminRoute/attributes');
 const addProduct = require('./server/router/adminRoute/addproduct')
 const adminlogin = require('./server/router/adminRoute/login')
+const editProduct = require('./server/router/adminRoute/editProduct')
+const banner = require('./server/router/adminRoute/banner')
 
 function checkAdminSession(req, res, next) {
-    // if (req.session.admin) {
-        next();
-    // } else {
-        // res.redirect('/admin/login');
-    // }
+    if (req.session.admin) {
+    next();
+    } else {
+    res.redirect('/admin/login');
+    }
 }
 // Use route files
 app.use('/admin', adminlogin)
-app.use('/admin',checkAdminSession, dashboardRoutes);
-app.use('/admin',checkAdminSession, ordersRoutes);
-app.use('/admin',checkAdminSession, productsRoutes);
-app.use('/admin',checkAdminSession, addVarientsRoutes);
-app.use('/admin',checkAdminSession, customersRoutes);
-app.use('/admin',checkAdminSession, attributesRoutes);
-app.use('/admin',checkAdminSession, addProduct)
-
+app.use('/admin', checkAdminSession, dashboardRoutes);
+app.use('/admin', checkAdminSession, ordersRoutes);
+app.use('/admin', checkAdminSession, productsRoutes);
+app.use('/admin', checkAdminSession, addVarientsRoutes);
+app.use('/admin', checkAdminSession, customersRoutes);
+app.use('/admin', checkAdminSession, attributesRoutes);
+app.use('/admin', checkAdminSession, addProduct)
+app.use('/admin', checkAdminSession, banner)
+app.use('/admin',editProduct)
 
 // Routes
+
+function checkUserSession(req, res, next) {
+    if (req.session.user) {
+        if(req.session.user.isActive)
+    next();
+    } else {
+    res.redirect('/admin/login');
+    }
+}
 // app.use('/admin', require('./server/router/adminRouter'))
 app.use('/attributes', require('./server/router/attributeRouter'))
 app.use('/', require('./server/router/userRoute'))
-app.use('/user',require('./server/router/userDashboard'))
+app.use('/user', require('./server/router/userDashboard'))
 
 
 

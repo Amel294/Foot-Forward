@@ -22,9 +22,10 @@ router.put('/colors/:id', productAttributeController.updateColor);
 // SIZES
 router.post('/sizes', productAttributeController.addSize);
 router.delete('/sizes/:id', productAttributeController.deleteSize);
+router.put('/sizes/:id',productAttributeController.restoreSize)
 router.get('/sizes', productAttributeController.getAllSizes);
 router.get('/sizes/:id', productAttributeController.getSizeById);
-router.put('/sizes/:id', productAttributeController.updateSize);
+router.put('/sizes/:id/:newValue', productAttributeController.updateSize);
 
 
 // CATEGORIES
@@ -32,7 +33,7 @@ router.put('/sizes/:id', productAttributeController.updateSize);
 router.post('/category', productAttributeController.addSubCategory);
 router.get('/category/:mainCategory',productAttributeController.getSubCategory);
 router.delete('/category/:mainCategory/:subcategoryName', productAttributeController.deleteSubcategory);
-
+router.put('/category/:mainCategory/:subcategoryName/:value',productAttributeController.editSubCategory)
 //add product
 
 

@@ -3,19 +3,30 @@ function populateSizes(sizes) {
 
     sizes.forEach(sizeObj => {
         const sizeValue = sizeObj.value; // Accessing the value property of size object
+        const isDeleted = sizeObj.isDeleted; // Accessing the isDeleted property
+        const backgroundColor = isDeleted ? '#ffbcbc' : ''; // Set background color based on isDeleted
+
         const sizeElement = `
             <div class="col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
-                <div class="card custom-card">
+                <div class="card custom-card" style="background-color: ${backgroundColor};">
                     <div class="card-body d-flex align-items-center justify-content-center">
                         <div class="d-flex align-items-center justify-content-between w-100">
                             <span class="size h6">${sizeValue}</span>
                             <div class="d-flex align-items-center gap-2">
-                                <a href="#" class="btn btn-icon btn-trigger me-n1 editSizeBtn" data-size-id="${sizeObj._id}" data-size-value="${sizeValue}">
-                                    <em class="icon ni ni-edit icon_size"></em>
-                                </a>
-                                <a href="#" class="btn btn-icon btn-trigger me-n1 deleteSizeBtn" data-size-id="${sizeObj._id}">
-                                    <em class="icon ni ni-trash-empty icon_size"></em>
-                                </a>
+                                ${
+                                    isDeleted
+                                        ? `
+                                            <a href="#" class="btn btn-icon btn-trigger me-n1 restoreSizeBtn" data-size-id="${sizeObj._id}" data-size-value="${sizeValue}">
+                                                <em class="icon ni ni-undo"></em>
+                                            </a>`
+                                        : `
+                                            <a href="#" class="btn btn-icon btn-trigger me-n1 editSizeBtn" data-size-id="${sizeObj._id}" data-size-value="${sizeValue}">
+                                                <em class="icon ni ni-edit icon_size"></em>
+                                            </a>
+                                            <a href="#" class="btn btn-icon btn-trigger me-n1 deleteSizeBtn" data-size-id="${sizeObj._id}">
+                                                <em class="icon ni ni-trash-empty icon_size"></em>
+                                            </a>`
+                                }
                             </div>
                         </div>
                     </div>
@@ -26,6 +37,7 @@ function populateSizes(sizes) {
         $container.append(sizeElement);
     });
 }
+
 
 
 
@@ -51,6 +63,7 @@ $(document).ready(function() {
 // Handle the deletion of sizes
 $(document).on('click', '.deleteSizeBtn', function() {
     const sizeId = $(this).data('size-id');
+    
     $.ajax({
         url: `http://localhost:3000/attributes/sizes/${sizeId}`,
         type: 'DELETE',
@@ -61,10 +74,46 @@ $(document).on('click', '.deleteSizeBtn', function() {
             fetchSizes();
         },
         error: function(error) {
-            console.error('Error deleting size:', error);
+            if (error.status === 400) {
+
+                // Display the alert message in the Bootstrap modal
+                const errorMessage = error.responseJSON.message;
+                $(document).ready(function() {
+                    // Your Bootstrap modal code here
+                
+                $('#alertModal .modal-body').text(errorMessage);
+                $('#alertModal').modal('show');
+                });
+            } else {
+                console.error('Error deleting size:', error);
+            }
         }
     });
 });
+
+
+
+// New function to handle size restoration
+$(document).on('click', '.restoreSizeBtn', function() {
+    const sizeId = $(this).data('size-id');
+
+    $.ajax({
+        url: `http://localhost:3000/attributes/sizes/${sizeId}`, // Update the URL for the restore action
+        type: 'PUT', // Use PUT request to update the isDeleted property
+        dataType: 'json',
+        success: function(response) {
+            console.log('Size restored:', response);
+            // Refresh the sizes list in the UI
+            fetchSizes();
+        },
+        error: function(error) {
+            console.error('Error restoring size:', error);
+        }
+    });
+});
+
+
+
 
 function fetchSizes() {
     $.ajax({
@@ -136,7 +185,7 @@ $('#updateSizeBtn').click(function() {
     console.log("Sending updated size value:", updatedSizeValue);
     
     $.ajax({
-        url: `http://localhost:3000/attributes/sizes/${sizeId}`,
+        url: `http://localhost:3000/attributes/sizes/${sizeId}/${updatedSizeValue}`,
         type: 'PUT',
         data: {
             size: updatedSizeValue

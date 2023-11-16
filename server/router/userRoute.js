@@ -41,9 +41,11 @@ function signedin(req, res, next) {
   next(); // Continue to the next middleware or route handler
 }
 
+//home
+router.get('/', controller.home);
 
 //signup
-router.get('/', controller.signUp);
+
 router.get('/signup', signedin, controller.signUp);
 router.get('/signin', signedin, controller.signIn);
 router.get('/emailOtp', controller.otpPage)
@@ -496,12 +498,19 @@ router.post('/place-order', async (req, res) => {
     await userCart.clearCart();
 
     // Send a response indicating the order was successfully placed
-    return res.status(201).json({ message: 'Order placed successfully' });
+    res.redirect('/orderSuccess')
   } catch (error) {
     // Handle any errors that occur during the process
     console.error('Error placing order:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+router.get('/orderSuccess' , async (req,res)=>{
+  const userId = req.session.user.id; 
+  const order = await Order.findOne({ user: userId }).sort({ orderDate: -1 });
+  console.log(order)
+  res.render('user/orderSuccess',{order : or})
+})
 
 module.exports = router;

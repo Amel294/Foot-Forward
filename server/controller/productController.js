@@ -2,6 +2,8 @@ const Product = require('../model/productDB');
 const multer = require('multer');
 const storage = multer.memoryStorage(); // Store files in memory as Buffers
 const upload = multer({ storage: storage })
+const brand = require('../model/productAttribute/brandDB')
+const subcategories = require('../model/productAttribute/categoryDB')
 
 // Handle API request to get the last added product's ID
 exports.getLastProductIDAdded = async (req, res) => {
@@ -100,3 +102,71 @@ exports.addProductWithVariants = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+
+
+
+// Handle the editing of a product with variants and images
+exports.editProductWithVariants = async (req, res) => {
+    // Fetch product by ID and update
+    const productId = req.params.productId;
+    try {
+      const product = await Product.findOne({ productId: productId });
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      // Update product details
+      product.name = req.body.name || product.name;
+      product.price = req.body.price || product.price;
+      product.trending = req.body.trending === "on" ? true : false;
+  
+      // Save the updated product
+      const updatedProduct = await product.save();
+      res.status(200).json({ success: true, message: 'Product updated successfully', product: updatedProduct });
+    } catch (error) {
+      console.error('Error in editProductWithVariants:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  };
+
+
+
+  exports.getProductData = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+        const product = await Product.findOne({ productId: productId })
+                                       .populate('brand')
+                                       .populate('subcategory');
+
+        if (!product) {
+            return res.status(404).send('Product not found');
+        }
+
+        // Fetch all brands and subcategories
+        const allBrands = await brand.find({});
+        const allSubcategories = await subcategories.find({});
+        product.images = product.images.map(image => {
+            return {
+                ...image,
+                base64Data: `data:${image.contentType};base64,${image.data.toString('base64')}`
+            };
+        });
+        
+        // Render the page with product data, all brands, and all subcategories
+        res.render('editProducts', {
+            product: product,
+            allBrands: allBrands,
+            allSubcategories: allSubcategories,
+            activeRoute: 'dashboard'
+        });
+    } catch (error) {
+        console.error('Error in fetching product:', error);
+        res.status(500).send('Server Error');
+    }
+};
+
+
+
+
+

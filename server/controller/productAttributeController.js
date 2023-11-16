@@ -2,7 +2,9 @@ const Brand = require('../model/productAttribute/brandDB');
 const Color = require('../model/productAttribute/colorDB');
 const Size = require('../model/productAttribute/sizeDB');
 const Category = require('../model/productAttribute/categoryDB');
-
+const Product  = require('../model/productDB')
+const mongoose = require('mongoose')
+const ObjectId = mongoose.Types.ObjectId; // Use mongoose.Types.ObjectId
 
 
 
@@ -159,8 +161,28 @@ exports.getSizeById = async (req, res) => {
 // Delete a size
 exports.deleteSize = async (req, res) => {
     try {
-        const size = await Size.findByIdAndRemove(req.params.id);
-        if (!size) return res.status(404).json({ message: 'Size not found' });
+        // Check if the size is associated with any products
+        const isSizeUsedInProducts = await Product.exists({ 'variants.size': req.params.id });
+
+        if (isSizeUsedInProducts) {
+            const associatedProducts = await Product.find({ 'variants.size': req.params.id }, 'productId');
+            const productIds = associatedProducts.map(product => product.productId);
+            console.log(`Can't delete size associated with products: ${productIds.join(', ')}`);
+            return res.status(400).json({
+                message: `Can't delete size associated with products: ${productIds.join(', ')}`
+            });
+        }
+
+        // If no associated products, proceed with deleting the size
+        const size = await Size.findByIdAndUpdate(
+            req.params.id,
+            { $set: { isDeleted: true } },
+        );
+
+        if (!size) {
+            return res.status(404).json({ message: 'Size not found' });
+        }
+
         res.status(204).send();
     } catch (err) {
         res.status(500).json({ message: err.message });
@@ -168,16 +190,39 @@ exports.deleteSize = async (req, res) => {
 };
 
 
+
+
+exports.restoreSize = async (req, res) => {
+    try {
+        const size = await Size.findByIdAndUpdate(
+            req.params.id,
+            { $set: { isDeleted: false } },
+            { new: true }
+        );
+
+        if (!size) return res.status(404).json({ message: 'Size not found' });
+
+        res.status(204).send();
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+};
+
+
+
 // Edit an existing size
 exports.updateSize = async (req, res) => {
   try {
       const size = await Size.findById(req.params.id);
+      const newValue  =  req.params.newValue;
+      console.log(newValue)
       if (!size) return res.status(404).json({ message: 'Size not found' });
+      await Size.findByIdAndUpdate(
+        req.params.id,
+        { $set: { value: newValue } },
+    );
 
-      size.value = Number(req.body.size); // Ensure the value is a number
-      await size.save();
-
-      res.status(200).json(size);
+      res.status(200).json(newValue);
   } catch (err) {
       res.status(400).json({ message: err.message });
   }

@@ -4199,7 +4199,7 @@ header .main-navbar {
         position: relative;
         margin-top: 10px; } }
     .banner-poster .slider-bg .bg-text span {
-      font-size: calc(42px + (240 - 42) * ((100vw - 320px) / (1920 - 320)));
+      font-size: calc(42px + (240 - 42) * ((50vw - 320px) / (1920 - 320)));
       font-family: "Montserrat", sans-serif;
       font-weight: 900;
       color: #212529; }

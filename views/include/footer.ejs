@@ -17,8 +17,54 @@
 <!-- <script src="/static/assets/js/demo-settingse5ca.js?ver=3.2.3"></script> -->
 <!-- <script src="/static/assets/js/charts/chart-ecommercee5ca.js?ver=3.2.3"></script> -->
 <!-- JavaScript for Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src = /static/assets/js/orders.js></script>
+<script src = /static/assets/js/products.js></script>
+<script>$("#banner_active").prop("checked", true);
+</script>
 
+
+<script>
+  // Function to handle marking an order as delivered
+  $('.mark-delivered-btn').on('click', function (e) {
+    e.preventDefault();
+    const orderId = $(this).data('order-id');
+
+    $.post(`/admin/orders/mark-delivered/${orderId}`, function (data) {
+        // Handle success (e.g., update UI, show success message)
+        console.log('Order marked as delivered:', data);
+
+        // Reload the page
+        location.reload();
+    }).fail(function (error) {
+        // Handle error (e.g., show error message)
+        console.error('Error marking order as delivered:', error);
+    });
+});
+
+
+  // Function to handle removing an order
+  $('.remove-order-btn').on('click', function (e) {
+    e.preventDefault();
+    const orderId = $(this).data('order-id');
+
+    $.ajax({
+      url: `/admin/orders/remove/${orderId}`,
+      type: 'DELETE',
+      success: function (data) {
+        // Handle success (e.g., update UI, show success message)
+        console.log('Order removed:', data);
+        location.reload();
+
+      },
+      error: function (error) {
+        // Handle error (e.g., show error message)
+        console.error('Error removing order:', error);
+      },
+    });
+  });
+</script>
 
 
 
