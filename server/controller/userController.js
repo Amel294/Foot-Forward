@@ -7,6 +7,10 @@ const mongoose = require('mongoose');
 const Color = require('../model/productAttribute/colorDB');
 const Size = require('../model/productAttribute/sizeDB');
 const Banner = require('../model/banner');
+const Address = require('../model/address')
+const Order = require('../model/order');
+const Wishlist = require('../model/wishlist');
+const util = require('util');
 
 // SMTP configuration
 let transporter = nodemailer.createTransport({
@@ -271,27 +275,7 @@ exports.logout = async (req, res) => {
 
 
 
-exports.cart = async (req, res) => {
-  try {
-    // Fetch the cart based on user session ID
-    const cart = await Cart.findOne({ user: req.session.user.id });
-    if (!cart) {
-      return res.status(404).send('Cart not found.');
-    }
 
-    // Fetch each product and its variants
-    for (let item of cart.items) {
-      item.product = await ProductDB.findById(item.product);
-      // Assuming 'variants' is an array in ProductDB, find the variant manually
-      item.variant = item.product.variants.find(v => v._id.toString() === item.variant.toString());
-    }
-    console.log(cart)
-    res.render('user/cart', { cart });
-  } catch (error) {
-    console.error('Error fetching the cart:', error);
-    res.status(500).send('Error fetching the cart');
-  }
-};
 
 
 exports.smallcart = async (req, res) => {
@@ -366,7 +350,27 @@ exports.smallcart = async (req, res) => {
 
 
 
-
+exports.userDashboard = async (req, res) => {
+  try {
+    const id = req.session.user.id;
+    const addresses = await Address.find({ userId: req.session.user.id });
+    const user = await User.findOne({ _id: id });
+    const orders = await Order.find({ user: id }).populate('items.product');
+    const wishlist = await Wishlist.find({user: id}).populate('products')
+    // Fetch product images for each product in the orders
+    for (const order of orders) {
+      for (const item of order.items) {
+        const product = await ProductDB.findById(item.product._id);
+        item.product.images = product.images;
+      }
+    }
+    console.log(orders)
+    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders,wishlist : wishlist });
+  } catch (error) {
+    console.error("Failed to get addresses and orders for user:", error);
+    res.status(500).render('error', { message: 'Unable to fetch addresses and orders.' });
+  }
+}
 
 
 

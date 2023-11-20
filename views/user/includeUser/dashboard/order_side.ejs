@@ -20,7 +20,8 @@
                         <tr>
                             <td>
                                 <a href="product-left-sidebar.html">
-                                    <img src="<%= item.product.images[0] %>"
+                                    <img src="data:image/jpeg;base64,<%= item.product.images[0].data.toString('base64') %>">
+                                    <!-- <img src="<%= item.product.images[0] %>" -->
                                 </a>
                             </td>
                             <td>
@@ -33,12 +34,10 @@
                                 <p class="<%= order.orderStatus === 'Shipped' ? 'success-button' : (order.orderStatus === 'Pending' ? 'danger-button' : '') %> btn btn-sm"><%= order.orderStatus %></p>
                             </td>
                             <td>
-                                <p class="theme-color fs-6">$<%= order.total.toFixed(2) %></p>
+                                <p class="theme-color fs-6">₹<%= item.itemTotal %></p>
                             </td>
                             <td>
-                                <a href="javascript:void(0)">
-                                    <i class="far fa-eye"></i>
-                                </a>
+                                <a href="#" class="btn btn-solid-default btn-sm fw-bold remove-from-wishlist" data-order-id="<%= order._id %>">Cancel</a>
                             </td>
                         </tr>
                     <% }); %>

@@ -51,27 +51,18 @@
     background-color: #e0e0e0; /* Slightly darker on hover for visual feedback */
   }
 
-  .heart-icon {
-    position: absolute;
-    top: 10px; /* Adjust as needed */
-    right: 10px; /* Adjust as needed */
-    cursor: pointer;
-  }
-  
-  .heart-icon svg {
-    stroke: #ff0000; /* Red stroke */
-    fill: transparent; /* No fill initially */
-    transition: fill 0.2s ease;
-  }
-  
-  .heart-icon.active svg {
-    fill: #ff0000; /* Red fill for the active state */
-  }
-  .color-list-fix{
-    display: flex;
-    justify-content: space-between;
-  }
-  
+ 
+/* Styles for the red solid heart */
+.add-to-wishlist-button.added-to-wishlist .heart {
+  fill: red;
+}
+
+/* Styles for the red hollow heart */
+.add-to-wishlist-button .heart {
+  fill: transparent;
+  stroke: red;
+  stroke-width: 2;
+}
 
 
 

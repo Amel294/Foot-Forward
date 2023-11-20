@@ -116,7 +116,32 @@
 
 
 
-
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.remove-from-wishlist').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const productId = this.dataset.productId;
+        const productRow = this.closest('tr');
+  
+        fetch(`/wishlist/remove/${productId}`, { method: 'DELETE' })
+          .then(response => response.json())
+          .then(data => {
+            if (data.error) {
+              console.error(data.error);
+            } else {
+              // Remove the product row from the table
+              productRow.remove();
+              console.log(data.message);
+            }
+          })
+          .catch(error => console.error('Error:', error));
+      });
+    });
+  });
+  </script>
+  
+  
   
 
 

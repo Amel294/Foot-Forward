@@ -91,19 +91,12 @@ app.use('/admin',editProduct)
 
 // Routes
 
-function checkUserSession(req, res, next) {
-    if (req.session.user) {
-        if(req.session.user.isActive)
-    next();
-    } else {
-    res.redirect('/admin/login');
-    }
-}
+
+
 // app.use('/admin', require('./server/router/adminRouter'))
 app.use('/attributes', require('./server/router/attributeRouter'))
 app.use('/', require('./server/router/userRoute'))
 app.use('/user', require('./server/router/userDashboard'))
-
 
 
 

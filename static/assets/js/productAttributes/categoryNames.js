@@ -65,7 +65,7 @@ function fetchAndPopulateSubcategories(mainCategory) {
 
           // Clear any previous subcategories
           $container.find('.card-inner-md').remove();
-
+          
           // Append each subcategory to the container
           subcategories.forEach(subcategory => {
               const subcategoryElement = `
@@ -74,8 +74,14 @@ function fetchAndPopulateSubcategories(mainCategory) {
                           <div class="user-info">
                               <span class="h6">${subcategory.Subcategory}</span>
                           </div>
+                          
                           <div class="user-action">
-                              <a href="#" class="btn btn-icon btn-trigger me-n1">
+                          <!-- Add this button within your category card element -->
+<a href="#" class="btn btn-icon btn-trigger me-n1 editCategoryBtn"  data-category-Id="${subcategory._id}" data-category-name="${subcategory.Subcategory}">
+    <em class="icon ni ni-edit"></em>
+</a>
+
+                              <a href="#" class="btn btn-icon delCat btn-trigger me-n1" data-category-id="${subcategory._id}">
                                   <em class="icon ni ni-trash-empty icon_size"></em>
                               </a>
                           </div>
@@ -96,28 +102,32 @@ function fetchAndPopulateSubcategories(mainCategory) {
 
 
 
-$(document).on('click', '.btn-trigger', function(event) {
+$(document).on('click', '.delCat', function(event) {
   console.log("Delete button clicked");
   event.preventDefault();
 
-  const subcategoryName = $(this).closest('.user-card').find('.h6').text();
-  const mainCategory = $(this).closest('.col-lg-4').find('.title').text();
-  console.log("Main Category:", mainCategory);
+  const subcategoryName = $(this).data('category-id');
   console.log("Subcategory:", subcategoryName);
 
   $.ajax({
       type: 'DELETE',
-      url: `http://localhost:3000/attributes/category/${encodeURIComponent(mainCategory)}/${encodeURIComponent(subcategoryName)}`,
+      url: `http://localhost:3000/attributes/category/${encodeURIComponent(subcategoryName)}`,
       success: function(response) {
           console.log('Subcategory deleted:', response);
 
           // Remove the subcategory element from the DOM
           $(event.target).closest('.card-inner-md').remove();
       },
-      error: function(jqXHR, textStatus, errorThrown) {
-          console.error('Error deleting subcategory:', textStatus, errorThrown);
-          console.error('Server response:', jqXHR.responseText);
-      }
+      error: function(xhr, status, error) {
+        if (xhr.status === 400) {
+            // Server responded with a 400 status, indicating the subcategory is in use
+            alert(xhr.responseJSON.message);
+        } else {
+            // Handle other kinds of errors
+            console.error('An error occurred:', error);
+            alert('An error occurred while deleting the subcategory.');
+        }
+    }
   });
 });
 
@@ -128,3 +138,58 @@ $(document).ready(function() {
       fetchAndPopulateSubcategories(mainCategory);
   });
 });
+
+
+
+// Handle the click event for the Edit Category button
+$(document).on('click', '.editCategoryBtn', function(e) {
+    e.preventDefault();
+
+    const categoryId = $(this).data('category-id');
+    const categoryName = $(this).data('category-name');
+    console.log(`Edit Category data ${categoryId} ${categoryName}`);
+
+    // Populate the edit category modal with the current category name
+    $('#editCategoryName').val(categoryName);
+
+    // Store the category ID for the update button
+    $('#updateCategoryBtn').data('category-id', categoryId);
+
+    // Show the edit category modal
+    $('#editCategoryModal').modal('show');
+});
+
+// Handle the click event for the Update Category button
+$('#updateCategoryBtn').click(function() {
+    const categoryId = $(this).data('category-id');
+    const updatedCategoryName = $('#editCategoryName').val();
+    console.log(`From Update category button ${categoryId} ${updatedCategoryName}`);
+
+    // AJAX request to update the category name
+    $.ajax({
+        url: `http://localhost:3000/attributes/category/${categoryId}/${updatedCategoryName}`,
+        type: 'PUT',
+        data: {
+            name: updatedCategoryName
+        },
+        success: function(updatedCategory) {
+            console.log('Category updated:', updatedCategory);
+            $('#editCategoryModal').modal('hide'); // Hide the modal
+
+            // Update the category name in the UI without reloading
+            const categoryCard = $(`.user-action .editCategoryBtn[data-category-id="${categoryId}"]`)
+                .closest('.user-card');
+            categoryCard.find('.h6').text(updatedCategoryName);
+        },
+        error: function(xhr, status, error) {
+            if (xhr.status === 400) {
+                // Server responded with a 400 status, indicating a problem
+                alert(xhr.responseJSON.message);
+            } else {
+                // Handle other kinds of errors
+                console.error('An error occurred:', error);
+            }
+        }
+    });
+});
+

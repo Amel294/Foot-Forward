@@ -11,6 +11,8 @@
             </button>
           </div>
           <div class="save-details-box">
+            <form action="/place-order" method="POST">
+
             <div class="row g-3">
               <% if (addresses.length > 0) { %>
                 <% addresses.forEach(function(address) { %>
@@ -22,7 +24,7 @@
                         </h5>
                         <div class="save-position">
                           <label>
-                            <input type="radio" name="selectedAddress" value="<%= address.id %>" class="address-radio">
+                            <input type="radio" name="selectedAddress" value="<%= address._id %>" class="address-radio" checked>
                             <span>Select Address</span>
                           </label>
                         </div>
@@ -56,7 +58,6 @@
 
               <div class="choose-payment-method">
                 <h2 class="mb-4">Choose Payment Method</h2>
-                <form action="/place-order" method="POST">
                   <!-- Payment method selection -->
                   <label class="h5">
                     <input type="radio" name="paymentMethod" value="COD" checked> COD
@@ -67,11 +68,11 @@
 
                   <!-- Place Order button -->
                   <button type="submit" id="placeOrderButton" class="btn btn-solid-default btn-sm fw-bold">Place Order</button>
-                </form>
               </div>
             </div>
           </div>
-        </div>
+        </form>
+      </div>
 
         <!-- Modal -->
 

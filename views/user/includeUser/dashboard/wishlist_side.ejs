@@ -1,6 +1,6 @@
 <div class="tab-pane fade table-dashboard dashboard wish-list-section active show" id="wishlist">
     <div class="box-head mb-3">
-        <h3>My Wishlish</h3>
+        <h3>My Wishlist</h3>
     </div>
     <div class="table-responsive">
         <table class="table cart-table">
@@ -13,121 +13,35 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <a href="product-left-sidebar.html">
-                            <img src="assets/images/fashion/product/front/1.jpg"
-                                class="blur-up lazyloaded" alt="">
-                        </a>
-                    </td>
+                <% wishlist.forEach(wish => { %>
+                    <% wish.products.forEach(product => { %>
+                        <tr>
+                            <td>
+                                <a href="/product/<%= product._id %>">
+                                    <% if (product.images && product.images.length > 0) { %>
+                                        <img src="data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>"
+                                             class="blur-up lazyloaded" alt="<%= product.name %>">
+                                    <% } else { %>
+                                        <img src="path/to/default/image.jpg" class="blur-up lazyloaded" alt="Default Image">
+                                    <% } %>
+                                </a>
+                            </td>
 
-                    <td>
-                        <p class="fs-6 m-0">Outwear &amp; Coats</p>
-                    </td>
-                    <td>
-                        <p class="theme-color fs-6">$49.54</p>
-                    </td>
-                    <td>
-                        <a href="cart.html" class="btn btn-solid-default btn-sm fw-bold">Remove
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="product-left-sidebar.html">
-                            <img src="assets/images/fashion/product/front/2.jpg"
-                                class="blur-up lazyloaded" alt="">
-                        </a>
-                    </td>
-
-                    <td>
-                        <p class="fs-6 m-0">Outwear &amp; Coats</p>
-                    </td>
-                    <td>
-                        <p class="theme-color fs-6">$49.54</p>
-                    </td>
-                    <td>
-                        <a href="cart.html" class="btn btn-solid-default btn-sm fw-bold">Remove
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="product-left-sidebar.html">
-                            <img src="assets/images/fashion/product/front/3.jpg"
-                                class="blur-up lazyloaded" alt="">
-                        </a>
-                    </td>
-
-                    <td>
-                        <p class="fs-6 m-0">Men's Sweatshirt</p>
-                    </td>
-                    <td>
-                        <p class="theme-color fs-6">$49.54</p>
-                    </td>
-                    <td>
-                        <a href="cart.html" class="btn btn-solid-default btn-sm fw-bold">Remove
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="product-left-sidebar.html">
-                            <img src="assets/images/fashion/product/front/4.jpg"
-                                class="blur-up lazyloaded" alt="">
-                        </a>
-                    </td>
-
-                    <td>
-                        <p class="fs-6 m-0">Men's Hoodie t-shirt</p>
-                    </td>
-                    <td>
-                        <p class="theme-color fs-6">$49.54</p>
-                    </td>
-                    <td>
-                        <a href="cart.html" class="btn btn-solid-default btn-sm fw-bold">Remove
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="product-left-sidebar.html">
-                            <img src="assets/images/fashion/product/front/5.jpg"
-                                class="blur-up lazyloaded" alt="">
-                        </a>
-                    </td>
-
-                    <td>
-                        <p class="fs-6 m-0">Men's Hoodie t-shirt</p>
-                    </td>
-                    <td>
-                        <p class="theme-color fs-6">$49.54</p>
-                    </td>
-                    <td>
-                        <a href="cart.html" class="btn btn-solid-default btn-sm fw-bold">Remove
-                        </a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <a href="product-left-sidebar.html">
-                            <img src="assets/images/fashion/product/front/6.jpg"
-                                class="blur-up lazyloaded" alt="">
-                        </a>
-                    </td>
-
-                    <td>
-                        <p class="fs-6 m-0">Men's Sweatshirt</p>
-                    </td>
-                    <td>
-                        <p class="theme-color fs-6">$49.54</p>
-                    </td>
-                    <td>
-                        <a href="cart.html" class="btn btn-solid-default btn-sm fw-bold">Remove
-                        </a>
-                    </td>
-                </tr>
+                            <td>
+                                <p class="fs-6 m-0"><%= product.name %></p>
+                            </td>
+                            <td>
+                                <p class="theme-color fs-6">₹<%= product.price %></p>
+                            </td>
+                            <td>
+                                <a href="#" class="btn btn-solid-default btn-sm fw-bold remove-from-wishlist" data-product-id="<%= product._id %>">Remove</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                <% }); %>
             </tbody>
         </table>
     </div>
 </div>
+
+

@@ -32,8 +32,8 @@ router.put('/sizes/:id/:newValue', productAttributeController.updateSize);
 
 router.post('/category', productAttributeController.addSubCategory);
 router.get('/category/:mainCategory',productAttributeController.getSubCategory);
-router.delete('/category/:mainCategory/:subcategoryName', productAttributeController.deleteSubcategory);
-router.put('/category/:mainCategory/:subcategoryName/:value',productAttributeController.editSubCategory)
+router.delete('/category/:subcategoryId', productAttributeController.deleteSubcategory);
+router.put('/category/:categoryID/:value',productAttributeController.editSubCategory)
 //add product
 
 

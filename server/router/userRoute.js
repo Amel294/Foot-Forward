@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer'); // Import nodemailer here
+const mongoose = require('mongoose'); // Corrected 'Mongoose' to 'mongoose'
+const { Schema, ObjectId } = mongoose;
+
 const dotenv = require("dotenv");
 const path = require('path'); // Import the 'path' module
 const userDB = require("../model/userDB")
@@ -15,7 +18,12 @@ const wishlist = require("../model/wishlist")
 const { findOne } = require('../model/counterDB');
 const Address = require("../model/address")
 const Order = require('../model/order'); // Adjust the path to your Order model
-
+const userMiddleware = require('../middleware/userSideMiddleware')
+const cartController = require("../controller/cartController")
+const productController = require("../controller/productController")
+const orderController = require("../controller/orderController")
+const addressController = require("../controller/addressController")
+const wishlistController = require("../controller/wishlistController")
 // Apply globally
 router.use(checkSession);
 
@@ -51,165 +59,10 @@ router.get('/signin', signedin, controller.signIn);
 router.get('/emailOtp', controller.otpPage)
 
 
-router.get('/products', async (req, res) => {
-  try {
-    // Fetch the list of brands from the database
-    const brands = await Brand.find();
-    const colors = await Color.find();
-    const subcategories = await Category.aggregate([
-      {
-        $group: {
-          _id: { Subcategory: "$Subcategory", _id: "$_id" }
-        }
-      },
-      {
-        $project: {
-          category: "$_id.Subcategory",
-          _id: "$_id._id"
-        }
-      }
-    ]);
+router.get('/products', productController.getAllProducts)
 
-// Now, subcategories will contain an array of objects with both Subcategory and _id fields
+router.get('/product/:productId', productController.productById);
 
-    // const products = await Product.find().populate('brand').populate('subcategory').exec();
-    const priceRange = await Product.aggregate([
-      {
-        $group: {
-          _id: null,
-          minPrice: { $min: "$price" },
-          maxPrice: { $max: "$price" }
-        }
-      }
-    ]);
-
-    const minPrice = priceRange[0].minPrice;
-    const maxPrice = priceRange[0].maxPrice;
-    // Render your EJS template and pass the brands and colors data
-    // Log the brand of each product
-    subcategories.forEach((subcategorie) => {
-      console.log(subcategorie);
-    });
-    // brands.forEach((brand) => {
-    //   console.log(brand);
-    // });
-    res.render('user/productview', { brands, colors, subcategories,  minPrice, maxPrice });
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).send('Internal Server Error');
-  }
-})
-
-router.get('/product/:productId', async (req, res) => {
-  const productId = req.params.productId;
-
-  try {
-    // Aggregation pipeline to find the product and populate related data
-    const pipeline = [
-      { $match: { productId: parseInt(productId, 10) } }, // Ensure to match the type (string or number)
-      {
-        $lookup: {
-          from: 'brands', // Replace with your actual collection name for brands
-          localField: 'brand',
-          foreignField: '_id',
-          as: 'brand'
-        }
-      },
-      { $unwind: '$brand' }, // Assuming there is only one brand per product
-      {
-        $lookup: {
-          from: 'categories', // Replace with your actual collection name for categories
-          localField: 'subcategory',
-          foreignField: '_id',
-          as: 'subcategory'
-        }
-      },
-      { $unwind: '$subcategory' }, // Assuming there is only one category per product
-      {
-        $lookup: {
-          from: 'colors', // Replace with your actual collection name for colors
-          localField: 'variants.color',
-          foreignField: '_id',
-          as: 'variantColors'
-        }
-      },
-      {
-        $lookup: {
-          from: 'sizes', // Replace with your actual collection name for sizes
-          localField: 'variants.size',
-          foreignField: '_id',
-          as: 'variantSizes'
-        }
-      },
-      {
-        $project: {
-          name: 1,
-          brand: 1,
-          category: '$subcategory', // Use the populated 'subcategory' object
-          price: 1,
-          description: 1,
-          trending: 1,
-          productId: 1,
-          isEnabled: 1,
-          images: 1,
-          variants: {
-            $map: {
-              input: '$variants',
-              as: 'variant',
-              in: {
-                _id: '$$variant._id',
-                color: {
-                  $arrayElemAt: [
-                    '$variantColors',
-                    { $indexOfArray: ['$variantColors._id', '$$variant.color'] }
-                  ]
-                },
-                size: {
-                  $arrayElemAt: [
-                    '$variantSizes',
-                    { $indexOfArray: ['$variantSizes._id', '$$variant.size'] }
-                  ]
-                },
-                stock: '$$variant.stock'
-              }
-            }
-          }
-        }
-      }
-    ];
-
-    // Execute the aggregation pipeline
-    const productData = await Product.aggregate(pipeline);
-    console.log(productData)
-    // Assuming productData is an array with one or more objects
-    // Assuming productData is an array with one or more objects
-    productData.forEach((product) => {
-      console.log("Product Name:", product.name);
-      console.log("Product Brand:", product.brand.name);
-
-      product.variants.forEach((variant, index) => {
-        console.log(`Variant ${ index + 1 }:`);
-        console.log("Color:", variant.color);
-        console.log("Size:", variant.size);
-        console.log("Stock:", variant.stock);
-        console.log("Varient ID", variant._id)
-        console.log("---------------------------");
-      });
-    })
-
-
-    // Check if product data was found
-    if (!productData || productData.length === 0) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-
-    // Send the response with the populated product data
-    res.render('user/productSingle', { productData: productData[0] });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
 
 
 router.get('/products/filter', async (req, res) => {
@@ -221,26 +74,41 @@ router.get('/products/filter', async (req, res) => {
       filters.brand = { $in: brand.split(',') };
     }
     if (color) {
-      // Assuming you have the color IDs, adjust as needed for your schema
       filters['variants.color'] = { $in: color.split(',') };
     }
     if (category) {
       filters.subcategory = { $in: category.split(',') };
     }
-    
 
     // Fetch all necessary data
     const brands = await Brand.find({ isDeleted: false });
     const colors = await Color.find({ isDeleted: false });
     const subcategories = await Category.find({ isDeleted: false }).distinct('Subcategory');
-    const products = await Product.find(filters).populate('brand').populate('subcategory').exec();
-
+    let products = await Product.find(filters).populate('brand').populate('subcategory').exec();
+    let userWishlist ;
+    if(req.session.user){
+      const userId = req.session.user.id;
+       userWishlist = await wishlist.findOne({ user: new mongoose.Types.ObjectId(userId) });
+  
+      // Add isInWishlist field to each product
+      products = products.map(product => {
+        product = product.toObject(); // Convert Mongoose document to plain JavaScript object
+        product.isInWishlist = userWishlist && userWishlist.products.includes(product._id.toString());
+        return product;
+      });
+      console.log(products)
+    }
+    
+    // Retrieve user's wishlist
+   
     // Pass all the necessary data to the EJS template
     res.render('user/includeUser/content_productView_singleProduct', {
       products,
       brands,
       colors,
       subcategories,
+      Wishlist: userWishlist,
+      req
     });
 
   } catch (error) {
@@ -255,7 +123,12 @@ router.get('/products/filter', async (req, res) => {
 
 
 
-router.get('/myOrders', controller.myOrders);
+
+
+
+
+
+router.get('/myOrders', userMiddleware.isUserLogged, controller.myOrders);
 
 
 
@@ -272,155 +145,15 @@ router.post('/verifyOtp', controller.verifyOTP);
 router.post('/postUser', controller.postUser);
 router.post('/authenticate', controller.authenticatePassword);
 router.post('/logout', controller.logout)
-//wishlist and cart
-router.get('/cart/total', async (req, res) => {
-  try {
-    // Assuming `Cart` is your Mongoose model for the cart collection
-    const cart = await Cart.findOne({ user: req.session.user.id }); // Find the cart for the current user
-    if (!cart) {
-      return res.status(404).json({ message: 'Cart not found' });
-    }
-    // Send the total as a response
-    res.json({ total: cart.total });
-  } catch (error) {
-    console.error('Error fetching cart total:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-router.get('/cart', controller.cart)
-router.get('/small-cart' , controller.smallcart)
-router.get('/cart/items-count', async (req, res) => {
-  try {
-    console.log("Im here");
-    // Assuming you have a middleware that sets req.user to the logged-in user's info
-    if (!req.session.user.id) {
-      return res.status(401).json({ message: "User is not authenticated." });
-    }
-    console.log("Im here");
-    // Find the cart for the logged-in user
-    const cart = await Cart.findOne({ user: req.session.user.id });
-    if (!cart) {
-      return res.status(200).json({ count: 0 }); // No cart means 0 items
-    }
-    console.log("Im here");
-    // Calculate the total number of items in the cart
-    const itemCount = cart.items.reduce((total, item) => total + item.quantity, 0);
-
-    // Respond with the count
-    res.status(200).json({ count: itemCount });
-  } catch (error) {
-    console.error('Error getting cart items count:', error);
-    res.status(500).json({ message: "Internal server error." });
-  }
-});
 
 
-
-async function calculateCartTotal(cartId) {
-  const cart = await Cart.findById(cartId).populate('items.product');
-  if (!cart) return;
-
-  let total = 0;
-  for (const item of cart.items) {
-    console.log(`Price: ${ item.product.price }, Quantity: ${ item.quantity }`); // Add this line for debugging
-    total += item.product.price * item.quantity;
-  }
-
-  console.log(`Total: ${ total }`); // Add this line for debugging
-  cart.total = total;
-  await cart.save();
-}
-
-
-// POST route to add items to the cart
-router.post('/add-to-cart', async (req, res) => {
-  try {
-    const userId = req.session.user.id;
-    const { productId, variantId, quantity } = req.body;
-
-    let cart = await Cart.findOne({ user: userId });
-    if (!cart) {
-      cart = new Cart({ user: userId, items: [] });
-    }
-
-    const itemIndex = cart.items.findIndex(item => item.product.toString() === productId && item.variant.toString() === variantId);
-
-    if (itemIndex > -1) {
-      cart.items[itemIndex].quantity += quantity;
-    } else {
-      cart.items.push({ product: productId, variant: variantId, quantity });
-    }
-
-    await cart.save();
-    await calculateCartTotal(cart._id);
-    res.status(200).send('Item added to cart');
-  } catch (error) {
-    console.error('Error adding to cart:', error);
-    res.status(500).send('Error adding to cart');
-  }
-});
-
-// DELETE route to remove an item from the cart
-router.delete('/cart/remove/:itemId', async (req, res) => {
-  try {
-    const userId = req.session.user.id;
-    const itemId = req.params.itemId;
-
-    // Find the cart, remove the item, and return the updated cart
-    const updatedCart = await Cart.findOneAndUpdate(
-      { user: userId },
-      { $pull: { items: { _id: itemId } } },
-      { new: true } // This option returns the updated document
-    );
-
-    // If the cart is not found, send an error response
-    if (!updatedCart) {
-      return res.status(404).json({ success: false, message: 'Cart not found' });
-    }
-
-    // Recalculate the cart total using the cart ID
-    await calculateCartTotal(updatedCart._id);
-
-    // Send back the updated total
-    res.json({ success: true, total: updatedCart.total });
-  } catch (error) {
-    console.error('Error removing item from cart:', error);
-    res.status(500).json({ success: false, message: 'Failed to remove item' });
-  }
-});
-
-
-// PUT route to update the quantity of an item in the cart
-router.put('/cart/update-quantity/:itemId', async (req, res) => {
-  try {
-    const userId = req.session.user.id;
-    const itemId = req.params.itemId;
-    const quantity = Math.min(10, Math.max(1, req.body.quantity));
-
-    // First, find the cart for the user
-    const userCart = await Cart.findOne({ user: userId });
-    if (!userCart) {
-      return res.status(404).json({ success: false, message: 'Cart not found' });
-    }
-
-    // Then, update the quantity of the item in the cart
-    const updateResult = await Cart.updateOne(
-      { 'user': userId, 'items._id': itemId },
-      { '$set': { 'items.$.quantity': quantity } }
-    );
-
-    // If the item quantity was updated, recalculate the cart total
-    if (updateResult.modifiedCount > 0) {
-      await calculateCartTotal(userCart._id); // Pass the cart ID instead of the user ID
-    }
-
-    res.json({ success: true });
-  } catch (error) {
-    console.error('Error updating item quantity:', error);
-    res.status(500).json({ success: false, message: 'Failed to update quantity' });
-  }
-});
+router.get('/cart/total', cartController.cartTotal);
+router.get('/cart', cartController.getCartPage)
+router.get('/small-cart', cartController.smallcart)
+router.get('/cart/items-count', cartController.itemsInCart);
+router.post('/add-to-cart', cartController.addToCart);
+router.delete('/cart/remove/:itemId', cartController.removeFromCart);
+router.put('/cart/update-quantity/:itemId', cartController.updateQuantity);
 
 
 
@@ -429,88 +162,20 @@ router.put('/cart/update-quantity/:itemId', async (req, res) => {
 
 
 
-router.get('/userDashboard', async (req, res) => {
-  try {
-    const id = req.session.user.id;
-    const addresses = await Address.find({ userId: req.session.user.id });
-    const user = await userDB.findOne({ _id: id });
-    const orders = await Order.find({ user: id }).populate('items.product');
+router.get('/userDashboard', controller.userDashboard);
 
-    // Fetch product images for each product in the orders
-    for (const order of orders) {
-      for (const item of order.items) {
-        const product = await Product.findById(item.product._id);
-        item.product.images = product.images;
-      }
-    }
+router.post('/wishlist/add/:productId', wishlistController.addToWishlist);
 
-    // Reverse the orders array to display the latest order first
 
-    // Render the 'userDashboard' EJS template and pass the addresses and orders to it.
-    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders });
-  } catch (error) {
-    console.error("Failed to get addresses and orders for user:", error);
-    res.status(500).render('error', { message: 'Unable to fetch addresses and orders.' });
-  }
-});
+router.delete('/wishlist/remove/:productId', wishlistController.removeFromWishlist);
 
 
 
-router.post('/wishlist', (req, res) => {
 
-})
+router.get('/checkout', addressController.checkout)
 
-router.get('/checkout', async(req, res) => {
-  const id = req.session.user.id
-    const addresses = await Address.find({ userId: req.session.user.id });
-    const user = await userDB.findOne({ _id: id });
+router.post('/place-order', cartController.placeOrder);
 
-    // Render the 'userDashboard' EJS template and pass the addresses to it.
-    res.render('user/checkout', { addresses: addresses,user: user });
-})
-
-router.post('/place-order', async (req, res) => {
-  try {
-    const userId = req.session.user.id; // Assuming you have a session with user information
-
-    // Get the selected address and payment method from the form data
-    const { selectedAddress, paymentMethod } = req.body;
-
-    // Retrieve the user's cart based on the userId
-    const userCart = await Cart.findOne({ user: userId }).populate('items.product');
-
-    if (!userCart || userCart.items.length === 0) {
-      return res.status(400).json({ error: 'Cart is empty or not found' });
-    }
-    // Create a new order using the cart data
-    const order = new Order({
-      user: userId,
-      items: userCart.items,
-      total: userCart.total,
-      paymentMethod: paymentMethod,
-      shippingAddress: selectedAddress,
-    });
-
-    // Save the order to the database
-    await order.save();
-
-    // Clear the user's cart after placing the order (you may have a method for this in your Cart model)
-    await userCart.clearCart();
-
-    // Send a response indicating the order was successfully placed
-    res.redirect('/orderSuccess')
-  } catch (error) {
-    // Handle any errors that occur during the process
-    console.error('Error placing order:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-router.get('/orderSuccess' , async (req,res)=>{
-  const userId = req.session.user.id; 
-  const order = await Order.findOne({ user: userId }).sort({ orderDate: -1 });
-  console.log(order)
-  res.render('user/orderSuccess',{order : or})
-})
+router.get('/orderSuccess', orderController.orderSuccess)
 
 module.exports = router;

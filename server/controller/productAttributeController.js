@@ -72,24 +72,48 @@ exports.getBrandById = async (req, res) => {
 // Add a new color
 exports.addColor = async (req, res) => {
     try {
-        const color = new Color(req.body);
-        await color.save();
-        res.status(201).json(color);
+        const color = req.body.name;
+        const hex = req.body.hex;
+        console.log(color);
+        console.log(hex);
+        const existingColor = await Color.findOne({
+            $or: [{ name: color }, { hexCode: hex }]
+        });
+        if (existingColor) {
+            return res.status(400).json({
+                message: 'Color name or HEX code already exists.'
+            });
+        }
+        const newColor = new Color({ name: color, hex: hex }); // Use name and hexCode properties
+
+        await newColor.save(); // Save the newColor object
+        res.status(201).json(newColor);
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 };
 
+
+
+
 // Delete a color
 exports.deleteColor = async (req, res) => {
     try {
-        const color = await Color.findByIdAndRemove(req.params.id);
-        if (!color) return res.status(404).json({ message: 'Color not found' });
+        const colorId = req.params.id;
+        const color = await Color.findById(colorId);
+
+        if (!color) {
+            return res.status(404).json({ message: 'Color not found' });
+        }
+
+        await Color.findByIdAndUpdate(colorId, { $set: { isDeleted: true } });
+        
         res.status(204).send();
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 
 exports.getAllColors = async (req, res) => {
@@ -242,23 +266,33 @@ exports.updateSize = async (req, res) => {
 // Edit a subcategory within a category
 exports.editSubCategory = async (req, res) => {
     try {
-        const categoryType = req.params.categoryType;
-        const category = await Category.findOne();
+        const categoryID = req.params.categoryID;
+        const newValue = req.params.value;
+        console.log(`Category id is: ${categoryID}`);
 
-        if (!category) return res.status(404).json({ message: 'Category not found' });
-
-        if (!["men", "women", "unisex"].includes(categoryType)) {
-            return res.status(400).json({ message: 'Invalid category type' });
+        // Check if any products are associated with this category
+        const associatedProducts = await Product.find({'subcategory': categoryID}, 'productId');
+        
+        if (associatedProducts.length > 0) {
+            // List the IDs of products associated with this category
+            const productIds = associatedProducts.map(product => product.productId);
+            console.log(`Can't edit category as it is associated with products: ${productIds.join(', ')}`);
+            return res.status(400).json({
+                message: `Can't edit category as it is associated with products: ${productIds.join(', ')}`
+            });
         }
 
-        category[categoryType] = req.body.name;
-        await category.save();
+        const category = await Category.findOne({_id: categoryID});
+        if (!category) return res.status(404).json({ message: 'Category not found' });
 
+        await Category.findByIdAndUpdate(categoryID, { $set: { Subcategory: newValue } });
         res.status(200).json(category);
+
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        res.status(500).json({ message: err.message });
     }
 };
+
 
 // Delete a subcategory from a category
 exports.deleteSubCategory = async (req, res) => {
@@ -308,17 +342,33 @@ exports.deleteSubCategory = async (req, res) => {
   
   // Edit a category (though it might be rare to edit a whole category)
   exports.editCategory = async (req, res) => {
-      try {
-          const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
-              new: true,
-              runValidators: true
-          });
-          if (!category) return res.status(404).json({ message: 'Category not found' });
-          res.status(200).json(category);
-      } catch (err) {
-          res.status(400).json({ message: err.message });
-      }
-  };
+    try {
+        const CategoryID = req.params.id;
+
+        // Check if the category is associated with any products
+        const isCategoryUsedInProducts = await Product.exists({ 'subcategory': CategoryID });
+
+        if (isCategoryUsedInProducts) {
+            const associatedProducts = await Product.find({ 'subcategory': CategoryID });
+            const productIds = associatedProducts.map(product => product.productId);
+            console.log(`Can't edit category associated with products: ${productIds.join(', ')}`);
+            return res.status(400).json({
+                message: `Can't edit Category associated with products: ${productIds.join(', ')}`
+            });
+        }
+
+        const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+
+        if (!category) return res.status(404).json({ message: 'Category not found' });
+        res.status(200).json(category);
+    } catch (err) {
+        res.status(400).json({ message: err.message });
+    }
+};
+
   
   // Delete a category
   exports.deleteCategory = async (req, res) => {
@@ -364,7 +414,9 @@ exports.getSubCategory = async (req, res) => {
 
     try {
         const subcategories = await Category.find({ Category: mainCategory });
+        console.log(subcategories)
         return res.json(subcategories);
+       
     } catch (err) {
         return res.status(500).json({ message: "Error fetching subcategories", error: err });
     }
@@ -373,15 +425,22 @@ exports.getSubCategory = async (req, res) => {
 
 exports.deleteSubcategory = async (req, res) => {
     try {
-        const mainCategory = req.params.mainCategory;
-        const subcategoryName = req.params.subcategoryName;
+        const subcategoryId = req.params.subcategoryId;
 
-        // Find the document with the matching main category and subcategory
-        const result = await Category.deleteOne({ 
-            Category: mainCategory, 
-            Subcategory: subcategoryName 
-        });
+        // Check if the subcategory is associated with any products
+        const associatedProducts = await Product.find({ 'subcategory': subcategoryId }, 'productId');
 
+        if (associatedProducts.length > 0) {
+            // List the IDs of products associated with this subcategory
+            const productIds = associatedProducts.map(product => product.productId);
+            console.error(`Can't delete subcategory as it is associated with products: ${productIds.join(', ')}`);
+            return res.status(400).json({
+                message: `Can't delete subcategory as it is associated with products: ${productIds.join(', ')}`
+            });
+        }
+
+        // Proceed with deletion if no associated products
+        const result = await Category.deleteOne({ _id: subcategoryId });
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Subcategory not found' });
         }
@@ -393,6 +452,7 @@ exports.deleteSubcategory = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 
 

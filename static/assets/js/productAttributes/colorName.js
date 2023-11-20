@@ -55,7 +55,7 @@ $(document).on('click', '.deleteColorBtn', function() {
         dataType: 'json',
         success: function(response) {
             console.log('Color deleted:', response);
-            location.reload();
+            populateColors(colors);
         },
         error: function(error) {
             console.error('Error deleting color:', error);
@@ -72,16 +72,22 @@ $('#addColorBtn').click(function() {
             url: 'http://localhost:3000/attributes/colors',
             data: { name: colorName, hex: colorHex },
             success: function(response) {
-                location.reload();
+                if (response.message === 'Color name or HEX code already exists.') {
+                    alert('Color name or HEX code already exists.');
+                } else {
+                    location.reload();
+                }
             },
-            error: function(jqXHR, textStatus, errorThrown) {
-                console.error('Error adding color:', textStatus, errorThrown);
+            error: function(error) {
+                console.error('Error adding color:', error);
             }
         });
     } else {
         alert('Please enter a color name and hex value');
     }
 });
+
+
 
 
 // Show the Add Color Modal when the plus button is clicked

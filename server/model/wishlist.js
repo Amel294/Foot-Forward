@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, ObjectId } = mongoose;
+const Product = require('./productDB'); // Adjust the path to where your Product model is located
 
 const wishlistSchema = new Schema({
   user: {
@@ -9,7 +10,7 @@ const wishlistSchema = new Schema({
   },
   products: [{
     type: ObjectId,
-    ref: 'Product',
+    ref: 'ProductDB',
     required: true
   }],
 });
