@@ -207,6 +207,7 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
             selectedColors.push(id.replace('color-', ''));
         }
     });
+    let searchTerm = $('#searchInput').val(); // Get the value from the search input
 
     // Debugging: Log selected items
     console.log('Selected Brands:', selectedBrands);
@@ -225,7 +226,8 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
             category: selectedCategories.join(','), // Backend expects comma-separated values for categories
             color: selectedColors.join(','), // Adjust accordingly if you have color filters
             minPrice: minPrice,
-            maxPrice: maxPrice
+            maxPrice: maxPrice,
+            search: searchTerm 
         },
         success: function(response) {
             // Update the product list in the DOM with the response
@@ -238,6 +240,7 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
 }
 
 // Event listeners
+$('#searchInput').on('input', updateProductList);
 $('input[type="checkbox"].check-it').on('change', updateProductList);
 $('#minPrice, #maxPrice').on('input', updateProductList);
 

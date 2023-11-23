@@ -64,25 +64,30 @@
                   </span></div>
                 <!-- Display order status -->
                 <div class="nk-tb-col">
-                  <% if (order.orderStatus==='Pending' ) { %>
+                  <% if (order.orderStatus === "Pending") { %>
                     <span class="dot bg-warning d-sm-none"></span>
                     <span class="badge badge-sm badge-dot has-bg bg-warning d-none d-sm-inline-flex">Pending</span>
-                    <% } else if (order.orderStatus==='Processing' ) { %>
-                      <span class="dot bg-info d-sm-none"></span>
-                      <span class="badge badge-sm badge-dot has-bg bg-info d-none d-sm-inline-flex">Processing</span>
-                      <% } else if (order.orderStatus==='Shipped' ) { %>
-                        <span class="dot bg-primary d-sm-none"></span>
-                        <span class="badge badge-sm badge-dot has-bg bg-primary d-none d-sm-inline-flex">Shipped</span>
-                        <% } else if (order.orderStatus==='Delivered' ) { %>
-                          <span class="dot bg-success d-sm-none"></span>
-                          <span
-                            class="badge badge-sm badge-dot has-bg bg-success d-none d-sm-inline-flex">Delivered</span>
-                          <% } else if (order.orderStatus==='Cancelled' ) { %>
-                            <span class="dot bg-danger d-sm-none"></span>
-                            <span
-                              class="badge badge-sm badge-dot has-bg bg-danger d-none d-sm-inline-flex">Cancelled</span>
-                            <% } %>
+                  <% } else if (order.orderStatus === "Processing") { %>
+                    <span class="dot bg-info d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-info d-none d-sm-inline-flex">Processing</span>
+                  <% } else if (order.orderStatus === "Shipped") { %>
+                    <span class="dot bg-primary d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-primary d-none d-sm-inline-flex">Shipped</span>
+                  <% } else if (order.orderStatus === "Delivered") { %>
+                    <span class="dot bg-success d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-success d-none d-sm-inline-flex">Delivered</span>
+                  <% } else if (order.orderStatus === "Return") { %>
+                    <span class="dot bg-secondary d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-secondary d-none d-sm-inline-flex">Return</span>
+                  <% } else if (order.orderStatus === "Cancelled By Admin") { %>
+                    <span class="dot bg-danger d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-danger d-none d-sm-inline-flex">Cancelled By Admin</span>
+                  <% } else if (order.orderStatus === "Cancelled By User") { %>
+                    <span class="dot bg-danger d-sm-none"></span>
+                    <span class="badge badge-sm badge-dot has-bg bg-danger d-none d-sm-inline-flex">Cancelled By User</span>
+                  <% } %>
                 </div>
+                
 
                 <div class="nk-tb-col tb-col-sm"><span class="tb-sub">
                     <%= order.user.fullName %>

@@ -142,6 +142,55 @@
   </script>
   
   
+  <script>
+    // Function to cancel an order
+function cancelOrder(orderId) {
+  fetch(`/orders/cancel/${orderId}`, {
+    method: 'POST',
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message);
+    // Update the UI to show that the order has been cancelled
+    const orderElement = document.querySelector(`[data-order-id='${orderId}']`).closest('.order-row');
+    if (orderElement) {
+      orderElement.innerHTML = '<p>Order Cancelled</p>'; // Replace with your preferred UI change
+    }
+  })
+  .catch(error => console.error('Error cancelling order:', error));
+}
+
+// Function to return an order
+function returnOrder(orderId) {
+  fetch(`/orders/return/${orderId}`, {
+    method: 'POST',
+  })
+  .then(response => response.json())
+  .then(data => {
+    alert(data.message);
+    // Update the UI to show that the order is being returned
+    const orderElement = document.querySelector(`[data-order-id='${orderId}']`).closest('.order-row');
+    if (orderElement) {
+      orderElement.innerHTML = '<p>Return Initiated</p>'; // Replace with your preferred UI change
+    }
+  })
+  .catch(error => console.error('Error returning order:', error));
+}
+
+// Event listeners for cancel and return buttons
+document.addEventListener('click', function (event) {
+  if (event.target.classList.contains('cancel-order')) {
+    event.preventDefault();
+    const orderId = event.target.getAttribute('data-order-id');
+    cancelOrder(orderId);
+  } else if (event.target.classList.contains('return-order')) {
+    event.preventDefault();
+    const orderId = event.target.getAttribute('data-order-id');
+    returnOrder(orderId);
+  }
+});
+
+  </script>
   
 
 

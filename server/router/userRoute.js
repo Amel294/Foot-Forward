@@ -24,9 +24,45 @@ const productController = require("../controller/productController")
 const orderController = require("../controller/orderController")
 const addressController = require("../controller/addressController")
 const wishlistController = require("../controller/wishlistController")
+const couponController = require("../controller/couponController")
 // Apply globally
 router.use(checkSession);
+router.get('/blocked',(req,res)=>{
+  res.render('blocked')
+})
 
+async function isActive(req, res, next) {
+  try {
+    // Assuming you have the user's ID in req.session.user.id
+    const userId = req.session.user.id;
+    
+    // Fetch the user from the database
+    const user = await userDB.findById(userId);
+
+    if (!user) {
+      // User not found in the database, handle accordingly
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (user.isActive) {
+      // User is active, continue with the request
+      next();
+    } else {
+      // User is not active, destroy the session
+      req.session.destroy(function (err) {
+        if (err) {
+          console.error('Error destroying session:', err);
+          res.status(500).json({ message: 'Internal server error' });
+        } else {
+          res.redirect("/blocked")
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error checking isActive status:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
 
 
 function checkSession(req, res, next) {
@@ -49,6 +85,15 @@ function signedin(req, res, next) {
   next(); // Continue to the next middleware or route handler
 }
 
+function Protected(req,res,next){
+  if(req.session && req.session.user){
+    next();
+  }else{
+    res.redirect('/signin')
+
+  }
+}
+
 //home
 router.get('/', controller.home);
 
@@ -59,7 +104,7 @@ router.get('/signin', signedin, controller.signIn);
 router.get('/emailOtp', controller.otpPage)
 
 
-router.get('/products', productController.getAllProducts)
+router.get('/products',productController.getAllProducts)
 
 router.get('/product/:productId', productController.productById);
 
@@ -67,7 +112,7 @@ router.get('/product/:productId', productController.productById);
 
 router.get('/products/filter', async (req, res) => {
   try {
-    const { brand, color, category } = req.query;
+    const { brand, color, category,search } = req.query;
 
     let filters = {};
     if (brand) {
@@ -78,6 +123,9 @@ router.get('/products/filter', async (req, res) => {
     }
     if (category) {
       filters.subcategory = { $in: category.split(',') };
+    }
+    if (search) {
+      filters.name = { $regex: search, $options: 'i' }; // Use regex for partial matching
     }
 
     // Fetch all necessary data
@@ -168,14 +216,96 @@ router.post('/wishlist/add/:productId', wishlistController.addToWishlist);
 
 
 router.delete('/wishlist/remove/:productId', wishlistController.removeFromWishlist);
+// Cancel Order
+router.post('/orders/cancel/:orderId', async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    // Update the order status to 'Cancelled' or appropriate status
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, { orderStatus: 'Cancelled By User' }, { new: true });
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    return res.status(200).json({ message: 'Order cancelled successfully' });
+  } catch (error) {
+    console.error('Error cancelling order:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Return Order
+router.post('/orders/return/:orderId', async (req, res) => {
+  try {
+    const orderId = req.params.orderId;
+    // Update the order status to 'Return' or appropriate status
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, { orderStatus: 'Return' }, { new: true });
+
+    if (!updatedOrder) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    return res.status(200).json({ message: 'Order returned successfully' });
+  } catch (error) {
+    console.error('Error returning order:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+router.get('/razorpay-keys', (req, res) => {
+  const keys = {
+    keyId: process.env.RAZORPAY_Key_Id,
+    keySecret: process.env.RAZORPAY_Key_Secret
+  };
+  res.json(keys);
+});
 
 
 
+router.get('/get-amount-keys-payment-address', async (req, res) => {
+  try {
+    const userId = req.session.user.id;
 
-router.get('/checkout', addressController.checkout)
+    // Find the user's cart and calculate the total order amount
+    const cart = await Cart.findOne({ user: userId }).select({ total: 1, _id: 1 });
+    console.log(`cart in /get-amount is ${cart}`)
+    if (!cart) {
+      return res.status(404).json({ error: 'Cart not found' });
+    }
 
-router.post('/place-order', cartController.placeOrder);
+    const keys = {
+      keyId: process.env.RAZORPAY_Key_Id,
+      keySecret: process.env.RAZORPAY_Key_Secret
+    };
 
-router.get('/orderSuccess', orderController.orderSuccess)
+    
+    console.log(`Orderdata cart.total is  ${cart.total}`);
+    console.log(`Orderdata cart.id is  ${cart._id}`);
+    console.log(`Orderdata keys.id is  ${keys.keyId}`);
+    console.log(`Orderdata keys.secret is  ${keys.keySecret}`);
+
+    // Return the order amount as JSON
+    res.json({ cart,keys });
+  } catch (error) {
+    console.error('Error fetching order amount:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+router.get('/checkout',Protected, addressController.checkout)
+// Apply Coupon route (POST)
+router.post('/apply-coupon', couponController.addCoupon);
+
+// Remove Coupon route (DELETE)
+router.delete('/remove-coupon', couponController.removeCoupon);
+
+
+router.post('/place-order', Protected,cartController.placeOrder);
+
+router.get('/orderSuccess',Protected, orderController.orderSuccess)
 
 module.exports = router;
+

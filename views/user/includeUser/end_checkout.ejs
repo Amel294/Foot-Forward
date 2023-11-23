@@ -132,78 +132,217 @@
 <script>
   // Define a function to update the cart HTML
   async function updateCartHtml() {
-      try {
-        // Fetch the cart data from the server
-        console.log("Sending a request to /small-cart");
-        const response = await fetch('http://localhost:3000/small-cart');
-        const cart = await response.json();
+    try {
+      // Fetch the cart data from the server
+      console.log("Sending a request to /small-cart");
+      const response = await fetch('http://localhost:3000/small-cart');
+      const cart = await response.json();
 
-        console.log('Fetched cart data:', cart); // Log the fetched cart data
+      console.log('Fetched cart data:', cart); // Log the fetched cart data
 
-        // Define where you'll insert the cart HTML
-        const cartContainer = document.querySelector('#small_cart');
+      // Define where you'll insert the cart HTML
+      const cartContainer = document.querySelector('#small_cart');
 
-        // Start building the cart HTML
-        let cartHtml = `
+      // Start building the cart HTML
+      let cartHtml = `
           <div class="your-cart-box">
             <h3 class="mb-3 d-flex text-capitalize">Your cart
-              <span class="badge bg-theme new-badge rounded-pill ms-auto bg-dark">${cart.cartItem.length}</span>
+              <span class="badge bg-theme new-badge rounded-pill ms-auto bg-dark">${ cart.cartItem.length }</span>
             </h3>
             <ul class="list-group mb-3">`;
 
-        // Calculate total and build list items
-        let total = cart.total;
+      // Calculate total and build list items
+      let total = cart.total;
 
-        console.log("length is : " + cart.cartItem.length);
-        cart.cartItem.forEach(item => {
-          // Ensure that item.product and item.product.price are valid references
-          cartHtml += `
+      console.log("length is : " + cart.cartItem.length);
+      cart.cartItem.forEach(item => {
+        // Ensure that item.product and item.product.price are valid references
+        cartHtml += `
             <li class="list-group-item d-flex justify-content-between lh-condensed">
               <div>
-                <h6 class="my-0">${item.product}</h6>
-                <small class="text-muted">Color: ${item.color}</small>
+                <h6 class="my-0">${ item.product }</h6>
+                <small class="text-muted">Color: ${ item.color }</small>
                 <br>
-                <small class="text-muted">Size: ${item.size}</small>
+                <small class="text-muted">Size: ${ item.size }</small>
                 <br>
-                <small class="text-muted">Quantity: ${item.quantity}</small>
+                <small class="text-muted">Quantity: ${ item.quantity }</small>
               </div>
-              <span class="text-muted">₹${item.itemTotal.toFixed(2)}</span>
+              <span class="text-muted">₹${ item.itemTotal.toFixed(2) }</span>
             </li>`;
-        });
+      });
 
-        // Adjust the total for the promo code if applicable
-        let discount = 5; // Example discount value
-        total = Math.max(total - discount, 0);
+      // Adjust the total for the promo code if applicable
+      let discount = 5; // Example discount value
+      total = Math.max(total - discount, 0);
 
-        // Add discount and total to cart HTML
-        cartHtml += `
+      // Add discount and total to cart HTML
+      cartHtml += `
             <li class="list-group-item d-flex justify-content-between lh-condensed active">
               <div class="text-dark">
                 <h6 class="my-0">Promo code</h6>
                 <small>EXAMPLECODE</small>
               </div>
-              <span>-₹${discount.toFixed(2)}</span>
+              <span>-₹${ discount.toFixed(2) }</span>
             </li>
             <li class="list-group-item d-flex lh-condensed justify-content-between">
               <span class="fw-bold">Total (USD)</span>
-              <strong>₹${total.toFixed(2)}</strong>
+              <strong>₹${ total.toFixed(2) }</strong>
             </li>
           </ul>
         </div>`;
 
-        // Insert the cart HTML into the small_cart div
-        cartContainer.innerHTML = cartHtml;
+      // Insert the cart HTML into the small_cart div
+      cartContainer.innerHTML = cartHtml;
 
-      } catch (error) {
-        console.error('Error fetching cart data:', error);
-      }
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
     }
+  }
 
-    // Call the updateCartHtml function on DOM content load
-    document.addEventListener('DOMContentLoaded', updateCartHtml);
+  // Call the updateCartHtml function on DOM content load
+  document.addEventListener('DOMContentLoaded', updateCartHtml);
+</script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const placeOrderButton = document.getElementById("placeOrderButton");
+
+    placeOrderButton.addEventListener("click", async (event) => {
+      event.preventDefault();
+
+      const paymentMethod = document.querySelector(
+        'input[name="paymentMethod"]:checked'
+      ).value;
+      const address = document.querySelector('input[name="selectedAddress"]').value
+      console.log(`Address in front End is ${ address }`)
+
+      if (paymentMethod === "PayOnline") {
+        try {
+          const response = await fetch("/get-amount-keys-payment-address", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              // Set the Razorpay API key in the headers
+            },
+          });
+
+          response.json()
+            .then((orderData) => { // Use .then to handle the response
+              console.log(`Orderdata cart is  ${ orderData.cart.total }`);
+              console.log(`Orderdata keys.id is  ${ orderData.keys.keyId }`);
+              console.log(`Orderdata keys.secret is  ${ orderData.keys.keySecret }`);
+              const options = {
+                key: orderData.keys.keyId,
+                amount: orderData.cart.total * 100,
+                currency: "INR",
+                name: "Foot Forward",
+                description: "Order Payment",
+                image: "your_logo_url",
+                handler: function (response) {
+                  console.log(response);
+                  if (response.razorpay_payment_id) {
+                    fetch('/place-order', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ 
+                        paymentId: response.razorpay_payment_id,
+                        paymentMethod: "PayOnline",
+                        address:address }),
+                    })
+                      .then(response => {
+                        if (!response.ok) {
+                          throw new Error('Network response was not ok ' + response.statusText);
+                        }
+                        return response.json();
+                      })
+                      .then(orderResponse => {
+                        console.log(orderResponse);
+                        window.location.href = '/orderSuccess'; // Redirect to the success page
+                      })
+                      .catch(error => {
+                        console.error('Fetch error:', error);
+                      });
+                  } else {
+                    console.log('Payment failed or was cancelled.');
+                  }
+                },
+                prefill: {
+                  name: "User's Name",
+                  email: "user@example.com",
+                  contact: "user_mobile_number",
+                },
+              };
+
+              const razorpayPayment = new Razorpay(options);
+              razorpayPayment.open();
+            }).catch((error) => {
+              console.error("Error parsing response:", error);
+            });
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    });
+  });
+</script>
+
+//for copy code in accordion
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Find all copy buttons in the accordion
+    const copyButtons = document.querySelectorAll('#couponsAccordion .coupon-card button');
+
+    copyButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        // Find the corresponding accordion button
+        const accordionHeader = this.closest('.accordion-item').querySelector('.accordion-header');
+        const couponCode = accordionHeader.querySelector('.accordion-button').textContent.trim();
+
+        // Copy the coupon code to the clipboard
+        navigator.clipboard.writeText(couponCode).then(() => {
+          alert('Coupon code copied to clipboard: ' + couponCode);
+        }).catch(err => {
+          console.error('Error copying text to clipboard', err);
+        });
+      });
+    });
+  });
 </script>
 
 
+<script>
+  document.getElementById('applyCoupan').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent default form submission
+    const couponCode = document.getElementById('couponCodeInput').value;
+
+    fetch('/apply-coupon', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ couponCode: couponCode })
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Coupon applied:', data);
+      // Additional logic to handle successful coupon application
+    })
+    .catch(error => {
+      console.error('Error applying coupon:', error);
+    });
+  });
+</script>
+
+
+
+
+  
 
 </body>
 

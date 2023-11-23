@@ -8,7 +8,9 @@ const OrderStatus = {
   PROCESSING: 'Processing',
   SHIPPED: 'Shipped',
   DELIVERED: 'Delivered',
-  CANCELLED: 'Cancelled',
+  RETURN : "Return",
+  ADMINCANCELLED: 'Cancelled By Admin',
+  USERCANCELED : 'Cancelled By User'
 };
 
 // Define the order schema

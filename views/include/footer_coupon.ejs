@@ -1,0 +1,179 @@
+<div class="nk-footer">
+  <div class="container-fluid">
+    <div class="nk-footer-wrap">
+      <div class="nk-footer-copyright"> &copy;Foot Forward </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Import jQuery from a CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/static/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<script src="/static/assets/js/scriptse5ca.js?ver=3.2.3"></script>
+<script src="/static/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>
+<script src="/static/assets/js/example-sweetalerte5ca.js"></script>
+<!-- <script src="/static/assets/js/charts/chart-ecommercee5ca.js?ver=3.2.3"></script> -->
+<!-- JavaScript for Select2 -->
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src = /static/assets/js/orders.js></script>
+<script src = /static/assets/js/products.js></script>
+<script>$("#banner_active").prop("checked", true);
+</script>
+
+
+<script>
+  // Function to handle marking an order as delivered
+  $('.mark-delivered-btn').on('click', function (e) {
+    e.preventDefault();
+    const orderId = $(this).data('order-id');
+
+    $.post(`/admin/orders/mark-delivered/${orderId}`, function (data) {
+        // Handle success (e.g., update UI, show success message)
+        console.log('Order marked as delivered:', data);
+
+        // Reload the page
+        location.reload();
+    }).fail(function (error) {
+        // Handle error (e.g., show error message)
+        console.error('Error marking order as delivered:', error);
+    });
+});
+
+
+  // Function to handle removing an order
+  $('.remove-order-btn').on('click', function (e) {
+    e.preventDefault();
+    const orderId = $(this).data('order-id');
+
+    $.ajax({
+      url: `/admin/orders/remove/${orderId}`,
+      type: 'DELETE',
+      success: function (data) {
+        // Handle success (e.g., update UI, show success message)
+        console.log('Order removed:', data);
+        location.reload();
+
+      },
+      error: function (error) {
+        // Handle error (e.g., show error message)
+        console.error('Error removing order:', error);
+      },
+    });
+  });
+</script>
+
+
+<script>
+  $(document).ready(function () {
+      // Select the form element and discount input group
+      const $couponForm = $('#couponForm');
+      const $discountInputGroup = $('#discountInputGroup');
+
+      // Add a change event listener to the coupon type radio buttons
+      $('input[name="coupon_type"]').on('change', function () {
+          const selectedType = $('input[name="coupon_type"]:checked').attr('id');
+
+          // Check the selected type and update the label and placeholder accordingly
+          if (selectedType === 'coupon_flat') {
+              $discountInputGroup.find('.form-label').text('Flat Rate Discount');
+              $discountInputGroup.find('input[name="coupanDiscount"]').attr('placeholder', 'Enter flat rate discount');
+          } else if (selectedType === 'coupon_percent') {
+              $discountInputGroup.find('.form-label').text('Discount in Percent');
+              $discountInputGroup.find('input[name="coupanDiscount"]').attr('placeholder', 'Enter discount in Percent');
+          }
+      });
+
+      // Rest of your code...
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    const $couponForm = $('#couponForm');
+
+    $couponForm.on('submit', function (e) {
+      e.preventDefault();
+      const formData = $couponForm.serializeArray().reduce(function (obj, item) {
+        obj[item.name] = item.value;
+        return obj;
+      }, {});
+
+      $.ajax({
+        type: 'POST',
+        url: '/admin/add-coupon',
+        data: formData,
+        success: function (response) {
+          console.log(response.message);
+          // Display Sweet Alert
+          Swal.fire({
+            title: 'Success!',
+            text: 'Coupon added successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Reload the page when OK is clicked
+              location.reload();
+            }
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error.responseText);
+          // Add error handling Sweet Alert here if desired
+        },
+      });
+    });
+  });
+</script>
+
+
+
+<script>
+  function toggleCouponStatus(couponId) {
+      const isActive = document.getElementById('coupon' + couponId).checked;
+
+      fetch('/admin/update-coupon-status', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ couponId, active: isActive })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              console.log('Coupon status updated');
+              // Update the text in the status cell
+          } else {
+              console.error('Failed to update coupon status');
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+      });
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>

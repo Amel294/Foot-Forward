@@ -362,9 +362,11 @@ exports.userDashboard = async (req, res) => {
       for (const item of order.items) {
         const product = await ProductDB.findById(item.product._id);
         item.product.images = product.images;
+        item.product.price  = product.price;
       }
+      console.log(order.price)
     }
-    console.log(orders)
+    
     res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders,wishlist : wishlist });
   } catch (error) {
     console.error("Failed to get addresses and orders for user:", error);

@@ -7,7 +7,8 @@
                         <div class="check-container">
                             <div class="check-background">
                                 <svg viewBox="0 0 65 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M7 25L27.3077 44L58.5 7" stroke="white" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M7 25L27.3077 44L58.5 7" stroke="white" stroke-width="13"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
                             </div>
                             <div class="check-shadow"></div>
@@ -17,7 +18,8 @@
                     <div class="success-contain">
                         <h4>Order Success</h4>
                         <h5 class="font-light">Payment Is Successfully Processsed And Your Order Is On The Way</h5>
-                        <h6 class="font-light">Order Id is:<%= order._id%></h6>
+                        <h6 class="font-light">Order Id is:<%= orders._id%>
+                        </h6>
                     </div>
                 </div>
             </div>
@@ -34,68 +36,36 @@
             <h2 class="mb-3">Order Details</h2>
         </div>
         <div class="row g-4">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="col-sm-12 table-responsive">
                     <table class="table cart-table table-borderless">
                         <tbody>
                             <tr class="table-order">
-                                <td>
-                                    <a href="javascript:void(0)">
-                                        <img src="assets/images/fashion/instagram/1.jpg" class="img-fluid blur-up lazyloaded" alt="">
-                                    </a>
-                                </td>
-                                <td>
-                                    <p>Product Name</p>
-                                    <h5>Outwear &amp; Coats</h5>
-                                </td>
-                                <td>
-                                    <p>Quantity</p>
-                                    <h5>1</h5>
-                                </td>
-                                <td>
-                                    <p>Price</p>
-                                    <h5>₹63.54</h5>
-                                </td>
-                            </tr>
+                                <table>
+                                    <tbody>
+                                        <%- console.log('orders:', orders) %>
 
-                            <tr class="table-order">
-                                <td>
-                                    <a href="javascript:void(0)">
-                                        <img src="assets/images/fashion/instagram/2.jpg" class="img-fluid blur-up lazyloaded" alt="">
-                                    </a>
-                                </td>
-                                <td>
-                                    <p class="font-light">Product Name</p>
-                                    <h5>Jacket &amp; Cap</h5>
-                                </td>
-                                <td>
-                                    <p class="font-light">Quantity</p>
-                                    <h5>5</h5>
-                                </td>
-                                <td>
-                                    <p class="font-light">Price</p>
-                                    <h5>₹57.10</h5>
-                                </td>
-                            </tr>
-
-                            <tr class="table-order">
-                                <td>
-                                    <a href="javascript:void(0)">
-                                        <img src="assets/images/fashion/instagram/3.jpg" class="img-fluid blur-up lazyloaded" alt="">
-                                    </a>
-                                </td>
-                                <td>
-                                    <p class="font-light">Product Name</p>
-                                    <h5>New Fashion</h5>
-                                </td>
-                                <td>
-                                    <p class="font-light">Quantity</p>
-                                    <h5>1</h5>
-                                </td>
-                                <td>
-                                    <p class="font-light">Price</p>
-                                    <h5>₹63.25</h5>
-                                </td>
+                                            <% orders.items.forEach(function(item) { %>
+                                              <tr>
+                                                <td>
+                                                  <a href="product-left-sidebar.html">
+                                                    <img src="data:image/jpeg;base64,<%= item.product.images[0].data.toString('base64') %>">
+                                                  </a>
+                                                </td>
+                                                
+                                                <td>
+                                                  <p class="fs-6 m-0"><%= item.product.name %> x<%= item.quantity %></p>
+                                                </td>
+                                                <td>
+                                                  <p class="<%= orders.orderStatus === 'Shipped' ? 'success-button' : (orders.orderStatus === 'Pending' ? 'danger-button' : '') %> btn btn-sm"><%= orders.orderStatus %></p>
+                                                </td>
+                                                <td>
+                                                  <p class="theme-color fs-6">₹<%= item.itemTotal %></p>
+                                                </td>
+                                                
+                                              </tr>
+                                            <% }); %>
+                                    </tbody>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -138,7 +108,7 @@
                     </table>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="order-success">
                     <div class="row g-4">
                         <div class="col-sm-6">

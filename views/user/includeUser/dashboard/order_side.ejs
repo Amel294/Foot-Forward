@@ -6,12 +6,12 @@
         <table class="table cart-table">
             <thead>
                 <tr class="table-head">
-                    <th scope="col">image</th>
+                    <th scope="col">Image</th>
                     <th scope="col">Order Id</th>
                     <th scope="col">Product Details</th>
                     <th scope="col">Status</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Cancel</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,28 +20,43 @@
                         <tr>
                             <td>
                                 <a href="product-left-sidebar.html">
-                                    <img src="data:image/jpeg;base64,<%= item.product.images[0].data.toString('base64') %>">
-                                    <!-- <img src="<%= item.product.images[0] %>" -->
+                                    <img
+                                        src="data:image/jpeg;base64,<%= item.product.images[0].data.toString('base64') %>">
                                 </a>
                             </td>
                             <td>
-                                <p class="mt-0"><%= order._id %></p>
+                                <p class="mt-0">
+                                    <%= order._id %>
+                                </p>
                             </td>
                             <td>
-                                <p class="fs-6 m-0"><%= item.product.name %> x<%= item.quantity %></p>
+                                <p class="fs-6 m-0">
+                                    <%= item.product.name %> x<%= item.quantity %>
+                                    
+                                </p>
                             </td>
                             <td>
-                                <p class="<%= order.orderStatus === 'Shipped' ? 'success-button' : (order.orderStatus === 'Pending' ? 'danger-button' : '') %> btn btn-sm"><%= order.orderStatus %></p>
+                                <p class="btn btn-sm">
+                                    <%= order.orderStatus %>
+                                </p>
                             </td>
                             <td>
-                                <p class="theme-color fs-6">₹<%= item.itemTotal %></p>
+                                <p class="theme-color fs-6">₹<%= item.product.price * item.quantity %>
+                                </p>
                             </td>
                             <td>
-                                <a href="#" class="btn btn-solid-default btn-sm fw-bold remove-from-wishlist" data-order-id="<%= order._id %>">Cancel</a>
-                            </td>
+                                <% if (order.orderStatus === "Delivered") { %>
+                                  <a href="#" class="btn btn-solid-default btn-sm fw-bold return-order" data-order-id="<%= order._id %>">Return</a>
+                                <% } else if (order.orderStatus !== "Return" && order.orderStatus !== "Cancelled By User" && order.orderStatus !== "Cancelled By Admin") { %>
+                                  <a href="#" class="btn btn-solid-default btn-sm fw-bold cancel-order" data-order-id="<%= order._id %>">Cancel</a>
+                                <% } %>
+                              </td>
+                              
+                              
+                              
                         </tr>
-                    <% }); %>
-                <% }); %>
+                        <% }); %>
+                            <% }); %>
             </tbody>
         </table>
     </div>

@@ -65,28 +65,28 @@ exports.cartTotal = async (req, res) => {
   }
 }
 
-exports.placeOrder =  async (req, res) => {
+exports.placeOrder = async (req, res) => {
   try {
     const userId = req.session.user.id; // Assuming you have a session with user information
 
     // Get the selected address and payment method from the form data
-    console.log(`The address is ${req.body.selectedAddress.toString()}`);
-    const { selectedAddress, paymentMethod } = req.body;
+    console.log(`The address is ${req.body.address}`);
+    const { paymentMethod, address } = req.body;
 
-    console.log(selectedAddress)
     // Retrieve the user's cart based on the userId
     const userCart = await Cart.findOne({ user: userId }).populate('items.product');
 
     if (!userCart || userCart.items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty or not found' });
     }
+
     // Create a new order using the cart data
     const order = new Order({
       user: userId,
       items: userCart.items,
       total: userCart.total,
       paymentMethod: paymentMethod,
-      shippingAddress: selectedAddress,
+      shippingAddress: address,
     });
 
     // Save the order to the database
@@ -94,15 +94,21 @@ exports.placeOrder =  async (req, res) => {
 
     // Clear the user's cart after placing the order (you may have a method for this in your Cart model)
     await userCart.clearCart();
+    
+    // Send a JSON response indicating the order was successfully placed
+    res.status(200).json({ message: 'Order placed successfully' });
 
-    // Send a response indicating the order was successfully placed
-    res.redirect('/orderSuccess')
+    // Redirect after a delay
+    // Delay in milliseconds (1 second in this example)
   } catch (error) {
     // Handle any errors that occur during the process
     console.error('Error placing order:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
-}
+};
+
+
+
 
 
 

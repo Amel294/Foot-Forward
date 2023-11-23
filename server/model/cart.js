@@ -35,13 +35,19 @@ const cartSchema = new Schema({
         default: 0
     },
     coupon: {
-        type: String,
+        type: ObjectId,
+        ref: 'Coupon',
         required: false // Coupon is not required
     }
 });
 
 // Middleware to calculate the total price
 cartSchema.pre('save', async function (next) {
+    // Check if items have been modified
+    if (!this.isModified('items')) {
+        return next();
+    }
+
     let total = 0;
     
     // Loop through each item and calculate the total
@@ -58,6 +64,8 @@ cartSchema.pre('save', async function (next) {
     this.total = total;
     next();
 });
+
+
 cartSchema.methods.clearCart = async function () {
     this.items = []; // Clear the items array
     this.total = 0;  // Reset the total to 0
