@@ -1,289 +1,272 @@
-<div class="nk-content ">
+<div class="nk-content">
     <div class="container-fluid">
         <div class="nk-content-inner">
             <div class="nk-content-body">
                 <div class="components-preview mx-auto">
+                    <!-- Referral Offer Settings Section -->
                     <div class="nk-block nk-block-lg">
-
                         <div class="card">
-                            <div class="card-inner ">
-                                <div class="card-head">
-                                    <h3 class="card-title">Add new Coupon</h3>
+                            <div class="card-inner">
+                                <h3 class="card-title">Referral Offer Settings</h3>
+                                <div class="card-body">
+                                    <form id="referralSettingsForm">
+                                        <div class="row gy-3">
+                                            <!-- Toggle for Enabling/Disabling Referral -->
+                                            <div class="col-md-6 d-flex align-items-center">
+                                                <label class="form-label me-2">Enable Referral Offers</label>
+                                                <div class="custom-control custom-switch">
+                                                    <input type="checkbox" class="custom-control-input" id="referralToggle">
+                                                    <label class="custom-control-label" for="referralToggle"></label>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Field for Updating Referral Reward -->
+                                            <div class="col-md-6">
+                                                <label for="referralReward" class="form-label">Referral Reward</label>
+                                                <input type="text" class="form-control" id="referralReward" placeholder="Enter reward amount" value="<%=referral.reward%>">
+                                            </div>
+                                        </div>
+
+                                        <div class="row gy-3">
+                                            <!-- Submit Button -->
+                                            <div class="col-12 mt-5">
+                                                <button type="submit" class="btn btn-primary">Update Settings</button>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                                <form action="#" class="gy-3" id="couponForm">
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label" for="site-name">Coupon
-                                                    Name</label></div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap"><input type="text" name="coupanName"
-                                                        class="form-control form-control-lg" value=""
-                                                        placeholder="NEWYEAR20"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label" for="site-name">Coupon
-                                                    Description</label></div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap"><input type="text" name="coupanDescription"
-                                                        class="form-control form-control-lg" value=""
-                                                        placeholder="Get 20% off on purchase of Rs.3000"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label">Select type of
-                                                    Coupan</label></div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap">
-                                                    <ul class="custom-control-group">
-                                                        <li>
-                                                            <div
-                                                                class="custom-control custom-radio custom-control-pro no-control">
-                                                                <input type="radio" class="custom-control-input"
-                                                                    name="coupon_type" id="coupon_flat"
-                                                                    value="Flat rate" required>
-                                                                <label class="custom-control-label"
-                                                                    for="coupon_flat">Flat rate</label>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div
-                                                                class="custom-control custom-radio custom-control-pro no-control checked">
-                                                                <input type="radio" class="custom-control-input"
-                                                                    name="coupon_type" id="coupon_percent"
-                                                                    value="Percent" required>
-                                                                <label class="custom-control-label"
-                                                                    for="coupon_percent">Percent</label>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3 align-center" id="discountInputGroup">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label">Discount in
-                                                    Percent</label></div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap"><input type="text" name="coupanDiscount"
-                                                        class="form-control form-control-lg" value="" placeholder="2%">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label">Pick Date and Time for
-                                                    Coupon expiry</label></div>
-                                        </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap ">
-                                                    <div class="form-icon form-icon-right"><em
-                                                            class="icon ni ni-calendar-alt"></em></div><input
-                                                        type="text"
-                                                        class="form-control form-control-xl form-control-outlined date-picker"
-                                                        name="coupanDate" id="outlined-date-picker"><label
-                                                        class="form-label-outlined" for="outlined-date-picker">Date
-                                                        Picker</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap has-timepicker">
-                                                    <div class="form-icon form-icon-right"><em
-                                                            class="icon ni ni-clock"></em></div><input type="text"
-                                                        class="form-control form-control-xl form-control-outlined time-picker"
-                                                        name="coupanTime" id="outlined-time-picker"><label
-                                                        class="form-label-outlined" for="outlined-time-picker">Time
-                                                        Picker</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label">Min Order Amount In
-                                                    ₹</label></div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap "><input type="text"
-                                                        name="coupanMinOrderAmount" class="form-control form-control-lg"
-                                                        name="site-url" value="" placeholder="3000"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label">Total Coupans</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <div class="form-group">
-                                                <div class="form-control-wrap "><input type="text" name="coupanTotal"
-                                                        class="form-control form-control-lg" name="site-url" value=""
-                                                        placeholder="100"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row g-3 align-center">
-                                        <div class="col-lg-5">
-                                            <div class="form-group"><label class="form-label">Enable Coupon</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-7">
-                                            <ul class="custom-control-group g-3 align-center flex-wrap">
-                                                <li>
-                                                    <div class="custom-control custom-radio checked">
-                                                        <input type="radio" class="custom-control-input" checked=""
-                                                            name="coupon_enable" id="coupon-enable-yes" value="Enable">
-                                                        <label class="custom-control-label"
-                                                            for="coupon-enable-yes">Enable</label>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="custom-control custom-radio">
-                                                        <input type="radio" class="custom-control-input"
-                                                            name="coupon_enable" id="coupon-enable-no" value="Disable">
-                                                        <label class="custom-control-label"
-                                                            for="coupon-enable-no">Disable</label>
-                                                    </div>
-                                                </li>
-                                            </ul>
-
-                                        </div>
-                                    </div>
-
-
-                                    <div class="row g-3">
-                                        <div class="col-lg-7 offset-lg-5">
-                                            <div class="form-group mt-2">
-                                                <button type="submit" id="submitCoupon"
-                                                    class="btn btn-lg btn-primary">Add Coupon</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
-
+                    <div class="nk-block nk-block-lg">
+                        <div class="card">
+                            <div class="card-inner">
+                                <h3 class="card-title">Create New Offer</h3>
+                                <div class="card-body">
+                                    <!-- Offer creation form -->
+                                    <form action="#" class="gy-3" id="offerForm">
+                                        <div class="row g-3 align-center">
+                                            <div class="col-lg-5">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="offerName">Offer Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="form-group">
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" name="offerName"
+                                                            class="form-control form-control-lg" value=""
+                                                            placeholder="New Year Dhamaka">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3 align-center">
+                                            <div class="col-lg-5">
+                                                <div class="form-group">
+                                                    <label class="form-label" for="offerDescription">Offer
+                                                        Description</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="form-group">
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" name="offerDescription"
+                                                            class="form-control form-control-lg" value=""
+                                                            placeholder="Assured 10% off on purchasing sneakers">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Add IDs to the select elements -->
+<div class="row g-3 align-center">
+    <div class="col-lg-5">
+        <div class="form-group">
+            <label class="form-label">Select Type of Offer</label>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="form-group">
+            <div class="form-control-wrap">
+                <select name="offerType" id="offerTypeSelect" class="form-select form-control-lg">
+                    <option value="Category">Category</option>
+                    <option value="Product">Product</option>
+                </select>
             </div>
         </div>
     </div>
 </div>
 
+<div class="row g-3 align-center"" id="categoryOptions" style="display: none;">
+    <!-- Category options will be rendered here -->
+</div>
+
+<div class="row g-3 align-center"" id="productOptions" style="display: none;"   >
+    <!-- Product options will be rendered here -->
+</div>
 
 
-<div class="nk-content ">
-    <div class="container-fluid">
-        <div class="nk-content-inner">
-            <div class="nk-content-body">
-                <div class="components-preview mx-auto">
+
+
+
+                                        <div class="row g-3 align-center" id="discountInputGroup">
+                                            <div class="col-lg-5">
+                                                <div class="form-group">
+                                                    <label class="form-label">Discount in Percent</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="form-group">
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" name="offerDiscount"
+                                                            class="form-control form-control-lg" value=""
+                                                            placeholder="2%">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3 align-center">
+                                            <div class="col-lg-5">
+                                                <div class="form-group"><label class="form-label">Pick Date and Time of
+                                                        Offer expiry</label></div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="form-group">
+                                                    <div class="form-control-wrap ">
+                                                        <div class="form-icon form-icon-right"><em
+                                                                class="icon ni ni-calendar-alt"></em></div><input
+                                                            type="text"
+                                                            class="form-control form-control-xl form-control-outlined date-picker"
+                                                            name="coupanDate" id="outlined-date-picker"><label
+                                                            class="form-label-outlined" for="outlined-date-picker">Date
+                                                            Picker</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-3">
+                                                <div class="form-group">
+                                                    <div class="form-control-wrap has-timepicker">
+                                                        <div class="form-icon form-icon-right"><em
+                                                                class="icon ni ni-clock"></em></div><input type="text"
+                                                            class="form-control form-control-xl form-control-outlined time-picker"
+                                                            name="coupanTime" id="outlined-time-picker"><label
+                                                            class="form-label-outlined" for="outlined-time-picker">Time
+                                                            Picker</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row g-3 align-center">
+                                            <div class="col-lg-5">
+                                                <div class="form-group">
+                                                    <label class="form-label">Max Times offer can be used</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <div class="form-group">
+                                                    <div class="form-control-wrap">
+                                                        <input type="text" name="offerMaxUses"
+                                                            class="form-control form-control-lg" value=""
+                                                            placeholder="Unlimited">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3 align-center">
+                                            <div class="col-lg-5">
+                                                <div class="form-group">
+                                                    <label class="form-label">Enable Offer</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-7">
+                                                <ul class="custom-control-group g-3 align-center flex-wrap">
+                                                    <li>
+                                                        <div class="custom-control custom-radio checked">
+                                                            <input type="radio" class="custom-control-input" checked=""
+                                                                name="offerEnable" id="offer-enable-yes" value="Enable">
+                                                            <label class="custom-control-label"
+                                                                for="offer-enable-yes">Enable</label>
+                                                        </div>
+                                                    </li>
+                                                    <li>
+                                                        <div class="custom-control custom-radio">
+                                                            <input type="radio" class="custom-control-input"
+                                                                name="offerEnable" id="offer-enable-no" value="Disable">
+                                                            <label class="custom-control-label"
+                                                                for="offer-enable-no">Disable</label>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row g-3">
+                                            <div class="col-lg-7 offset-lg-5">
+                                                <div class="form-group mt-2">
+                                                    <button type="submit" id="submitOffer"
+                                                        class="btn btn-lg btn-primary">Create Offer</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Existing Offers Table -->
                     <div class="nk-block nk-block-lg">
                         <div class="card">
                             <div class="card-inner">
-                                <h3 class="card-title">Existing Coupons</h3>
+                                <h3 class="card-title">Existing Offers</h3>
                                 <div class="card-body">
                                     <table class="table">
                                         <thead>
                                             <tr>
-                                                <th>Coupon Code</th>
-                                                <th>Coupon Description</th>
+                                                <th>Offer Name</th>
+                                                <th>Offer Description</th>
                                                 <th>Type</th>
                                                 <th>Discount</th>
                                                 <th>Expiry Date</th>
-                                                <th>Min Order Amount</th>
                                                 <th>Max Uses</th>
                                                 <th>Status</th>
                                                 <th>Action</th>
-
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <% coupons.forEach(coupon=> { %>
+                                            <% offers.forEach(offer => { %>
                                                 <tr>
+                                                    <td><%= offer.offerName %></td>
+                                                    <td><%= offer.offerDescription %></td>
+                                                    <td><%= offer.offerType %></td>
                                                     <td>
-                                                        <%= coupon.code %>
-                                                    </td>
-                                                    <td>
-                                                        <%= coupon.Description %>
-                                                    </td>
-                                                    <td>
-                                                        <%= coupon.type %>
-                                                    </td>
-                                                    <% if (coupon.type==="Percent" ) { %>
-                                                        <td>
-                                                            <%= coupon.discount %>%
-                                                        </td>
+                                                        <% if (offer.offerType === 'Percent') { %>
+                                                            <%= offer.offerDiscount %>% 
                                                         <% } else { %>
-                                                            <td>₹<%= coupon.discount %>
-                                                            </td>
-                                                            <% } %>
-                                                                <td>
-                                                                    <%= coupon.validUntil.toDateString() %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= coupon.minimumOrderAmount %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= coupon.maxUses || 'Unlimited' %>
-                                                                </td>
-                                                                <td>
-                                                                    <%= coupon.isExpired ? 'Expired' : (coupon.active
-                                                                        ? 'Active' : 'Inactive' ) %>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="form-control-wrap">
-                                                                        <div class="custom-control custom-switch">
-                                                                            <input type="checkbox"
-                                                                                class="custom-control-input"
-                                                                                id="coupon<%= coupon._id %>"
-                                                                                <%=coupon.active ? 'checked' : '' %>
-                                                                            onclick="toggleCouponStatus('<%= coupon._id
-                                                                                %>')">
-                                                                                <label class="custom-control-label"
-                                                                                    for="coupon<%= coupon._id %>"></label>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
+                                                            ₹<%= offer.offerDiscount %>
+                                                        <% } %>
+                                                    </td>
+                                                    <td><%= new Date(offer.offerValidUntil).toDateString() %></td>
+                                                    <td><%= offer.offerMaxUses ? offer.offerMaxUses : 'Unlimited' %></td>
+                                                    <td><%= offer.offerEnable ? 'Active' : 'Inactive' %></td>
+                                                    <td>
+                                                        <button class="btn btn-danger remove-offer" data-offerid="<%= offer._id %>">
+                                                            <em class="icon ni ni-trash-empty"></em>
+                                                        </button>
+                                                    </td>
+                                                    
+                                                    
                                                 </tr>
-                                                <% }) %>
-
+                                            <% }); %>
                                         </tbody>
+                                        
+                                        
                                     </table>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

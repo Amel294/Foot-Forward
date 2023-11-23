@@ -11,6 +11,8 @@ const Address = require('../model/address')
 const Order = require('../model/order');
 const Wishlist = require('../model/wishlist');
 const util = require('util');
+const adminReferral = require("../model/referral")
+const Referral = require("../model/ReferralModel")
 
 // SMTP configuration
 let transporter = nodemailer.createTransport({
@@ -366,8 +368,11 @@ exports.userDashboard = async (req, res) => {
       }
       console.log(order.price)
     }
-    
-    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders,wishlist : wishlist });
+    const adminRef = await adminReferral.findOne({},{isEnabled:1 ,_id:0})
+    const refer = await Referral.findOne({ownedBy:id},{referralCode:1,_id:0});
+    console.log(`Admin ref : ${adminRef}`)
+    console.log(`user ref : ${refer}`)
+    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders,wishlist : wishlist,adminRef,refer });
   } catch (error) {
     console.error("Failed to get addresses and orders for user:", error);
     res.status(500).render('error', { message: 'Unable to fetch addresses and orders.' });

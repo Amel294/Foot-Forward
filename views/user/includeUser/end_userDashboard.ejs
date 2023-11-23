@@ -192,6 +192,32 @@ document.addEventListener('click', function (event) {
 
   </script>
   
+  <script>
+    document.getElementById('generateReferralCode').addEventListener('click', function() {
+        fetch('/create-referral-coupon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            // Include additional data if needed
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Refresh the page on successful referral code generation
+            window.location.reload();
+        })
+        .catch(error => {
+            // Handle any errors here
+            console.error('Error generating referral code:', error);
+        });
+    });
+</script>
+
 
 
 

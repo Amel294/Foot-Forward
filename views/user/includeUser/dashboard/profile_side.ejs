@@ -47,6 +47,30 @@
             <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#editModal" data-field-type="password" data-current-value="">Edit</a>
         </li>
     </ul>
+
+    <div class="box-head mt-5">
+        <h3>Referal code</h3>
+    </div>
+    <ul class="dash-profile ">
+      
+        <% if (adminRef.isEnabled) { %>
+            <% if (refer) { %>
+                <!-- Display referral code if it exists -->
+                <li>Your Referral Code: </li>
+                <h5><%= refer.referralCode %></h5>
+            <% } else { %>
+                <!-- Show button to generate referral code if it does not exist -->
+                <li>
+                    <button id="generateReferralCode" class="btn btn-primary">Generate Referral Code</button>
+                </li>
+            <% } %>
+        <% } else { %>
+            <!-- Content or message to display if the referral system is disabled -->
+            <li>Referral system is currently disabled.</li>
+        <% } %>
+    </ul>
+    
+    
     
     
 </div>

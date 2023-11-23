@@ -62,9 +62,17 @@ const productSchema = new Schema({
         stock: {
             type: Number,
             required: true
+        },
+        hasOffer: {
+            type: Boolean,
+            default: false
+        },
+        offerPercent: {
+            type: Number,
+            default: 0
         }
     }]
-});
+},{ strict: false });
 
 // Middleware to convert image URLs to base64 and set content type
 productSchema.pre('save', async function (next) {

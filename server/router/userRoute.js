@@ -3,6 +3,7 @@ const router = express.Router();
 const nodemailer = require('nodemailer'); // Import nodemailer here
 const mongoose = require('mongoose'); // Corrected 'Mongoose' to 'mongoose'
 const { Schema, ObjectId } = mongoose;
+const crypto = require('crypto');
 
 const dotenv = require("dotenv");
 const path = require('path'); // Import the 'path' module
@@ -25,6 +26,9 @@ const orderController = require("../controller/orderController")
 const addressController = require("../controller/addressController")
 const wishlistController = require("../controller/wishlistController")
 const couponController = require("../controller/couponController")
+const Offer = require("../model/offer")
+const adminReferral = require("../model/referral")
+const Referral = require("../model/ReferralModel")
 // Apply globally
 router.use(checkSession);
 router.get('/blocked',(req,res)=>{
@@ -132,6 +136,7 @@ router.get('/products/filter', async (req, res) => {
     const brands = await Brand.find({ isDeleted: false });
     const colors = await Color.find({ isDeleted: false });
     const subcategories = await Category.find({ isDeleted: false }).distinct('Subcategory');
+    const offer = await Offer.find({});
     let products = await Product.find(filters).populate('brand').populate('subcategory').exec();
     let userWishlist ;
     if(req.session.user){
@@ -306,6 +311,50 @@ router.delete('/remove-coupon', couponController.removeCoupon);
 router.post('/place-order', Protected,cartController.placeOrder);
 
 router.get('/orderSuccess',Protected, orderController.orderSuccess)
+
+
+
+async function generateUniqueReferralCoupon(Referral) {
+  let isUnique = false;
+  let uniqueCoupon = '';
+
+  while (!isUnique) {
+      // Generate a random string for the coupon
+      uniqueCoupon = crypto.randomBytes(8).toString('hex');
+
+      // Check if this coupon already exists in the database
+      const existingCoupon = await Referral.findOne({ referralCode: uniqueCoupon });
+      if (!existingCoupon) {
+          isUnique = true;
+      }
+  }
+
+  return uniqueCoupon;
+}
+
+
+router.post('/create-referral-coupon', async (req, res) => {
+  try {
+      const uniqueCouponCode = await generateUniqueReferralCoupon(Referral);
+
+      const ownedByUserId = req.session.user.id;
+
+      // Create a new referral document
+      const newReferral = new Referral({
+          referralCode: uniqueCouponCode,
+          ownedBy: ownedByUserId,
+          createdAt: Date.now()
+      });
+
+      // Save the new referral to the database
+      await newReferral.save();
+
+      res.status(201).send({ message: 'Referral coupon created', couponCode: uniqueCouponCode });
+  } catch (error) {
+      console.error('Error creating referral coupon:', error);
+      res.status(500).send({ message: 'Error creating referral coupon: ' + error.message });
+  }
+});
 
 module.exports = router;
 

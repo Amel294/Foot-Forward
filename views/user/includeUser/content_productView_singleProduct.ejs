@@ -1,7 +1,13 @@
 <% products.forEach(product => { %>
   <div class="col-lg-3 col-md-4 col-sm-6 col-12">
       <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
-          <div class="img-wrapper">
+          <div class="img-wrapper position-relative">
+            <!-- Discount Banner -->
+            <% if (product.hasOffer) { %>
+              <div class="discount-banner position-absolute top-0 end-0 bg-danger text-white p-2">
+                  <%= product.offerPercent %>% OFF
+              </div>
+          <% } %>
               <div class="front">
                   <a href="/product/<%= product.productId %>" class="bg-size blur-up lazyloaded"
                       style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
@@ -15,7 +21,19 @@
               <h3 class="theme-color"><%= product.name %></h3>
               
               <div class="main-price">
+                <% if (product.hasOffer) { %>
+                  <!-- Original Price Strikethrough -->
+                  <h5 class="font-light theme-color text-decoration-line-through">
+                      ₹<%= product.price %>
+                  </h5>
+                  <!-- Discounted Price -->
+                  <h5 class="font-light theme-color">
+                      ₹<%= (product.price - (product.price * product.offerPercent / 100)).toFixed(2) %>
+                  </h5>
+              <% } else { %>
+                  <!-- Regular Price -->
                   <h5 class="font-light theme-color">₹<%= product.price %></h5>
+              <% } %>
 
                   <% if (req.session.user) { %>
                       <% if (product.isInWishlist) { %>

@@ -70,7 +70,7 @@ const adminlogin = require('./server/router/adminRoute/login')
 const editProduct = require('./server/router/adminRoute/editProduct')
 const banner = require('./server/router/adminRoute/banner')
 const coupon = require('./server/router/adminRoute/coupon')
-
+const offer = require('./server/router/adminRoute/offer')
 function checkAdminSession(req, res, next) {
     if (req.session.admin) {
     next();
@@ -89,6 +89,7 @@ app.use('/admin', checkAdminSession, attributesRoutes);
 app.use('/admin', checkAdminSession, addProduct)
 app.use('/admin', checkAdminSession, banner)
 app.use('/admin', checkAdminSession, coupon)
+app.use('/admin', checkAdminSession, offer)
 app.use('/admin',editProduct)
 
 // Routes

@@ -417,3 +417,11 @@
   justify-content: space-between; /* Products will go straight across */
 /* } */
 
+
+.discount-banner {
+  z-index: 1; /* Ensure it's above the image */
+  font-size: 0.9rem; /* Adjust font size as needed */
+  border-radius: 0.25rem; /* Rounded corners */
+  /* Additional styles if needed */
+}
+
