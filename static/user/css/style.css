@@ -418,10 +418,62 @@
 /* } */
 
 
+
 .discount-banner {
-  z-index: 1; /* Ensure it's above the image */
-  font-size: 0.9rem; /* Adjust font size as needed */
-  border-radius: 0.25rem; /* Rounded corners */
-  /* Additional styles if needed */
+  position: absolute;
+  top: 0;
+  left: 0; /* Align to the top left corner */
+  z-index: 2; /* Ensure it's above other elements */
 }
 
+.product-box {
+  position: relative; /* Needed for absolute positioning of children */
+}
+.img-wrapper {
+  position: relative;
+  height: 200px; 
+  width: 100%; 
+}
+
+.product-details h6, .product-details h3 {
+  margin: 5px 0; /* Reduces the space between the brand and the product name */
+}
+
+.product-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Aligns items to start, center, or end of container */
+}
+
+.front a {
+  display: block;
+  height: 100%; /* Make it the full height of .img-wrapper */
+  width: 100%; /* Make it the full width of .img-wrapper */
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.main-price {
+  display: flex; /* Aligns children inline */
+  align-items: baseline; /* Aligns items on their baseline for a consistent look */
+  gap: 0.5rem; /* Optional: adds some space between the original and discounted prices */
+}
+.font-light {
+  font-weight: 300; /* Adjust the font weight as needed */
+}
+
+.theme-color {
+  color: #000; /* Adjust the color as needed */
+}
+
+.text-decoration-line-through {
+  text-decoration: line-through;
+}
+
+.add-to-wishlist-button {
+  position: absolute;
+  top: 0;
+  right: 0; /* Align to the top right corner */
+  border: none; /* Remove border if it's not needed */
+}

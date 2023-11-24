@@ -212,7 +212,10 @@ exports.getAllProducts = async (req, res) => {
         // brands.forEach((brand) => {
         //   console.log(brand);
         // });
-        res.render('user/productview', { brands, colors, subcategories, minPrice, maxPrice });
+        
+        const currentPage = parseInt(req.query.page) || 1;
+
+        res.render('user/productview', { brands, colors, subcategories, minPrice, maxPrice,currentPage  });
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).send('Internal Server Error');

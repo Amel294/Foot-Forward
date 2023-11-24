@@ -116,59 +116,69 @@ router.get('/product/:productId', productController.productById);
 
 router.get('/products/filter', async (req, res) => {
   try {
-    const { brand, color, category,search } = req.query;
+    const { brand, color, category, search, page } = req.query;
+    console.log(req.query);
+    const limit = 8; // Adjust the limit as per your requirement
+    const skip = (page - 1) * limit;
 
     let filters = {};
-    if (brand) {
-      filters.brand = { $in: brand.split(',') };
-    }
-    if (color) {
-      filters['variants.color'] = { $in: color.split(',') };
-    }
-    if (category) {
-      filters.subcategory = { $in: category.split(',') };
-    }
+    if (brand) filters.brand = { $in: brand.split(',') };
+    if (color) filters['variants.color'] = { $in: color.split(',') };
+    if (category) filters.subcategory = { $in: category.split(',') };
+
+    // Construct the search filter to match products based on name
+    const searchFilter = {};
     if (search) {
-      filters.name = { $regex: search, $options: 'i' }; // Use regex for partial matching
+      searchFilter.name = { $regex: search, $options: 'i' };
     }
 
-    // Fetch all necessary data
-    const brands = await Brand.find({ isDeleted: false });
-    const colors = await Color.find({ isDeleted: false });
-    const subcategories = await Category.find({ isDeleted: false }).distinct('Subcategory');
-    const offer = await Offer.find({});
-    let products = await Product.find(filters).populate('brand').populate('subcategory').exec();
-    let userWishlist ;
-    if(req.session.user){
-      const userId = req.session.user.id;
-       userWishlist = await wishlist.findOne({ user: new mongoose.Types.ObjectId(userId) });
-  
-      // Add isInWishlist field to each product
-      products = products.map(product => {
-        product = product.toObject(); // Convert Mongoose document to plain JavaScript object
-        product.isInWishlist = userWishlist && userWishlist.products.includes(product._id.toString());
-        return product;
-      });
-      console.log(products)
+    // Combine the filters and search filter
+    const combinedFilters = { ...filters, ...searchFilter };
+    let products
+    if(search){
+      products = await Product.find(combinedFilters)
+      .populate('brand')
+      .populate('subcategory')
+      .skip(0)
+      .limit(0);
+    }else{
+      products = await Product.find(combinedFilters)
+      .populate('brand')
+      .populate('subcategory')
+      .skip(skip)
+      .limit(limit);
     }
     
-    // Retrieve user's wishlist
-   
-    // Pass all the necessary data to the EJS template
-    res.render('user/includeUser/content_productView_singleProduct', {
-      products,
-      brands,
-      colors,
-      subcategories,
-      Wishlist: userWishlist,
-      req
-    });
 
+    const noOfProducts = await Product.countDocuments(combinedFilters);
+    const totalPages = Math.ceil(noOfProducts / limit);
+
+    let userWishlist = null;
+    if (req.session && req.session.user) {
+      const userId = req.session.user._id;
+      userWishlist = await Wishlist.findOne({ user: userId });
+    }
+
+    // Render the EJS template with products and pagination details
+    res.render('user/includeUser/content_productView_singleProduct', {
+      products: products.map((product) => ({
+        ...product.toObject(),
+        isInWishlist: userWishlist ? userWishlist.products.includes(product._id.toString()) : false,
+      })),
+      brands: await Brand.find(),
+      colors: await Color.find(),
+      subcategories: await Category.find(),
+      currentPage: page,
+      totalPages,
+      userWishlist,
+      req,
+    });
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 

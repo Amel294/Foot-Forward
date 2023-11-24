@@ -13,7 +13,7 @@ const Wishlist = require('../model/wishlist');
 const util = require('util');
 const adminReferral = require("../model/referral")
 const Referral = require("../model/ReferralModel")
-
+const Wallet  = require("../model/wallet")
 // SMTP configuration
 let transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -113,7 +113,7 @@ exports.signup_POST = (req, res) => {
   const email = req.body.email;
   const phone = req.body.phone.toString();
   const password = req.body.password;
-
+  const referralCode = req.body.referralCode;
   // Check if the phone number is empty
   if (!phone) {
     return res.status(400).json({ error: "Phone number is required" });
@@ -126,11 +126,12 @@ exports.signup_POST = (req, res) => {
     fullName,
     email,
     phone,
-    password
+    password,
+    referralCode
   };
 
   req.session.save();
-
+  
   // Redirect to the '/emailOtp' route and render the 'emailOtp' view
   res.redirect('/emailOtp');
 }
@@ -151,7 +152,25 @@ exports.resend = async (req, res) => {
   });
 }
 
+// Function to update or create a wallet for a user
+async function updateOrCreateWallet(userId, description, amount) {
+  let wallet = await Wallet.findOne({ user: userId });
 
+  if (!wallet) {
+      // Create a new wallet if it doesn't exist
+      wallet = new Wallet({
+          user: userId,
+          balance: amount,
+          transactions: [{ description, amount }]
+      });
+  } else {
+      // Update existing wallet
+      wallet.balance += amount;
+      wallet.transactions.push({ description, amount });
+  }
+
+  await wallet.save();
+}
 
 exports.verifyOTP = async (req, res) => {
   console.log("Verify OTP");
@@ -171,6 +190,26 @@ exports.verifyOTP = async (req, res) => {
       console.log(user)
       console.log(req.session.temp);
       await user.save();
+      console.log(`Created user ${user._id}` )
+      if (req.session.temp.referralCode) {
+        // Find the referrer by the referral code
+        const referral = await Referral.findOne({ referralCode: req.session.temp.referralCode });
+        console.log(referral)
+        if (referral) {
+                
+                const oldUser = await User.findOne({_id:referral.ownedBy})
+                const newUser = await User.findOne({_id:user._id})
+                await updateOrCreateWallet(oldUser, 'Referral bonus received', 50);
+                await updateOrCreateWallet(newUser._id, 'Referral bonus for joining', 50);
+
+                console.log("*****************")
+                console.log(`New user ${newUser}` )
+                console.log("*****************")
+                console.log(`old user ${oldUser}` )
+                console.log("*****************")
+            }
+        }
+    
       req.session.temp = null;  // Clear the temporary session data
       res.json({ success: true, message: 'OTP verified successfully and user saved!' });
     } catch (error) {

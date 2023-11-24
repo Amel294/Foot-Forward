@@ -1,98 +1,188 @@
-<% products.forEach(product => { %>
+<% if(products.length===0){ %>
   <div class="col-lg-3 col-md-4 col-sm-6 col-12">
-      <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
-          <div class="img-wrapper position-relative">
-            <!-- Discount Banner -->
-            <% if (product.hasOffer) { %>
-              <div class="discount-banner position-absolute top-0 end-0 bg-danger text-white p-2">
-                  <%= product.offerPercent %>% OFF
-              </div>
-          <% } %>
-              <div class="front">
-                  <a href="/product/<%= product.productId %>" class="bg-size blur-up lazyloaded"
-                      style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
-                  </a>
-              </div>
-          </div>
+    <div class="product-box  p-3 mb-5 bg-white rounded-3">
+      <h3>No Produts found with these filter</h3>
 
-          <div class="product-details">
-              <!-- Rating Details -->
-              <h6 class="theme-color"><%= product.brand.name %></h6>
-              <h3 class="theme-color"><%= product.name %></h3>
-              
-              <div class="main-price">
-                <% if (product.hasOffer) { %>
-                  <!-- Original Price Strikethrough -->
-                  <h5 class="font-light theme-color text-decoration-line-through">
-                      ₹<%= product.price %>
-                  </h5>
-                  <!-- Discounted Price -->
-                  <h5 class="font-light theme-color">
-                      ₹<%= (product.price - (product.price * product.offerPercent / 100)).toFixed(2) %>
-                  </h5>
-              <% } else { %>
-                  <!-- Regular Price -->
-                  <h5 class="font-light theme-color">₹<%= product.price %></h5>
-              <% } %>
-
-                  <% if (req.session.user) { %>
-                      <% if (product.isInWishlist) { %>
-                          <!-- Full heart icon for products in the wishlist -->
-                          <button type="button" class="btn m-1 btn-sm rounded-3 add-to-wishlist-button added-to-wishlist"
-                              style="border: none;"
-                              data-product-id="<%= product._id %>">
-                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 48 48">
-                                  <path class="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z"/>
-                              </svg>
-                          </button>
-                      <% } else { %>
-                          <!-- Hollow heart icon for products not in the wishlist -->
-                          <button type="button" class="btn m-1 btn-sm rounded-3 add-to-wishlist-button"
-                              style="border: none;"
-                              data-product-id="<%= product._id %>">
-                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 48 48">
-                                  <path class="heart" d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z"/>
-                              </svg>
-                          </button>
-                      <% } %>
-                  <% } %>
-              </div>
-          </div>
-      </div>
+    </div>
   </div>
-<% }); %>
+  <% }%>
+
+
+    <div class="container">
+      <div class="row"> <!-- Make sure this row class is present -->
+
+        <% products.forEach(product=> { %>
+          <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+            <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
+              <div class="img-wrapper position-relative">
+                <!-- Discount Banner -->
+
+                <% if (product.hasOffer) { %>
+                  <div class="discount-banner position-absolute top-0 end-0 bg-danger text-white p-2"
+                    style="width: 40%;">
+                    <%= product.offerPercent %>% OFF
+                  </div>
+                  <% } %>
+                    <div class="front">
+                      <a href="/product/<%= product.productId %>" class="bg-size blur-up lazyloaded"
+                        style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
+                      </a>
+                    </div>
+              </div>
+
+              <div class="product-details">
+                <!-- Rating Details -->
+                <h6 class="theme-color">
+                  <%= product.brand.name %>
+                </h6>
+                <h3 class="theme-color">
+                  <%= product.name %>
+                </h3>
+
+                <div class="main-price">
+                  <% if (product.hasOffer) { %>
+                    <!-- Original Price Strikethrough -->
+                    <h5 class="font-light theme-color text-decoration-line-through">
+                      ₹<%= product.price %>
+                    </h5>
+                    <!-- Discounted Price -->
+                    <h5 class="font-light theme-color">
+                      ₹<%= (product.price - (product.price * product.offerPercent / 100)).toFixed(2) %>
+                    </h5>
+                    <% } else { %>
+                      <!-- Regular Price -->
+                      <h5 class="font-light theme-color">₹<%= product.price %>
+                      </h5>
+                      <% } %>
+
+                        <% if (req.session.user) { %>
+                          <% if (product.isInWishlist) { %>
+                            <!-- Full heart icon for products in the wishlist -->
+                            <button type="button"
+                              class="btn m-1 btn-sm rounded-3 add-to-wishlist-button added-to-wishlist"
+                              style="border: none;" data-product-id="<%= product._id %>">
+                              <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                viewBox="0 0 48 48">
+                                <path class="heart"
+                                  d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" />
+                              </svg>
+                            </button>
+                            <% } else { %>
+                              <!-- Hollow heart icon for products not in the wishlist -->
+                              <button type="button" class="btn m-1 btn-sm rounded-3 add-to-wishlist-button"
+                                style="border: none;" data-product-id="<%= product._id %>">
+                                <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                  viewBox="0 0 48 48">
+                                  <path class="heart"
+                                    d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" />
+                                </svg>
+                              </button>
+                              <% } %>
+                                <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% }); %>
+      </div>
+    </div>
 
 
 
-<script>
-  
-  // JavaScript to handle the click event for adding/removing products from the wishlist
-  $(document).ready(function () {
-    $('.add-to-wishlist-button').on('click', function () {
-  const wishlistButton = $(this);
-  const productId = wishlistButton.data('product-id');
-  const isAdded = wishlistButton.hasClass('added-to-wishlist');
-      console.log(`Product id is ${productId}`);
-      let urltest = `/wishlist/${isAdded ? 'remove' : 'add'}/${productId}`;
-      let typetest = isAdded ? 'DELETE' : 'POST';
-      console.log(urltest);
-      console.log(typetest);
-      $.ajax({
-    url: urltest,
-    type: typetest,
-    success: function () {
-      if (isAdded) {
-        wishlistButton.removeClass('added-to-wishlist');
-        wishlistButton.find('.heart').attr('fill', 'transparent'); // Make the heart hollow
-      } else {
-        wishlistButton.addClass('added-to-wishlist');
-        wishlistButton.find('.heart').attr('fill', 'red'); // Make the heart solid and red
-      }
-    },
-    error: function () {
-      console.error(`Failed to ${isAdded ? 'remove' : 'add'} product to wishlist`);
-    }
-  });
-});
-  });
-</script>
+
+    <nav class="page-section">
+      <ul class="pagination">
+        <!-- Previous Page Link -->
+        <% if (currentPage > 1) { %>
+          <li class="page-item">
+            <a class="page-link" href="#" onclick="loadPage(<%= currentPage - 1 %>)" aria-label="Previous">
+              <span aria-hidden="true">
+                <i class="fas fa-chevron-left"></i>
+              </span>
+            </a>
+          </li>
+        <% } %>
+    
+        <!-- First Page Link -->
+        <% if (currentPage > 3) { %>
+          <li class="page-item">
+            <a class="page-link" href="#" onclick="loadPage(1)">
+              1
+            </a>
+          </li>
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+        <% } %>
+    
+        <!-- Page Links -->
+        <% const minPage = Math.max(currentPage - 1, 1); %>
+        <% const maxPage = Math.min(currentPage + 1, totalPages); %>
+        <% for (let i = minPage; i <= maxPage; i++) { %>
+          <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+            <a class="page-link" href="#" onclick="loadPage(<%= i %>)">
+              <%= i %>
+            </a>
+          </li>
+        <% } %>
+    
+        <!-- Last Page Link -->
+        <% if (currentPage < totalPages - 2) { %>
+          <li class="page-item disabled">
+            <span class="page-link">...</span>
+          </li>
+          <li class="page-item">
+            <a class="page-link" href="#" onclick="loadPage(<%= totalPages %>)">
+              <%= totalPages %>
+            </a>
+          </li>
+        <% } %>
+    
+        <!-- Next Page Link -->
+        <% if (currentPage < totalPages) { %>
+          <li class="page-item">
+            <a class="page-link" href="#" onclick="loadPage(<%= currentPage + 1 %>)" aria-label="Next">
+              <span aria-hidden="true">
+                <i class="fas fa-chevron-right"></i>
+              </span>
+            </a>
+          </li>
+        <% } %>
+      </ul>
+    </nav>
+    
+    
+
+
+    <script>
+
+      // JavaScript to handle the click event for adding/removing products from the wishlist
+      $(document).ready(function () {
+        $('.add-to-wishlist-button').on('click', function () {
+          const wishlistButton = $(this);
+          const productId = wishlistButton.data('product-id');
+          const isAdded = wishlistButton.hasClass('added-to-wishlist');
+          console.log(`Product id is ${ productId }`);
+          let urltest = `/wishlist/${ isAdded ? 'remove' : 'add' }/${ productId }`;
+          let typetest = isAdded ? 'DELETE' : 'POST';
+          console.log(urltest);
+          console.log(typetest);
+          $.ajax({
+            url: urltest,
+            type: typetest,
+            success: function () {
+              if (isAdded) {
+                wishlistButton.removeClass('added-to-wishlist');
+                wishlistButton.find('.heart').attr('fill', 'transparent'); // Make the heart hollow
+              } else {
+                wishlistButton.addClass('added-to-wishlist');
+                wishlistButton.find('.heart').attr('fill', 'red'); // Make the heart solid and red
+              }
+            },
+            error: function () {
+              console.error(`Failed to ${ isAdded ? 'remove' : 'add' } product to wishlist`);
+            }
+          });
+        });
+      });
+    </script>

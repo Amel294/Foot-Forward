@@ -183,31 +183,29 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
 //catagory filter
 
 <script>
-  function nextPage() {
-    if (currentPage < totalPages) {
-      currentPage++;
-      updateProductList();
-    }
-  }
-  function updateProductList() {
-    const selectedBrands = [];
-    const selectedColors = [];
-    const selectedCategories = [];
-    let minPrice = $('#minPrice').val();
-    let maxPrice = $('#maxPrice').val();
+  // Initialize currentPage with the current page from the server
+  let currentPage = <%= currentPage %>;
 
-    // Get the selected checkboxes
-    $('input[type="checkbox"].check-it:checked').each(function() {
-        const id = $(this).attr('id');
-        if (id.startsWith('brand-')) {
-            selectedBrands.push(id.replace('brand-', ''));
-        } else if (id.startsWith('category-')) {
-            selectedCategories.push(id.replace('category-', ''));
-        } else if (id.startsWith('color-')) {
-            selectedColors.push(id.replace('color-', ''));
-        }
+  // Function to update the product list based on filters and pagination
+  function updateProductList() {
+    // Get selected filter criteria (brands, categories, colors, minPrice, maxPrice, search term)
+    const selectedBrands = [];
+    const selectedCategories = [];
+    const selectedColors = [];
+    const minPrice = $('#minPrice').val();
+    const maxPrice = $('#maxPrice').val();
+    const searchTerm = $('#searchInput').val();
+
+    $('input[type="checkbox"].check-it:checked').each(function () {
+      const id = $(this).attr('id');
+      if (id.startsWith('brand-')) {
+        selectedBrands.push(id.replace('brand-', ''));
+      } else if (id.startsWith('category-')) {
+        selectedCategories.push(id.replace('category-', ''));
+      } else if (id.startsWith('color-')) {
+        selectedColors.push(id.replace('color-', ''));
+      }
     });
-    let searchTerm = $('#searchInput').val(); // Get the value from the search input
 
     // Debugging: Log selected items
     console.log('Selected Brands:', selectedBrands);
@@ -216,39 +214,56 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
     console.log('Min Price:', minPrice);
     console.log('Max Price:', maxPrice);
 
-    // Now, you can use the selectedBrands and selectedCategories in your AJAX request
-    // You can also use minPrice and maxPrice for filtering products by price range
+    // Make an AJAX request to fetch products based on the selected criteria and current page
     $.ajax({
-        url: '/products/filter',
-        type: 'GET',
-        data: {
-            brand: selectedBrands.join(','), // Backend expects comma-separated values
-            category: selectedCategories.join(','), // Backend expects comma-separated values for categories
-            color: selectedColors.join(','), // Adjust accordingly if you have color filters
-            minPrice: minPrice,
-            maxPrice: maxPrice,
-            search: searchTerm 
-        },
-        success: function(response) {
-            // Update the product list in the DOM with the response
-            $('#product-container').html(response); // Update the "product-container" div
-        },
-        error: function(err) {
-            console.error('Error fetching data:', err);
-        }
+      url: '/products/filter',
+      type: 'GET',
+      data: {
+        brand: selectedBrands.join(','),
+        category: selectedCategories.join(','),
+        color: selectedColors.join(','),
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        search: searchTerm,
+        page: currentPage // Include the current page in the request
+      },
+      success: function (response) {
+        // Update the product list container with the new products
+        $('#product-container').html(response);
+      },
+      error: function (err) {
+        console.error('Error fetching data:', err);
+      }
     });
-}
+  }
 
-// Event listeners
-$('#searchInput').on('input', updateProductList);
-$('input[type="checkbox"].check-it').on('change', updateProductList);
-$('#minPrice, #maxPrice').on('input', updateProductList);
+  // Define the loadPage function to handle pagination
+  function loadPage(pageNumber) {
+    // Update the currentPage variable with the new page number
+    currentPage = pageNumber;
+    // Call the updateProductList function to fetch and display products for the new page
+    updateProductList();
+  }
 
-// Initial call to populate products based on default filters if needed
-// Uncomment this if you want to load products on page load
-updateProductList();
+  // Event listeners for filter criteria changes
+  $('#searchInput').on('input', updateProductList);
+  $('input[type="checkbox"].check-it').on('change', updateProductList);
+  $('#minPrice, #maxPrice').on('input', updateProductList);
 
+  // Event listener for pagination links
+  $('.page-link').on('click', function (e) {
+    e.preventDefault();
+    const page = $(this).attr('href').split('=')[1];
+    currentPage = parseInt(page);
+    loadPage(currentPage); // Call the loadPage function with the new page
+  });
+
+  // Initial call to populate products based on default filters if needed
+  // Uncomment this if you want to load products on page load
+  updateProductList();
 </script>
+
+
 
 
 

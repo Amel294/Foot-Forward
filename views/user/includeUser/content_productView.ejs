@@ -47,33 +47,39 @@
 
                         <div class="accordion-item category-color">
                             <h2 class="accordion-header" id="headingThree">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseThree">
                                     Color
                                 </button>
                             </h2>
-                            <div id="collapseThree" class="accordion-collapse collapse show" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                            <div id="collapseThree" class="accordion-collapse collapse show"
+                                aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                 <div class="accordion-body">
                                     <ul class="category-list color-list-fix">
-                                        <% colors.forEach(color => { %>
+                                        <% colors.forEach(color=> { %>
                                             <li>
-                                              <div class="custom-color-selector">
-                                                <input class="checkbox-animated check-it visually-hidden" type="checkbox" id="color-<%= color._id %>" data-hex="<%= color.hex %>">
-                                                <label style="background-color: <%= color.hex %>" class="color-circle shadow mb-3" for="color-<%= color._id %>">
-                                                  <i class="fas fa-check"></i>
-                                                </label>
-                                              </div>
-                                              <div class="color-circle-preview make_hidden" style="background-color: <%= color.hex %>;"></div>
+                                                <div class="custom-color-selector">
+                                                    <input class="checkbox-animated check-it visually-hidden"
+                                                        type="checkbox" id="color-<%= color._id %>"
+                                                        data-hex="<%= color.hex %>">
+                                                    <label style="background-color: <%= color.hex %>"
+                                                        class="color-circle shadow mb-3" for="color-<%= color._id %>">
+                                                        <i class="fas fa-check"></i>
+                                                    </label>
+                                                </div>
+                                                <div class="color-circle-preview make_hidden"
+                                                    style="background-color: <%= color.hex %>;"></div>
                                             </li>
-                                          <% }); %>
+                                            <% }); %>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        
-                        
 
 
-                        
+
+
+
 
 
                         <div class="accordion-item category-rating">
@@ -87,17 +93,19 @@
                                 <div class="accordion-body category-scroll">
                                     <ul class="category-list">
                                         <% subcategories.forEach(subcategory=> { %>
-                                            
+
                                             <li>
                                                 <div class="form-check ps-0 custome-form-check">
-                                                    <input class="checkbox_animated check-it" type="checkbox" id="category-<%= subcategory._id %>">
-                                                    <label class="form-check-label" for="category-<%= subcategory._id %>">
+                                                    <input class="checkbox_animated check-it" type="checkbox"
+                                                        id="category-<%= subcategory._id %>">
+                                                    <label class="form-check-label"
+                                                        for="category-<%= subcategory._id %>">
                                                         <%= subcategory.category %>
                                                     </label>
                                                     <p class="font-light"></p>
                                                 </div>
                                             </li>
-                                              
+
                                             <% }); %>
                                     </ul>
                                 </div>
@@ -136,43 +144,20 @@
                 <!-- label and featured section -->
 
                 <!-- Prodcut setion -->
-                <div id="product-container"
-                    class="row g-sm-4 g-3 mt-1 custom-gy-5 product-style-2 ratio_asos product-list-section row-cols-lg-4 row-cols-md-3 row-cols-2">
-                    
-                        <!-- content_productView_singleProduct will be rendered by js -->
+                <div id="product-container" 
+                    class="" style="
+                    display: flex;
+                    flex-direction: column;"> 
+
+                    <!-- content_productView_singleProduct will be rendered by js -->
+
+                
+
+
+
                 
             </div>
-
-
-
-            <nav class="page-section">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)" aria-label="Previous">
-                            <span aria-hidden="true">
-                                <i class="fas fa-chevron-left"></i>
-                            </span>
-                        </a>
-                    </li>
-                    <li class="page-item active">
-                        <a class="page-link" href="javascript:void(0)">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="javascript:void(0)">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" aria-label="Next">
-                            <span aria-hidden="true">
-                                <i class="fas fa-chevron-right"></i>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            </div>
         </div>
-    </div>
     </div>
 </section>
