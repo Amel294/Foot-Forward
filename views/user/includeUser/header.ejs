@@ -79,8 +79,13 @@
                                                     </path>
                                                 </svg>
                                                 <span>Wishlist</span>
+                                                <% if (req.session.user && wishlistCount > 0) { %>
+                                                    <span class="badge badge-pill badge-danger"><%= wishlistCount %></span>
+                                                <% } %>
                                             </a>
                                         </li>
+                                        
+
                                         <li>
                                             <a href="/userDashboard" class="nav-link menu-title theme-color">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

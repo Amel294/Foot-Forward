@@ -182,6 +182,88 @@ document.querySelectorAll('.cart-table .fa-times').forEach(item => {
   </script>
   
 
+//catagory filter
+
+<script>
+  // Initialize currentPage with the current page from the server
+  let currentPage = <%= currentPage %>;
+
+  // Function to update the product list based on filters and pagination
+  function updateProductList() {
+    // Get selected filter criteria (brands, categories, colors, minPrice, maxPrice, search term)
+    const selectedBrands = [];
+    const selectedCategories = [];
+    const selectedColors = [];
+    const minPrice = $('#minPrice').val();
+    const maxPrice = $('#maxPrice').val();
+    const searchTerm = $('#searchInput').val();
+
+    $('input[type="checkbox"].check-it:checked').each(function () {
+      const id = $(this).attr('id');
+      if (id.startsWith('brand-')) {
+        selectedBrands.push(id.replace('brand-', ''));
+      } else if (id.startsWith('category-')) {
+        selectedCategories.push(id.replace('category-', ''));
+      } else if (id.startsWith('color-')) {
+        selectedColors.push(id.replace('color-', ''));
+      }
+    });
+
+    // Debugging: Log selected items
+    console.log('Selected Brands:', selectedBrands);
+    console.log('Selected Categories:', selectedCategories);
+    console.log('Selected Colors:', selectedColors);
+    console.log('Min Price:', minPrice);
+    console.log('Max Price:', maxPrice);
+
+    // Make an AJAX request to fetch products based on the selected criteria and current page
+    $.ajax({
+      url: '/products/filter',
+      type: 'GET',
+      data: {
+        brand: selectedBrands.join(','),
+        category: selectedCategories.join(','),
+        color: selectedColors.join(','),
+        minPrice: minPrice,
+        maxPrice: maxPrice,
+        search: searchTerm,
+        page: currentPage // Include the current page in the request
+      },
+      success: function (response) {
+        // Update the product list container with the new products
+        $('#product-container').html(response);
+      },
+      error: function (err) {
+        console.error('Error fetching data:', err);
+      }
+    });
+  }
+
+  // Define the loadPage function to handle pagination
+  function loadPage(pageNumber) {
+    // Update the currentPage variable with the new page number
+    currentPage = pageNumber;
+    // Call the updateProductList function to fetch and display products for the new page
+    updateProductList();
+  }
+
+  // Event listeners for filter criteria changes
+  $('#searchInput').on('input', updateProductList);
+  $('input[type="checkbox"].check-it').on('change', updateProductList);
+  $('#minPrice, #maxPrice').on('input', updateProductList);
+
+  // Event listener for pagination links
+  $('.page-link').on('click', function (e) {
+    e.preventDefault();
+    const page = $(this).attr('href').split('=')[1];
+    currentPage = parseInt(page);
+    loadPage(currentPage); // Call the loadPage function with the new page
+  });
+
+  // Initial call to populate products based on default filters if needed
+  // Uncomment this if you want to load products on page load
+  updateProductList();
+</script>
 
 
 

@@ -22,13 +22,6 @@ router.put('/update-product', async (req, res) => {
 
 
 
-      console.log("1")
-      console.log(productId)
-      console.log("2")
-      console.log(deletedImages)
-      console.log("3")
-      console.log(product)
-
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
@@ -46,13 +39,10 @@ router.put('/update-product', async (req, res) => {
       if (deletedImages.length) {
         product.images = product.images.filter(image => !deletedImages.includes(image._id.toString()));
       }
-  
-     
-  
       await product.save();
-      var jq = jQuery.noConflict();
+      console.log("product saved")
+      res.status(200).send({message: "success"});
 
-      $('#successModal').modal('show');
     } catch (error) {
       console.error('Error in PUT /update-product:', error);
       res.status(500).json({ error: 'Internal server error' });

@@ -31,7 +31,7 @@ const adminReferral = require("../model/referral")
 const Referral = require("../model/ReferralModel")
 // Apply globally
 router.use(checkSession);
-router.get('/blocked',(req,res)=>{
+router.get('/blocked', (req, res) => {
   res.render('blocked')
 })
 
@@ -39,7 +39,7 @@ async function isActive(req, res, next) {
   try {
     // Assuming you have the user's ID in req.session.user.id
     const userId = req.session.user.id;
-    
+
     // Fetch the user from the database
     const user = await userDB.findById(userId);
 
@@ -89,10 +89,10 @@ function signedin(req, res, next) {
   next(); // Continue to the next middleware or route handler
 }
 
-function Protected(req,res,next){
-  if(req.session && req.session.user){
+function Protected(req, res, next) {
+  if (req.session && req.session.user) {
     next();
-  }else{
+  } else {
     res.redirect('/signin')
 
   }
@@ -108,7 +108,7 @@ router.get('/signin', signedin, controller.signIn);
 router.get('/emailOtp', controller.otpPage)
 
 
-router.get('/products',productController.getAllProducts)
+router.get('/products', productController.getAllProducts)
 
 router.get('/product/:productId', productController.productById);
 
@@ -116,68 +116,90 @@ router.get('/product/:productId', productController.productById);
 
 router.get('/products/filter', async (req, res) => {
   try {
-    const { brand, color, category, search, page } = req.query;
-    console.log(req.query);
-    const limit = 8; // Adjust the limit as per your requirement
+
+    const { brand, color, category, search, page = 1 } = req.query;
+    const limit = 8; // Set the limit of items per page
     const skip = (page - 1) * limit;
 
-    let filters = {};
-    if (brand) filters.brand = { $in: brand.split(',') };
-    if (color) filters['variants.color'] = { $in: color.split(',') };
-    if (category) filters.subcategory = { $in: category.split(',') };
+    if (search || brand || color || category) {
+      let filters = {};
+      if (brand) filters.brand = { $in: brand.split(',') };
+      if (color) filters['variants.color'] = { $in: color.split(',') };
+      if (category) filters.subcategory = { $in: category.split(',') };
+      const searchFilter = {};
+      if (search) {
+        searchFilter.name = { $regex: search, $options: 'i' };
+      }
+      const combinedFilters = { ...filters, ...searchFilter };
 
-    // Construct the search filter to match products based on name
-    const searchFilter = {};
-    if (search) {
-      searchFilter.name = { $regex: search, $options: 'i' };
+      const noOfProducts = await Product.countDocuments(combinedFilters);
+      const totalPages = Math.ceil(noOfProducts / limit);
+
+      const products = await Product.find(combinedFilters)
+        .populate('brand')
+        .populate('subcategory')
+        .skip(skip)
+        .limit(limit);
+
+      let userWishlist = null;
+      if (req.session && req.session.user) {
+        const userId = req.session.user._id;
+        userWishlist = await wishlist.findOne({ user: userId });
+      }
+
+      // Render the EJS template with products and pagination details
+      res.render('user/includeUser/content_productView_singleProduct', {
+        products: products.map((product) => ({
+          ...product.toObject(),
+          isInWishlist: userWishlist ? userWishlist.products.includes(product._id.toString()) : false,
+        })),
+        brands: await Brand.find(),
+        colors: await Color.find(),
+        subcategories: await Category.find(),
+        currentPage: page,
+        totalPages,
+        userWishlist,
+        req,
+        
+      });
+    } else {
+      const products = await Product.find()
+        .populate('brand')
+        .populate('subcategory')
+        .skip(skip)
+        .limit(limit);
+
+      const noOfProducts = await Product.countDocuments();
+      const totalPages = Math.ceil(noOfProducts / limit);
+
+      let userWishlist = null;
+      if (req.session && req.session.user) {
+        const userId = req.session.user._id;
+        userWishlist = await wishlist.findOne({ user: userId });
+      }
+
+      // Render the EJS template with products and pagination details
+      res.render('user/includeUser/content_productView_singleProduct', {
+        products: products.map((product) => ({
+          ...product.toObject(),
+          isInWishlist: userWishlist ? userWishlist.products.includes(product._id.toString()) : false,
+        })),
+        brands: await Brand.find(),
+        colors: await Color.find(),
+        subcategories: await Category.find(),
+        currentPage: page,
+        totalPages,
+        userWishlist,
+        req,
+        
+      });
     }
-
-    // Combine the filters and search filter
-    const combinedFilters = { ...filters, ...searchFilter };
-    let products
-    if(search){
-      products = await Product.find(combinedFilters)
-      .populate('brand')
-      .populate('subcategory')
-      .skip(0)
-      .limit(0);
-    }else{
-      products = await Product.find(combinedFilters)
-      .populate('brand')
-      .populate('subcategory')
-      .skip(skip)
-      .limit(limit);
-    }
-    
-
-    const noOfProducts = await Product.countDocuments(combinedFilters);
-    const totalPages = Math.ceil(noOfProducts / limit);
-
-    let userWishlist = null;
-    if (req.session && req.session.user) {
-      const userId = req.session.user._id;
-      userWishlist = await Wishlist.findOne({ user: userId });
-    }
-
-    // Render the EJS template with products and pagination details
-    res.render('user/includeUser/content_productView_singleProduct', {
-      products: products.map((product) => ({
-        ...product.toObject(),
-        isInWishlist: userWishlist ? userWishlist.products.includes(product._id.toString()) : false,
-      })),
-      brands: await Brand.find(),
-      colors: await Color.find(),
-      subcategories: await Category.find(),
-      currentPage: page,
-      totalPages,
-      userWishlist,
-      req,
-    });
   } catch (error) {
     console.error('Error fetching data:', error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 
 
@@ -284,7 +306,7 @@ router.get('/get-amount-keys-payment-address', async (req, res) => {
 
     // Find the user's cart and calculate the total order amount
     const cart = await Cart.findOne({ user: userId }).select({ total: 1, _id: 1 });
-    console.log(`cart in /get-amount is ${cart}`)
+    console.log(`cart in /get-amount is ${ cart }`)
     if (!cart) {
       return res.status(404).json({ error: 'Cart not found' });
     }
@@ -294,14 +316,14 @@ router.get('/get-amount-keys-payment-address', async (req, res) => {
       keySecret: process.env.RAZORPAY_Key_Secret
     };
 
-    
-    console.log(`Orderdata cart.total is  ${cart.total}`);
-    console.log(`Orderdata cart.id is  ${cart._id}`);
-    console.log(`Orderdata keys.id is  ${keys.keyId}`);
-    console.log(`Orderdata keys.secret is  ${keys.keySecret}`);
+
+    console.log(`Orderdata cart.total is  ${ cart.total }`);
+    console.log(`Orderdata cart.id is  ${ cart._id }`);
+    console.log(`Orderdata keys.id is  ${ keys.keyId }`);
+    console.log(`Orderdata keys.secret is  ${ keys.keySecret }`);
 
     // Return the order amount as JSON
-    res.json({ cart,keys });
+    res.json({ cart, keys });
   } catch (error) {
     console.error('Error fetching order amount:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -310,7 +332,7 @@ router.get('/get-amount-keys-payment-address', async (req, res) => {
 
 
 
-router.get('/checkout',Protected, addressController.checkout)
+router.get('/checkout', Protected, addressController.checkout)
 // Apply Coupon route (POST)
 router.post('/apply-coupon', couponController.addCoupon);
 
@@ -318,9 +340,9 @@ router.post('/apply-coupon', couponController.addCoupon);
 router.delete('/remove-coupon', couponController.removeCoupon);
 
 
-router.post('/place-order', Protected,cartController.placeOrder);
+router.post('/place-order', Protected, cartController.placeOrder);
 
-router.get('/orderSuccess',Protected, orderController.orderSuccess)
+router.get('/orderSuccess', Protected, orderController.orderSuccess)
 
 
 
@@ -329,14 +351,14 @@ async function generateUniqueReferralCoupon(Referral) {
   let uniqueCoupon = '';
 
   while (!isUnique) {
-      // Generate a random string for the coupon
-      uniqueCoupon = crypto.randomBytes(8).toString('hex');
+    // Generate a random string for the coupon
+    uniqueCoupon = crypto.randomBytes(8).toString('hex');
 
-      // Check if this coupon already exists in the database
-      const existingCoupon = await Referral.findOne({ referralCode: uniqueCoupon });
-      if (!existingCoupon) {
-          isUnique = true;
-      }
+    // Check if this coupon already exists in the database
+    const existingCoupon = await Referral.findOne({ referralCode: uniqueCoupon });
+    if (!existingCoupon) {
+      isUnique = true;
+    }
   }
 
   return uniqueCoupon;
@@ -345,24 +367,24 @@ async function generateUniqueReferralCoupon(Referral) {
 
 router.post('/create-referral-coupon', async (req, res) => {
   try {
-      const uniqueCouponCode = await generateUniqueReferralCoupon(Referral);
+    const uniqueCouponCode = await generateUniqueReferralCoupon(Referral);
 
-      const ownedByUserId = req.session.user.id;
+    const ownedByUserId = req.session.user.id;
 
-      // Create a new referral document
-      const newReferral = new Referral({
-          referralCode: uniqueCouponCode,
-          ownedBy: ownedByUserId,
-          createdAt: Date.now()
-      });
+    // Create a new referral document
+    const newReferral = new Referral({
+      referralCode: uniqueCouponCode,
+      ownedBy: ownedByUserId,
+      createdAt: Date.now()
+    });
 
-      // Save the new referral to the database
-      await newReferral.save();
+    // Save the new referral to the database
+    await newReferral.save();
 
-      res.status(201).send({ message: 'Referral coupon created', couponCode: uniqueCouponCode });
+    res.status(201).send({ message: 'Referral coupon created', couponCode: uniqueCouponCode });
   } catch (error) {
-      console.error('Error creating referral coupon:', error);
-      res.status(500).send({ message: 'Error creating referral coupon: ' + error.message });
+    console.error('Error creating referral coupon:', error);
+    res.status(500).send({ message: 'Error creating referral coupon: ' + error.message });
   }
 });
 

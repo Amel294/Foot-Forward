@@ -13,15 +13,15 @@
                                         class="icon ni ni-more-v"></em></a>
                                 <div class="toggle-expand-content" data-content="pageMenu">
                                     <ul class="nk-block-tools g-3">
-                                        <li>
+                                        <!-- <li>
                                             <div class="form-control-wrap">
                                                 <div class="form-icon form-icon-right"><em
                                                         class="icon ni ni-search"></em></div><input type="text"
                                                     class="form-control" id="default-04"
                                                     placeholder="Quick search by id">
                                             </div>
-                                        </li>
-                                        <li>
+                                        </li> -->
+                                        <!-- <li>
                                             <div class="drodown"><a href="#"
                                                     class="dropdown-toggle dropdown-indicator btn btn-outline-light btn-white"
                                                     data-bs-toggle="dropdown">Status</a>
@@ -33,7 +33,7 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> -->
 
                                         <li class="nk-block-tools-opt"><a href="#" data-target="addProduct"
                                                 class="toggle btn btn-icon btn-primary d-md-none"><em
@@ -50,11 +50,7 @@
                 <div class="nk-block">
                     <div class="nk-tb-list is-separate mb-3">
                         <div class="nk-tb-item nk-tb-head">
-                            <div class="nk-tb-col nk-tb-col-check">
-                                <div class="custom-control custom-control-sm custom-checkbox notext"><input
-                                        type="checkbox" class="custom-control-input" id="pid"><label
-                                        class="custom-control-label" for="pid"></label></div>
-                            </div>
+                            
                             <div class="nk-tb-col tb-col-sm"><span>Name</span></div>
                             <div class="nk-tb-col"><span>Product ID</span></div>
                             <div class="nk-tb-col"><span>Price</span></div>
@@ -70,12 +66,7 @@
 
                         <% products.forEach(product=> { %>
                             <div class="nk-tb-item">
-                                <div class="nk-tb-col nk-tb-col-check">
-                                    <div class="custom-control custom-control-sm custom-checkbox notext">
-                                        <input type="checkbox" class="custom-control-input" id="pid<%= product._id %>">
-                                        <label class="custom-control-label" for="pid<%= product._id %>"></label>
-                                    </div>
-                                </div>
+                                
                                 <div class="nk-tb-col tb-col-sm">
                                     <span class="tb-product">
                                         <% if(product.images && product.images[0]) { %>
@@ -162,16 +153,13 @@
                         <div class="card-inner">
                             <div>
                                 <ul class="pagination">
-                                    <li class="page-item"><a class="page-link" href="#">Prev</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><span class="page-link"><em
-                                                class="icon ni ni-more-h"></em></span></li>
-                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">7</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                  <% for(let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                                      <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+                                    </li>
+                                  <% } %>
                                 </ul>
-                            </div>
+                              </div>
 
                         </div>
                     </div>

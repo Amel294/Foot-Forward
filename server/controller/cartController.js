@@ -279,23 +279,15 @@ exports.removeFromCart =async (req, res) => {
 
 exports.itemsInCart = async (req, res) => {
   try {
-    console.log("Im here");
-    // Assuming you have a middleware that sets req.user to the logged-in user's info
     if (!req.session.user.id) {
       return res.status(401).json({ message: "User is not authenticated." });
     }
-    console.log("Im here");
     // Find the cart for the logged-in user
-    const cart = await Cart.findOne({ user: req.session.user.id });
-    if (!cart) {
+    const cartCount = await Cart.countDocuments({ user: req.session.user.id });
+        if (!cartCount) {
       return res.status(200).json({ count: 0 }); // No cart means 0 items
     }
-    console.log("Im here");
-    // Calculate the total number of items in the cart
-    const itemCount = cart.items.reduce((total, item) => total + item.quantity, 0);
-
-    // Respond with the count
-    res.status(200).json({ count: itemCount });
+    res.status(200).json({ count: cartCount });
   } catch (error) {
     console.error('Error getting cart items count:', error);
     res.status(500).json({ message: "Internal server error." });

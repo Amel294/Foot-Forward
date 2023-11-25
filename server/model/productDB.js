@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema, ObjectId } = mongoose;
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 // Define the product schema
 const productSchema = new Schema({
@@ -110,6 +111,7 @@ productSchema.statics.getPriceById = async function(productId) {
 
 
 // You should implement the `fetchImageFromURL` function to retrieve the image data from the URL and return it as a base64 string.
+productSchema.plugin(mongoosePaginate);
 
 const Product = mongoose.model('ProductDB', productSchema);
 

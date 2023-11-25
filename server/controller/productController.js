@@ -6,7 +6,7 @@ const brand = require('../model/productAttribute/brandDB')
 const subcategories = require('../model/productAttribute/categoryDB')
 const color = require("../model/productAttribute/colorDB")
 const Category = require("../model/productAttribute/categoryDB")
-
+const wishlist = require("../model/wishlist")
 
 
 // Handle API request to get the last added product's ID
@@ -172,6 +172,8 @@ exports.getProductData = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
     try {
+        const wishlistCount = await wishlist.countDocuments({ user: req.session.user.id });
+        console.log(`Wishlist count is ${wishlistCount}`)
         // Fetch the list of brands from the database
         const brands = await brand.find();
         const colors = await color.find();
@@ -215,7 +217,7 @@ exports.getAllProducts = async (req, res) => {
         
         const currentPage = parseInt(req.query.page) || 1;
 
-        res.render('user/productview', { brands, colors, subcategories, minPrice, maxPrice,currentPage  });
+        res.render('user/productview', { brands, colors, subcategories, minPrice, maxPrice,currentPage ,req,wishlistCount });
     } catch (error) {
         console.error('Error fetching data:', error);
         res.status(500).send('Internal Server Error');

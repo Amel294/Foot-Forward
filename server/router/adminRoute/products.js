@@ -3,11 +3,18 @@ const router = express.Router();
 const Product = require("../../model/productDB")
 
 router.get('/products', async (req, res) => {
-    const products = await Product.find().populate('variants.color variants.size subcategory brand');
-
-    res.render('products', { products, activeRoute: 'products' });
-});
-
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10; // Adjust the limit as needed
+  
+    try {
+      const products = await Product.paginate({}, { page, limit, populate: 'variants.color variants.size subcategory brand' });
+  
+      res.render('products', { products: products.docs, activeRoute: 'products', totalPages: products.totalPages, currentPage: page });
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  });
 
 
 

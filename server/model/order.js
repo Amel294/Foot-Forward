@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema, ObjectId } = mongoose;
 const Product = require('./productDB'); // Adjust the path to where your Product model is located
+const mongoosePaginate = require('mongoose-paginate-v2');
 
 // Define possible order status values
 const OrderStatus = {
@@ -99,6 +100,7 @@ orderSchema.pre('save', async function(next) {
 
 
 
+orderSchema.plugin(mongoosePaginate);
 
 const Order = mongoose.model('Order', orderSchema);
 

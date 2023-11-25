@@ -4,13 +4,16 @@ const Order = require("../../model/order")
 
 
 router.get('/orders', async (req, res) => {
-  try {
-    const orders = await Order.find().populate('user').populate('items.product'); // Populate both 'user' and 'items.product' fields
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10; // Adjust the limit as needed
 
-    res.render('orders', { activeRoute: 'orders', orders });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
+  try {
+    const orders = await Order.paginate({}, { page, limit, populate: 'user items.product' });
+
+    res.render('orders', { activeRoute: 'orders', orders: orders.docs, totalPages: orders.totalPages, currentPage: page });
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 
