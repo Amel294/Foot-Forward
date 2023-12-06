@@ -91,50 +91,47 @@ exports.getStockAndNameWithProductAndVarientId = async function getVariantStock(
   const pipeline = [
     {
       $match: {
-        _id: new mongoose.Types.ObjectId(productId)
-      }
+        _id: new mongoose.Types.ObjectId(productId),
+      },
     },
     {
       $project: {
-        offerPrice : "$offerPrice",
-        price: "$price",
         variants: {
           $filter: {
             input: "$variants",
             as: "variant",
             cond: {
-              $eq: ["$$variant._id", new mongoose.Types.ObjectId(variantId)]
-            }
-          }
+              $eq: ["$$variant._id", new mongoose.Types.ObjectId(variantId)],
+            },
+          },
         },
         name: "$name", // Add this line to project the "name" field
-      }
+      },
     },
     {
-      $unwind: "$variants"
+      $unwind: "$variants",
     },
     {
       $project: {
-        offerPrice : "$offerPrice",
-        price: "$price",
+        total: "$price",
+        offerPrice: "$offerPrice",
         stock: "$variants.stock",
         color: "$variants.color",
         size: "$variants.size",
-        name: "$name" 
-      }
-    }
+        name: "$name",
+      },
+    },
   ];
 
   const result = await productDB.aggregate(pipeline);
-  console.log(`Name is ${result[0].price}`);
+  console.log(`Name is ${result[0].name}`);
   if (result && result.length > 0) {
     return result[0];
   } else {
     // Handle the case where the product or variant is not found
     throw new Error('Product or variant not found');
   }
-}
-
+};
 exports.getQtyIfAlreadyAdded = async function getQtyIfAlreadyAdded(productId, variantId) {
   const cart = await Cart.findOne({
     'items': {

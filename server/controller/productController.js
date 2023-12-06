@@ -211,15 +211,7 @@ exports.getAllProducts = async (req, res) => {
 
         const minPrice = priceRange[0].minPrice;
         const maxPrice = priceRange[0].maxPrice;
-        // Render your EJS template and pass the brands and colors data
-        // Log the brand of each product
-        subcategories.forEach((subcategorie) => {
-            console.log(subcategorie);
-        });
-        // brands.forEach((brand) => {
-        //   console.log(brand);
-        // });
-        
+       
         const currentPage = parseInt(req.query.page) || 1;
        
         res.render('user/productview', { brands, colors, subcategories, minPrice, maxPrice,currentPage ,req,wishlistCount });

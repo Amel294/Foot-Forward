@@ -314,7 +314,6 @@ exports.authenticatePassword = async (req, res) => {
         email: user.email,
         // Add any other user data you want to store in the session
       };
-      console.log("User Created : " + req.session.user)
       // Redirect to the /products route
       return res.redirect('/products');
     } else {

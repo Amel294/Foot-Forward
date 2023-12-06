@@ -27,44 +27,17 @@ exports.getCartPage = async (req, res) => {
     const wishlistCount = userSideMiddleware.getWishlistCountOfUser(req.session.user.id);
 
     // Fetch the cart based on user session ID
-    const cart = await Cart.findOne({ user: req.session.user.id });
+    const cart = await Cart.findOne({ user: req.session.user.id }).populate('items.product  items.color items.size total price');
+
     if (!cart) {
       return res.status(404).send('Cart not found.');
     }
 
-    // Populate the color and size properties of each item in the cart.items array
-    await Cart.populate(cart, { path: 'items.color', select: 'name' });
-    await Cart.populate(cart, { path: 'items.size', select: 'value' });
-    let priceAfterDiscount = 0
-    let discount  = 0
-    // Fetch each product and its variants
-    for (let item of cart.items) {
-      item.product = await ProductDB.findOne({ _id: item.product }, { name: 1, variants: 1,images :1});
-    
-      // Check if product exists
-      if (item.product) {
-        const result = await userSideMiddleware.getStockAndNameWithProductAndVarientId(item.product, item.variant);
-        console.log(`Result: ${result}`);
-        item.price = result.price
-        priceAfterDiscount += result.offerPrice * item.quantity
-        discount  += (result.price - result.offerPrice) * item.quantity
-        // Check if stock is available
-        if (result.stock < item.quantity) {
-          // If stock is not available, you can handle it as per your requirement
-          console.log(`Stock not available for ${result.name } varint stcok  is ${result.stock} color is ${result.color} name is : ${result.name} price is ${result.price}`);
-          // For example, you can mark it as out of stock or remove it from the cart
-          item.outOfStock = true;
-        }
-      } else {
-        // Handle the case where the product is not found
-        console.log(`Product not found for id ${item.product}`);
-        item.outOfStock = true; // Mark it as out of stock or handle it accordingly
-      }
-    }
-    
-    console.log(cart.items);
-    console.log(`Discount is : ${priceAfterDiscount}`)
-    res.render('user/cart', { cart, req, wishlistCount,priceAfterDiscount,discount });
+    console.log(cart)
+
+
+
+    res.render('user/cart', { cart, req, wishlistCount, });
   } catch (error) {
     console.error('Error fetching the cart:', error);
     res.status(500).send('Error fetching the cart');
@@ -102,8 +75,8 @@ exports.itemCount = async (req, res) => {
 exports.placeOrder = async (req, res) => {
   try {
     const userId = req.session.user.id;
-    const { paymentMethod, address,paymentId } = req.body;
-    console.log(`Payment oid is : ${paymentId}`)
+    const { paymentMethod, address, paymentId } = req.body;
+    console.log(`Payment oid is : ${ paymentId }`)
     const shippingAddress = await Address.aggregate([
       {
         $match: { _id: new mongoose.Types.ObjectId(address) }
@@ -117,7 +90,7 @@ exports.placeOrder = async (req, res) => {
           zipCode: '$address.zipCode'
         }
       }
-    ]);    
+    ]);
     console.log(shippingAddress[0].street)
 
     const userCart = await Cart.findOne({ user: userId }).populate('items.product');
@@ -125,7 +98,7 @@ exports.placeOrder = async (req, res) => {
       return res.status(400).json({ error: 'Cart is empty or not found' });
     }
     let order
-    if(paymentMethod  === "PayOnline"){
+    if (paymentMethod === "PayOnline") {
       order = new Order({
         user: userId,
         items: userCart.items,
@@ -138,10 +111,10 @@ exports.placeOrder = async (req, res) => {
           zipCode: shippingAddress[0].zipCode
         },
 
-        
+
       });
     }
-    
+
 
     // Assign unique order IDs to each item
     await assignUniqueOrderIDs(order.items);
@@ -230,19 +203,22 @@ exports.updateQuantity = async (req, res) => {
       hasStock = true;
       return res.status(400).json({ success: false, message: 'Insufficient stock available' });
     }
-     
+
     // Update quantity in cart
     cartItem.quantity = newQuantity;
-   
+
     await userCart.save();
-   
+
 
     // Recalculate cart total and respond
-    await calculateCartTotal(userCart._id);
-    let temp = await ProductDB.findOne({_id :cartItem.product},{price:1 ,_id :0})
+    let temp = await ProductDB.findOne({ _id: cartItem.product }, { price: 1, _id: 0 })
     const newPrice = temp.price;
-    console.log(`New cart price is ${newPrice * newQuantity}`)
-    res.json({ success: true, message: 'Quantity updated successfully',hasStock, newTotal: userCart.total ,newTotal : newPrice * newQuantity});
+    console.log(`New cart price is ${ newPrice * newQuantity }`)
+    const discount = userCart.offerDiscount
+    const cartTotal = userCart.total
+    const grandTotal = userCart.totalAfterOffer
+    const total = userCart.total
+    res.json({ success: true, message: 'Quantity updated successfully', hasStock, newTotal: userCart.total, newTotal: newPrice * newQuantity, discount, grandTotal, cartTotal,total });
   } catch (error) {
     console.error('Error updating item quantity:', error);
     res.status(500).json({ success: false, message: 'Failed to update quantity' });
@@ -251,21 +227,7 @@ exports.updateQuantity = async (req, res) => {
 
 
 
-async function calculateCartTotal(cartId) {
-  const cart = await Cart.findById(cartId).populate('items.product');
-  if (!cart) return;
 
-  let total = 0;
-  for (const item of cart.items) {
-    console.log(`Price: ${ item.product.price }, Quantity: ${ item.quantity }`); // Add this line for debugging
-    total += item.product.price * item.quantity;
-  }
-
-  console.log(`Total: ${ total }`); // Add this line for debugging
-  cart.total = total;
-  await cart.save();
-  return cart.total
-}
 
 
 
@@ -273,10 +235,10 @@ exports.addToCart = async (req, res) => {
   try {
     console.log("In add to cart")
     const userId = req.session.user.id;
-    const { productId, variantId, quantity ,color, size} = req.body;
+    const { productId, variantId, quantity, color, size } = req.body;
     const stock = await userSideMiddleware.getStockWithProductAndVarientId(productId, variantId)
     const qtyinCart = await userSideMiddleware.getQtyIfAlreadyAdded(productId, variantId)
-    
+
     if (qtyinCart + quantity > 10) {
       return res.status(400).send('Cannot add more than 10 products');
     }
@@ -303,11 +265,10 @@ exports.addToCart = async (req, res) => {
     if (itemIndex > -1) {
       cart.items[itemIndex].quantity += quantity;
     } else {
-      cart.items.push({ product: productId, variant: variantId, quantity,color,size });
+      cart.items.push({ product: productId, variant: variantId, quantity, color, size });
     }
 
     await cart.save();
-    await calculateCartTotal(cart._id);
     res.status(200).send('Item added to cart');
   } catch (error) {
     console.error('Error adding to cart:', error);
@@ -315,31 +276,33 @@ exports.addToCart = async (req, res) => {
   }
 }
 
+
 exports.removeFromCart = async (req, res) => {
   try {
     const userId = req.session.user.id;
     const itemId = req.params.itemId;
+
+    // Find the cart instance based on userId and itemId
+    const cartInstance = await Cart.findOne({ user: userId, 'items._id': itemId });
+
+    if (cartInstance) {
+      await cartInstance.removeItem(itemId, userId);
+      console.log('Item removed successfully!');
+      const cart  = await Cart.findOne({user:req.session.user.id})
+      console.log(`Updated caet details are : ${cart}`)
+      const discount = cart.offerDiscount
+    const grandTotal = cart.totalAfterOffer
+    const total = cart.total
+    console.log(`Cart total in remove is ${total}`)
     
-    // Find the cart, remove the item, and return the updated cart
-    const updatedCart = await Cart.findOneAndUpdate(
-      { user: userId },
-      { $pull: { items: { _id: itemId } } },
-      { new: true } // This option returns the updated document
-    );
-
-    // If the cart is not found, send an error response
-    if (!updatedCart) {
-      return res.status(404).json({ success: false, message: 'Cart not found' });
+      res.status(200).json({ success:true, message: 'Item removed successfully', discount, grandTotal,total});
+    } else {
+      console.error('Cart not found for user:', userId);
+      res.status(404).json({success:false , message: 'Cart not found for user' });
     }
-
-    // Recalculate the cart total using the cart ID
-    await calculateCartTotal(updatedCart._id);
-
-    // Send back the updated total
-    res.json({ success: true, total: updatedCart.total });
   } catch (error) {
-    console.error('Error removing item from cart:', error);
-    res.status(500).json({ success: false, message: 'Failed to remove item' });
+    console.error('Error while removing item:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 
