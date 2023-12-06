@@ -3,43 +3,67 @@ const { Schema, ObjectId } = mongoose;
 const Product = require('./productDB'); // Adjust the path to where your Product model is located
 
 // Define the cart schema
-const cartSchema = new Schema({
-    user: {
+const cartSchema = new Schema(
+    {
+      user: {
         type: ObjectId, // Reference to the user who owns the cart
         ref: 'User',    // Reference to the 'User' model
         required: true
-    },
-    items: [
+      },
+      items: [
         {
-            product: {
-                type: ObjectId, // Reference to the product
-                ref: 'ProductDB', // Reference to the 'ProductDB' model
-                required: true
-            },
-            variant: {
-                type: ObjectId, // Reference to the variant within the product
-                ref: 'ProductDB.variants', // Reference to the 'variants' subdocument within 'ProductDB'
-                required: true
-            },
-            
-            quantity: {
-                type: Number,
-                required: true,
-                min: [1, 'Quantity cannot be less than 1.'],
-                max: [10, 'Quantity cannot be more than 1   0.']
-            }
+          product: {
+            type: ObjectId, // Reference to the product
+            ref: 'ProductDB', // Reference to the 'ProductDB' model
+            required: true
+          },
+          variant: {
+            type: ObjectId, // Reference to the variant within the product
+            ref: 'ProductDB.variants', // Reference to the 'variants' subdocument within 'ProductDB'
+            required: true
+          },
+          quantity: {
+            type: Number,
+            required: true,
+            min: [1, 'Quantity cannot be less than 1.'],
+            max: [10, 'Quantity cannot be more than 10.']
+          },
+          color: {
+            type:ObjectId,
+            ref: 'Color', 
+          },
+          size:{
+            type:ObjectId,
+            ref: 'Size', 
+            required: true
+          }
         }
-    ],
-    total: {
+      ],
+      total: {
         type: Number,
         default: 0
-    },
-    coupon: {
+      },
+      offerDiscount:{
+        type:Number,
+      },
+      totalAfterOffer :{
+        type:Number,
+      },
+      coupon: {
         type: ObjectId,
         ref: 'Coupon',
-        required: false // Coupon is not required
+      },
+      coupanDiscount :{
+        type:Number,
+      },
+      payable:{
+        type:Number
+      }
+    },
+    {
+      strictPopulate: false // Apply the option to the entire schema
     }
-});
+  );
 
 // Middleware to calculate the total price
 cartSchema.pre('save', async function (next) {

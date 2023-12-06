@@ -17,10 +17,10 @@
               <div class="img-wrapper position-relative">
                 <!-- Discount Banner -->
 
-                <% if (product.hasOffer) { %>
+                <% if (product.offer.hasOffer) { %>
                   <div class="discount-banner position-absolute top-0 end-0 bg-danger text-white p-2"
                     style="width: 40%;">
-                    <%= product.offerPercent %>% OFF
+                    <%= product.offer.offerPercent %>% OFF
                   </div>
                   <% } %>
                     <div class="front">
@@ -40,14 +40,14 @@
                 </h3>
 
                 <div class="main-price">
-                  <% if (product.hasOffer) { %>
+                  <% if (product.offer.hasOffer) { %>
                     <!-- Original Price Strikethrough -->
                     <h5 class="font-light theme-color text-decoration-line-through">
                       ₹<%= product.price %>
                     </h5>
                     <!-- Discounted Price -->
                     <h5 class="font-light theme-color">
-                      ₹<%= (product.price - (product.price * product.offerPercent / 100)).toFixed(2) %>
+                      ₹<%= (product.price - (product.price * product.offer.offerPercent / 100)).toFixed(2) %>
                     </h5>
                     <% } else { %>
                       <!-- Regular Price -->
@@ -93,7 +93,7 @@
     <nav class="page-section">
       <ul class="pagination">
         <!-- Previous Page Link -->
-        <% if (currentPage > 1) { %>
+        <% if (currentPage> 1) { %>
           <li class="page-item">
             <a class="page-link" href="#" onclick="loadPage(<%= currentPage - 1 %>)" aria-label="Previous">
               <span aria-hidden="true">
@@ -101,57 +101,58 @@
               </span>
             </a>
           </li>
-        <% } %>
-    
-        <!-- First Page Link -->
-        <% if (currentPage > 3) { %>
-          <li class="page-item">
-            <a class="page-link" href="#" onclick="loadPage(1)">
-              1
-            </a>
-          </li>
-          <li class="page-item disabled">
-            <span class="page-link">...</span>
-          </li>
-        <% } %>
-    
-        <!-- Page Links -->
-        <% const minPage = Math.max(currentPage - 1, 1); %>
-        <% const maxPage = Math.min(currentPage + 1, totalPages); %>
-        <% for (let i = minPage; i <= maxPage; i++) { %>
-          <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-            <a class="page-link" href="#" onclick="loadPage(<%= i %>)">
-              <%= i %>
-            </a>
-          </li>
-        <% } %>
-    
-        <!-- Last Page Link -->
-        <% if (currentPage < totalPages - 2) { %>
-          <li class="page-item disabled">
-            <span class="page-link">...</span>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#" onclick="loadPage(<%= totalPages %>)">
-              <%= totalPages %>
-            </a>
-          </li>
-        <% } %>
-    
-        <!-- Next Page Link -->
-        <% if (currentPage < totalPages) { %>
-          <li class="page-item">
-            <a class="page-link" href="#" onclick="loadPage(<%= currentPage + 1 %>)" aria-label="Next">
-              <span aria-hidden="true">
-                <i class="fas fa-chevron-right"></i>
-              </span>
-            </a>
-          </li>
-        <% } %>
+          <% } %>
+
+            <!-- First Page Link -->
+            <% if (currentPage> 3) { %>
+              <li class="page-item">
+                <a class="page-link" href="#" onclick="loadPage(1)">
+                  1
+                </a>
+              </li>
+              <li class="page-item disabled">
+                <span class="page-link">...</span>
+              </li>
+              <% } %>
+
+                <!-- Page Links -->
+                <% const minPage=Math.max(currentPage - 1, 1); %>
+                  <% const maxPage=Math.min(currentPage + 1, totalPages); %>
+                    <% for (let i=minPage; i <=maxPage; i++) { %>
+                      <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                        <a class="page-link" href="#" onclick="loadPage(<%= i %>)">
+                          <%= i %>
+                        </a>
+                      </li>
+                      <% } %>
+
+                        <!-- Last Page Link -->
+                        <% if (currentPage < totalPages - 2) { %>
+                          <li class="page-item disabled">
+                            <span class="page-link">...</span>
+                          </li>
+                          <li class="page-item">
+                            <a class="page-link" href="#" onclick="loadPage(<%= totalPages %>)">
+                              <%= totalPages %>
+                            </a>
+                          </li>
+                          <% } %>
+
+                            <!-- Next Page Link -->
+                            <% if (currentPage < totalPages) { %>
+                              <li class="page-item">
+                                <a class="page-link" href="#" onclick="loadPage(<%= currentPage + 1 %>)"
+                                  aria-label="Next">
+                                  <span aria-hidden="true">
+                                    <i class="fas fa-chevron-right"></i>
+                                  </span>
+                                </a>
+                              </li>
+                              <% } %>
       </ul>
     </nav>
-    
-    
+
+
 
 
     <script>

@@ -9,7 +9,7 @@ router.get('/orders', async (req, res) => {
 
   try {
     const orders = await Order.paginate({}, { page, limit, populate: 'user items.product' });
-
+    
     res.render('orders', { activeRoute: 'orders', orders: orders.docs, totalPages: orders.totalPages, currentPage: page });
   } catch (error) {
     console.error('Error fetching orders:', error);
@@ -25,7 +25,7 @@ router.post('/orders/mark-delivered/:orderId', async (req, res) => {
     // Find the order by ID and update its status to 'Delivered'
     const updatedOrder = await Order.findByIdAndUpdate(
       orderId,
-      { $set: { orderStatus: 'Delivered' } },
+      { $set: { itemStatus: 'Delivered' } },
       { new: true }
     );
 

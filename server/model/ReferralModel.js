@@ -14,8 +14,7 @@ const referralSchema = new Schema({
         required: true
     },
     usedBy: [{
-        type: ObjectId, // Array of users who have used the referral code
-        ref: 'User'
+        type: String, // Array of users who have used the referral code
     }],
     createdAt: {
         type: Date,

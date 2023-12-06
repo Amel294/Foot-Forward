@@ -1,5 +1,6 @@
 const Order =require("../model/order")
 const Product = require("../model/productDB")
+const userMiddleware = require("../middleware/userSideMiddleware")
 exports. orderSuccess = async (req,res)=>{
   
     const userId = req.session.user.id; 
@@ -14,6 +15,11 @@ exports. orderSuccess = async (req,res)=>{
     });    
     console.log("in Success page")
     console.log(order)
+    let wishlistCount;
+        if(req.session.user){
+            wishlistCount = await userMiddleware.getWishlistCountOfUser(req.session.user.id)
+            console.log(wishlistCount)
+        }
     // res.json(order)
-    res.render('user/orderSuccess',{orders : order})
+    res.render('user/orderSuccess',{orders : order,req,wishlistCount})
   }

@@ -5,6 +5,7 @@
                 <div class="row">
                     <div class="col-sm-5 col-7">
                         <div class="left-side-button float-start">
+                                
                             <a href="index.html" class="btn btn-solid-default btn fw-bold mb-0 ms-0">
                                 <i class="fas fa-arrow-left"></i> Continue Shopping</a>
                         </div>
@@ -18,6 +19,8 @@
                         <tr class="table-head">
                             <th scope="col">image</th>
                             <th scope="col">product name</th>
+                            <th scope="col">size & color</th>
+                            
                             <th scope="col">price</th>
                             <th scope="col">quantity</th>
                             <th scope="col">action</th>
@@ -26,22 +29,40 @@
                     </thead>
                     <tbody>
                         <% cart.items.forEach(function(item) { %>
-                            <tr id="item-row-<%= item._id %>">
-                                <td><a href="product-left-sidebar.html">
+                            <tr id="item-row-<%= item._id %>" data-productID="<%= item.product._id %>" data-variantID= "<%= item.variant._id %>">
+                                <td><a href="">
+                                    <%if(item.outOfStock){%>
+                                        <i class="fas fa-exclamation-circle" style="color: red;" data-toggle="tooltip" data-placement="top" title="Your Tooltip Content"></i>
+                                        <%}%>
                                         <img src="data:<%= item.product.images[0].contentType %>;base64,<%= item.product.images[0].data.toString('base64') %>"
                                             class="blur-up lazyloaded" alt="">
                                     </a>
                                 </td>
-                                <td id="name-<%= item.name %>"><%= item.product.name %>
-
-                                <td id="price-<%= item._id %>">₹<%= item.product.price %>
+                                
+                                    
+                                    <td id="name-<%= item.name %>"><%= item.product.name %></td>
+                                    <td id="name-<%= item.name %>">
+                                        <div style="    display: flex;
+                                        justify-content: center;
+                                        align-items: center;
+                                        ">
+                                        <span><%= item.size.value %></span>
+                                        <span class="shadow-lg  p-3 ms-3" style="background-color: <%= item.color.name %>; display: inline-block;
+                                            width: 20px; 
+                                            height: 20px; 
+                                            border-radius: 50%;
+                                            margin-left: 5px;"></span>
+                                        </div>
+                                      </td>
+                                      
+                                <td id="price-<%= item._id %>">₹<%= item.price %>
                                 </td>
                                 <td class="align-center">
                                     <div style="display: flex;
                                     align-items: center;
                                     justify-content: space-around; b ">
                                         <button type="button" class="btn quantity-left-minus" data-type="minus"
-                                            data-field="<%= item._id %>">
+                                            data-field="<%= item._id %>" data-vaientID="<%=item.variant %>">
                                             <i class="fas fa-minus"></i>
                                         </button>
                                         <input type="number" name="quantity" readonly="readonly"
@@ -49,46 +70,43 @@
                                             value="<%= item.quantity %>" data-item-id="<%= item._id %>"
                                             onblur="validateQuantity(this)" min="1" max="10"
                                             style="width: 60px; text-align: center; padding: .375rem .75rem;">
-
                                         <button type="button" class="btn quantity-right-plus" data-type="plus"
-                                            data-field="<%= item._id %>">
+                                            data-field="<%= item._id %>" data-vaientID="<%=item.variant %>">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
-
-
                                 </td>
                                 <td>
                                     <a href="#" class="remove-item" data-item-id="<%= item._id %>"><i
                                             class="fas fa-times"></i></a>
                                 </td>
-                                <td id="total-<%= item._id %>" class="item-total">₹<%= (item.quantity *
-                                        item.product.price).toFixed(2) %>
-                                </td>
-                            </tr>
+                                
+                                <td id="total-<%= item._id %>" class="item-total">₹<%= parseInt(item.quantity * item.price).toFixed(2) %></td>
 
+                            </tr>
+                          
                             <% }); %>
                     </tbody>
-
                 </table>
             </div>
             <div class="cart-checkout-section">
                 <div class="row g-4">
-
                     <div class="col-lg-12">
                         <div class="cart-box">
                             <div class="cart-box-details">
                                 <div class="total-details">
                                     <div class="top-details">
-                                        <h6>Products Total <span id ="cart-total">₹<%= cart.total %></span></h6>
+                                        <h6>Products Total <span id ="cart-total">₹<%= parseInt(cart.total).toFixed(2) %></span></h6>
+                                        <h6>Discount <span id ="cart-total">-₹<%= discount %></span></h6>
                                         <h6>Free Shipping  <span><del>-₹00.00</del></span></h6>
                                         <hr>
-                                        <h4>TOTAL<span>₹<%= cart.total %></span></h4>
+                                        <h4>TOTAL<span>₹<%=priceAfterDiscount  %></span></h4>
                                         <!-- <h3 class="mt-4">Cart Totals<span id ="cart-total">₹<%= cart.total %></span></h3> -->
                                     </div>
                                     <div class="bottom-details">
-                                        <a href="/checkout">Proceed to Checkout</a>
-                                    </div>
+                                        <a href="/checkout" id="checkout-link" class="checkout-button">Proceed to Checkout</a>
+                                      </div>
+                                      
                                 </div>
                             </div>
                         </div>

@@ -33,11 +33,12 @@ router.get('/offers', async (req, res) => {
         // Fetch products from the database (replace with your actual database query)
         const products = await productDB.find({}, { _id: 1, name: 1 });
         const category = await categoryDB.find({}, { _id: 1, Subcategory: 1 });
-        const referral = await Referral.findOne({},{isEnabled:1,reward:1});
+        const referral = await Referral.findOne({}, { isEnabled: 1, reward: 1 });
         const offers = await Offer.find({})
+
         console.log(offers)
         // Render the EJS template with data
-        res.render('offers', { offers, activeRoute: 'offer', products,category,referral });
+        res.render('offers', { offers, activeRoute: 'offer', products, category, referral });
     } catch (error) {
         // Handle any errors that occur during database query or rendering
         console.error(error);
@@ -50,14 +51,21 @@ router.get('/offers', async (req, res) => {
 
 router.post('/update-referral-settings', async (req, res) => {
     try {
+        if (!req.session.admin || !req.session.admin.id) {
+            return res.status(401).json({ message: 'UNAUTHORIZED' });
+        }
         const { isEnabled, reward } = req.body;
-
+        console.log(req.session.admin.id)
         // Assuming you want to update a specific document. Replace `someId` with the actual ID.
-        const result = await Referral.findByIdAndUpdate(
-            '655f12633a118c4181dcbd1c', 
-            { isEnabled, reward },
-            { new: true }
-        );
+        const filter = { _id: "655f12633a118c4181dcbd1c" };
+        const update = { isEnabled, reward };
+        const options = { new: true };
+
+        const result = await Referral.findOneAndUpdate(filter, update, options);
+
+        if (!result) {
+            return res.status(404).json({ message: 'Referral document not found' });
+        }
 
         res.status(200).json({ message: 'Referral settings updated successfully', result });
     } catch (error) {
@@ -78,15 +86,27 @@ router.post('/create-offer', async (req, res) => {
         if (newOffer.offerType === 'Product') {
             const productId = newOffer.offerProduct;
             if (productId) {
+                const product = await productDB.findById(productId);
+                if (!product) {
+                    throw new Error('Product not found');
+                }
+
+                const price = product.price; // Assuming 'price' is a field in your product schema
+                const offerPrice = price - (price * (discountPercent / 100));
+
                 const updatedProduct = await productDB.findByIdAndUpdate(productId, {
                     $set: {
-                        hasOffer: true,
-                        offerPercent: discountPercent
+                        offer: {
+                            hasOffer: true,
+                            offerPercent: discountPercent,
+                            offerPrice: offerPrice
+                        }
+
                     }
                 }, { new: true });
 
                 if (!updatedProduct) {
-                    throw new Error('Product not found or update failed');
+                    throw new Error('Update failed');
                 }
             } else {
                 throw new Error('Invalid product ID');
@@ -94,18 +114,25 @@ router.post('/create-offer', async (req, res) => {
         } else if (newOffer.offerType === 'Category') {
             const categoryId = newOffer.offerCategory;
             if (categoryId) {
-                const updateResult = await productDB.updateMany(
-                    { subcategory: categoryId }, // Filter to match category
-                    {
-                        $set: {
-                            hasOffer: true,
-                            offerPercent: discountPercent
-                        }
-                    }
-                );
+                const productsInCategory = await productDB.find({ subcategory: categoryId });
 
-                if (updateResult.matchedCount === 0) {
-                    throw new Error('No products found in this category or update failed');
+                if (productsInCategory.length === 0) {
+                    throw new Error('No products found in this category');
+                }
+
+                for (const product of productsInCategory) {
+                    const price = product.price; // Assuming 'price' is a field in your product schema
+                    const offerPrice = price * (discountPercent / 100);
+
+                    await productDB.findByIdAndUpdate(product._id, {
+                        $set: {
+                            offer: {
+                                hasOffer: true,
+                                offerPercent: discountPercent,
+                                offerPrice: offerPrice
+                            }
+                        }
+                    });
                 }
             } else {
                 throw new Error('Invalid category ID');
@@ -128,7 +155,6 @@ router.post('/remove-offer', async (req, res) => {
 
         // Find the offer by ID
         const offer = await Offer.findById(offerId);
-        console.log(offer)
         if (!offer) {
             throw new Error('Offer not found');
         }
@@ -136,38 +162,53 @@ router.post('/remove-offer', async (req, res) => {
         if (offer.offerType === 'Product') {
             const productId = offer.offerProduct;
             if (productId) {
-                // Update products with matching offerProduct
-                await productDB.updateMany(
-                    { _id: productId },
-                    {
+                // Reset the products with matching offerProduct to their original state
+                const product = await productDB.findById(productId);
+                if (product) {
+                    const originalPrice = product.price; // Assuming 'price' is a field in your product schema
+                    const originalofferPrice = originalPrice * (offer.offerPercent / 100);
+
+                    await productDB.findByIdAndUpdate(productId, {
                         $set: {
-                            hasOffer: false,
-                            offerPercent: 0
+                            offer: {
+                                hasOffer: false,
+                                offerPercent: 0,
+                                offerPrice: originalPrice
+                            }
+
                         }
-                    }
-                );
+                    });
+                } else {
+                    throw new Error('Product not found');
+                }
             } else {
                 throw new Error('Invalid product ID');
             }
         } else if (offer.offerType === 'Category') {
             const categoryId = offer.offerCategory;
             if (categoryId) {
-                // Update products with matching category
-                await productDB.updateMany(
-                    { subcategory: categoryId },
-                    {
+                // Reset the products in the matching category to their original state
+                const productsInCategory = await productDB.find({ subcategory: categoryId });
+
+                for (const product of productsInCategory) {
+                    const originalPrice = product.price; // Assuming 'price' is a field in your product schema
+                    const originalofferPrice = originalPrice * (offer.offerPercent / 100);
+
+                    await productDB.findByIdAndUpdate(product._id, {
                         $set: {
-                            hasOffer: false,
-                            offerPercent: 0
+                            offer: {
+                                hasOffer: false,
+                                offerPercent: 0,
+                                offerPrice: originalPrice
+                            }
                         }
-                    }
-                );
+                    });
+                }
             } else {
                 throw new Error('Invalid category ID');
             }
         }
-        console.log("I reached here");
-        
+
         // Remove the offer using the Mongoose model's remove method
         await Offer.deleteOne({ _id: offerId });
 

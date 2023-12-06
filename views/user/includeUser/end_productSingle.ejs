@@ -44,6 +44,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src=/static/user/js/custom/userValidation.js></script>
 <!-- Include Elevate Zoom -->
+
 <script>
   function toggleHeart(element) {
     element.classList.toggle('active');
@@ -132,6 +133,8 @@
               li.innerText = variant.size.value;
               li.classList.add('size-option');
               li.setAttribute('data-variant-id', variant._id); // Store the variant ID
+    li.setAttribute('data-color', variant.color._id); // Store the color
+    li.setAttribute('data-size', variant.size._id); // Store the size
 
               li.addEventListener('click', function() {
                   document.querySelectorAll('.size-option').forEach(function(el) {
@@ -225,35 +228,61 @@
     const productId = this.getAttribute('data-product-id');
     const variantId = document.querySelector('.size-option.selected').getAttribute('data-variant-id');
     const quantity = parseInt(document.querySelector('input[name="quantity"]').value, 10);
-
+    const color = document.querySelector('.size-option.selected').getAttribute('data-color');
+    const size = document.querySelector('.size-option.selected').getAttribute('data-size');
     fetch('/add-to-cart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            // You need to include headers for authentication if required
+            // Include any other headers as required
         },
         body: JSON.stringify({
             productId,
             variantId,
-            quantity
+            quantity,
+            color,
+            size,
         })
     })
-    .then(response => {
-        if (response.ok) {
-            return response.text();
+    .then(response => response.text().then(text => ({ status: response.status, body: text })))
+    .then(({ status, body }) => {
+        if (status === 200) {
+            Swal.fire({
+                title: 'Success!',
+                text: "Added to cart",
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        } else if (status === 400) {
+            let errorMessage = body;
+            if (body.includes('more than 10 products')) {
+                errorMessage = 'Cannot add more than 10 of this product to the cart';
+            } else if (body.includes('Insufficient stock')) {
+                errorMessage = 'Cannot add to cart: Insufficient stock';
+            }
+            Swal.fire({
+                title: 'Failed!',
+                text: errorMessage,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            throw new Error('Network response was not ok.');
         }
-        throw new Error('Network response was not ok.');
-    })
-    .then(text => {
-        console.log('Item added to cart:', text);
-        // Handle the UI updates or redirection as needed
     })
     .catch(error => {
         console.error('There has been a problem with your fetch operation:', error);
+        Swal.fire({
+            title: 'Error!',
+            text: error.message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     });
 });
-
 </script>
+
+
 
 
 </body>

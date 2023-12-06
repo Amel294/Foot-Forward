@@ -56,8 +56,11 @@ router.post('/loginAdmin', async (req, res) => {
         }
 
         // Create a session for the admin upon successful login
-        req.session.admin = admin;
-        
+        req.session.admin = {
+            id: admin._id, // You can store any user-related data here
+            email: admin.email,
+            // Add any other user data you want to store in the session
+          };
         
         // Successful login
         res.redirect('dashboard')

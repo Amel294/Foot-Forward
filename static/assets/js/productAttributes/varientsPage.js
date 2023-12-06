@@ -154,13 +154,30 @@ document.addEventListener('DOMContentLoaded', function () {
             
             const responseData = await response.json();
             if (response.ok) {
-                alert('Product saved successfully!');
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Product added successfully.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  })
             } else {
-                alert('Error saving product: ' + responseData.message);
+                Swal.fire({
+                    title: 'Failed!',
+                    text: 'Error saving product',
+                    icon: 'error', // Change 'failure' to 'error'
+                    confirmButtonText: 'OK'
+                  });
+                  
             }
         } catch (error) {
+            Swal.fire({
+                title: 'Failed!',
+                text: error,
+                icon: 'error', // Change 'failure' to 'error'
+                confirmButtonText: 'OK'
+              });
+
             console.error('Error:', error);
-            alert('An error occurred while saving the product.');
         }
     });
 });

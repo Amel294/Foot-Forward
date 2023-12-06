@@ -27,6 +27,12 @@ const walletSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
+      type: {
+        type: String,
+        required: true,
+        enum: ['Dr', 'Cr'] // This line adds the enumeration constraint
+    }
+    
     },
   ],
 });

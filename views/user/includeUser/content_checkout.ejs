@@ -1,7 +1,7 @@
 <section class="section-b-space">
   <div class="container">
     <div class="row g-4">
-      <div class="col-lg-8">
+      <div class="col-lg-7">
         <h3 class="mb-3">Billing address</h3>
         <div class="tab-pane dashboard" id="save">
           <div class="box-head">
@@ -64,18 +64,34 @@
                           <div class="coupon-section mb-4 mt-4">
                             <h2 class="mb-3">Coupon</h2>
                             <div class="input-group">
-                              <% if(coupon && coupon.code) { %>
+                              <% if (coupon) { %>
                                 <input type="text" id="couponCodeInput" class="form-control form-control-lg"
-                                       placeholder="Enter Coupon Code" value="<%= coupon.code %>" data-coupanCode="<%=coupon._id%>">
-                                <button id ="applyCoupan" type="button" class="btn btn-solid-default btn-sm fw-bold apply-coupon-button">Apply Coupon</button>
-                              <% } else { %>
-                                <input type="text" id="couponCodeInput" class="form-control form-control-lg"
-                                placeholder="Enter Coupon Code" value="">
-                         <button id ="applyCoupan" type="button" class="btn btn-solid-default btn-sm fw-bold apply-coupon-button">Apply Coupon</button>
-                              <% } %>
+                                  placeholder="Enter Coupon Code" value="<%= 
+                                   %>"
+                                  data-coupanCode="<%= coupon._id %>">
+                                <button id="applyCoupan" type="button"
+                                  class="btn btn-solid-default btn-sm fw-bold apply-coupon-button me-3">Apply
+                                  Coupon</button>
+                                <button id="removeCoupan" type="button"
+                                  class="btn btn-solid-default btn-sm fw-bold apply-coupon-button"
+                                  data-coupon="<%= cart.coupon.code %>">Remove Coupon</button>
+
+                                <% if (cart && cart.coupon && cart.coupon.code){ %>
+                                  <button id="removeCoupan" type="button"
+                                    class="btn btn-solid-default btn-sm fw-bold apply-coupon-button"
+                                    data-coupon="<%= cart.coupon.code %>">Remove Coupon</button>
+                                  <% } %>
+                                    <% } else { %>
+                                      <input type="text" id="couponCodeInput" class="form-control form-control-lg"
+                                        placeholder="Enter Coupon Code" value="">
+                                      <button id="applyCoupan" type="button"
+                                        class="btn btn-solid-default btn-sm fw-bold apply-coupon-button">Apply
+                                        Coupon</button>
+                                      <% } %>
                             </div>
                           </div>
-                          
+
+
 
 
 
@@ -187,10 +203,85 @@
           </div>
         </div>
       </div>
+      <div class="col-lg-5">
+        <div class="your-cart-box">
+          <h3 class="mb-3 d-flex text-capitalize">Your cart<span
+              class="badge bg-theme new-badge rounded-pill ms-auto bg-dark">3</span>
+          </h3>
+          <ul class="list-group mb-3">
 
-      <div id="small_cart" class="col-lg-4">
-        <!-- Cart content (unchanged) -->
+
+            <ul class="list-group">
+              <% ProductsInCart.forEach(function(product) { %>
+                <li class="list-group-item">
+                  <div class="row align-items-center">
+                    <div class="col-md-2">
+                      <% if (product.images && product.images.data) { %>
+                        <img
+                          src="data:<%= product.images.contentType %>;base64,<%= product.images.data.toString('base64') %>"
+                          alt="<%= product.name %>" class="img-fluid rounded">
+                        <% } else { %>
+                          <img src="path/to/default/image.jpg" alt="Default Image" class="img-fluid rounded">
+                          <% } %>
+                    </div>
+                    <div class="col-md-4">
+                      <h6 class="my-0">
+                        <%= product.name %>
+                      </h6>
+                      <small class="text-muted">Color: <%= product.color.name %> | Size: <%= product.size.value %>
+                      </small>
+                    </div>
+                    <div class="col-md-4 text-center d-flex flex-column">
+                      <small class="text-muted">Qty X Price</small>
+                      <small class="text-muted">
+                        <%= product.qty %> X <%= product.price %>
+                      </small>
+                    </div>
+                    <% if (product.offerPercent>0) { %>
+                      <div class="col-md-2 text-right">
+                        <span class="text-muted">Total: <s style="color: brown;">₹<%= product.price * product.qty %>
+                          </s></span>
+                        <span class="text-muted">₹<%= product.OfferPrice %></span>
+                      </div>
+                      <% } else { %>
+                        <div class="col-md-2 text-right">
+                          <s><span class="text-muted">₹<%= product.OfferPrice %></span></s>
+                        </div>
+
+                        <% } %>
+                  </div>
+                </li>
+                <% }); %>
+            </ul>
+            <li class="list-group-item d-flex lh-condensed justify-content-between">
+              <span class="fw-bold">Total (₹)</span>
+              <strong>₹<%= TotalBeforeCoupon %></strong>
+            </li>
+            <%if(coupon){%>
+              <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div class="text-dark">
+                  <small class="my-0">Promo code</small>
+                  <h6>
+                    <%= coupon %>
+                  </h6>
+                </div>
+                <%if(couponDiscount ){%>
+                <span>-₹<%= couponDiscount %> </span>
+                <%}%>
+              </li>
+              <%}%>
+              <li class="list-group-item d-flex justify-content-between lh-condensed active">
+                <div class="text-dark">
+                  <h6 class="my-0">Payable</h6>
+                </div>
+                <span>-₹<%= totalAfterCoupon %> </span>
+              </li>
+          </ul>
+
+
+        </div>
       </div>
+
     </div>
   </div>
 </section>

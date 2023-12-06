@@ -98,6 +98,10 @@ function Protected(req, res, next) {
   }
 }
 
+
+
+
+
 //home
 router.get('/', controller.home);
 
@@ -135,24 +139,27 @@ router.get('/products/filter', async (req, res) => {
       const noOfProducts = await Product.countDocuments(combinedFilters);
       const totalPages = Math.ceil(noOfProducts / limit);
 
-      const products = await Product.find(combinedFilters)
+      let products = await Product.find(combinedFilters)
         .populate('brand')
         .populate('subcategory')
         .skip(skip)
         .limit(limit);
 
-      let userWishlist = null;
+      let userWishlist;
       if (req.session && req.session.user) {
-        const userId = req.session.user._id;
-        userWishlist = await wishlist.findOne({ user: userId });
+        const userId = req.session.user.id;
+        userWishlist = await wishlist.findOne({ user: userId});
       }
-
+      
+      products = products.map(product => {
+        product = product.toObject(); // Convert Mongoose document to plain JavaScript object
+        product.isInWishlist = userWishlist && userWishlist.products.includes(product._id.toString());
+        return product;
+      });
+      console.log(products)
       // Render the EJS template with products and pagination details
       res.render('user/includeUser/content_productView_singleProduct', {
-        products: products.map((product) => ({
-          ...product.toObject(),
-          isInWishlist: userWishlist ? userWishlist.products.includes(product._id.toString()) : false,
-        })),
+        products,
         brands: await Brand.find(),
         colors: await Color.find(),
         subcategories: await Category.find(),
@@ -163,7 +170,7 @@ router.get('/products/filter', async (req, res) => {
         
       });
     } else {
-      const products = await Product.find()
+      let products = await Product.find()
         .populate('brand')
         .populate('subcategory')
         .skip(skip)
@@ -172,18 +179,24 @@ router.get('/products/filter', async (req, res) => {
       const noOfProducts = await Product.countDocuments();
       const totalPages = Math.ceil(noOfProducts / limit);
 
-      let userWishlist = null;
+      let userWishlist;
       if (req.session && req.session.user) {
-        const userId = req.session.user._id;
-        userWishlist = await wishlist.findOne({ user: userId });
+        const userId = req.session.user.id;
+        userWishlist = await wishlist.findOne({ user: userId});
       }
 
+      console.log(userWishlist)
+
+      products = products.map(product => {
+        product = product.toObject(); // Convert Mongoose document to plain JavaScript object
+        // console.log(product)
+        product.isInWishlist = userWishlist && userWishlist.products.includes(product._id.toString());
+        return product;
+      });
+      
       // Render the EJS template with products and pagination details
       res.render('user/includeUser/content_productView_singleProduct', {
-        products: products.map((product) => ({
-          ...product.toObject(),
-          isInWishlist: userWishlist ? userWishlist.products.includes(product._id.toString()) : false,
-        })),
+        products,
         brands: await Brand.find(),
         colors: await Color.find(),
         subcategories: await Category.find(),
@@ -232,13 +245,12 @@ router.post('/authenticate', controller.authenticatePassword);
 router.post('/logout', controller.logout)
 
 
-router.get('/cart/total', cartController.cartTotal);
-router.get('/cart', cartController.getCartPage)
-router.get('/small-cart', cartController.smallcart)
-router.get('/cart/items-count', cartController.itemsInCart);
-router.post('/add-to-cart', cartController.addToCart);
-router.delete('/cart/remove/:itemId', cartController.removeFromCart);
-router.put('/cart/update-quantity/:itemId', cartController.updateQuantity);
+router.get('/cart/totalAndDisount',Protected, cartController.cartTotal);
+router.get('/cart',Protected, cartController.getCartPage)
+router.get('/cart/items-count',Protected, cartController.itemsInCart);
+router.post('/add-to-cart',Protected, cartController.addToCart);
+router.delete('/cart/remove/:itemId',Protected, cartController.removeFromCart);
+router.put('/cart/update-quantity/:itemId/:variantId/:buttonClicked',Protected, cartController.updateQuantity);
 
 
 
@@ -254,16 +266,18 @@ router.post('/wishlist/add/:productId', wishlistController.addToWishlist);
 
 router.delete('/wishlist/remove/:productId', wishlistController.removeFromWishlist);
 // Cancel Order
-router.post('/orders/cancel/:orderId', async (req, res) => {
+router.post('/orders/cancel/:orderId/:itemId', async (req, res) => {
   try {
-    const orderId = req.params.orderId;
-    // Update the order status to 'Cancelled' or appropriate status
-    const updatedOrder = await Order.findByIdAndUpdate(orderId, { orderStatus: 'Cancelled By User' }, { new: true });
-
-    if (!updatedOrder) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-
+    const orderID = req.params.orderId; // Using orderID which is a string
+    const itemId = req.params.itemId;
+    console.log(`OrderId is ${orderID}
+    ItemId is ${itemId}`)
+    const updatedOrder = await Order.findOneAndUpdate(
+      { 'items.orderID': itemId },
+      { $set: { 'items.$.itemStatus': 'Cancelled By User' } },
+      { new: true }
+    );
+      console.log(updatedOrder)
     return res.status(200).json({ message: 'Order cancelled successfully' });
   } catch (error) {
     console.error('Error cancelling order:', error);
@@ -271,18 +285,27 @@ router.post('/orders/cancel/:orderId', async (req, res) => {
   }
 });
 
+
 // Return Order
-router.post('/orders/return/:orderId', async (req, res) => {
+router.post('/orders/return/:orderId/:itemId/:returnReason', async (req, res) => {
   try {
-    const orderId = req.params.orderId;
-    // Update the order status to 'Return' or appropriate status
-    const updatedOrder = await Order.findByIdAndUpdate(orderId, { orderStatus: 'Return' }, { new: true });
+    const orderID = req.params.orderId; // Using orderID which is a string
+    const itemId = req.params.itemId;
+    const reason = req.params.returnReason;
 
-    if (!updatedOrder) {
-      return res.status(404).json({ message: 'Order not found' });
-    }
-
-    return res.status(200).json({ message: 'Order returned successfully' });
+    console.log(`OrderId is ${orderID}, ItemId is ${itemId}, Reason is ${reason}`);
+    
+    const updatedOrder = await Order.findOneAndUpdate(
+      { 'items.orderID': itemId }, 
+      { $set: {
+          'items.$.itemStatus': 'Return Initiated',
+          'items.$.returnReason': reason
+        }
+      },
+      { new: true }
+    );
+    console.log(updatedOrder);
+    return res.status(200).json({ message: 'Order return initiated successfully' });
   } catch (error) {
     console.error('Error returning order:', error);
     return res.status(500).json({ message: 'Internal server error' });
@@ -305,7 +328,7 @@ router.get('/get-amount-keys-payment-address', async (req, res) => {
     const userId = req.session.user.id;
 
     // Find the user's cart and calculate the total order amount
-    const cart = await Cart.findOne({ user: userId }).select({ total: 1, _id: 1 });
+    const cart = await Cart.findOne({ user: userId }).select({ payable:1 ,total: 1, _id: 1 });
     console.log(`cart in /get-amount is ${ cart }`)
     if (!cart) {
       return res.status(404).json({ error: 'Cart not found' });
@@ -332,6 +355,7 @@ router.get('/get-amount-keys-payment-address', async (req, res) => {
 
 
 
+router.post('/checkCart', Protected, addressController.checkCart)
 router.get('/checkout', Protected, addressController.checkout)
 // Apply Coupon route (POST)
 router.post('/apply-coupon', couponController.addCoupon);
@@ -377,7 +401,7 @@ router.post('/create-referral-coupon', async (req, res) => {
       ownedBy: ownedByUserId,
       createdAt: Date.now()
     });
-
+    
     // Save the new referral to the database
     await newReferral.save();
 

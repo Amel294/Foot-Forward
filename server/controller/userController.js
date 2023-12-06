@@ -14,6 +14,8 @@ const util = require('util');
 const adminReferral = require("../model/referral")
 const Referral = require("../model/ReferralModel")
 const Wallet  = require("../model/wallet")
+
+const userSideMiddleware = require("../middleware/userSideMiddleware")
 // SMTP configuration
 let transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -58,10 +60,13 @@ exports.home = async (req, res) => {
   try {
       // Fetch existing banners from the database
       const existingBanners = await Banner.find({active:true});
-      console.log(existingBanners)
-      const products =await ProductDB.find();
+      
+      const products =await await ProductDB.find()
+      .sort({ createdAt: -1 }) // Sort by creation date descending
+      .limit(6);
+      console.log(products)
       // Render the banner page and pass the existing banners
-      res.render('user/home', {  banners: existingBanners ,products :products });
+      res.render('user/home', {  banners: existingBanners ,products :products,req });
   } catch (error) {
       // Handle errors
       console.error('Error:', error);
@@ -78,7 +83,7 @@ exports.signUp = (req, res) => {
 }
 
 exports.signIn = (req, res) => {
-  res.render('user/signIn')
+  res.render('user/signIn',{req})
 }
 
 exports.myOrders = (req, res) => {
@@ -153,24 +158,41 @@ exports.resend = async (req, res) => {
 }
 
 // Function to update or create a wallet for a user
-async function updateOrCreateWallet(userId, description, amount) {
-  let wallet = await Wallet.findOne({ user: userId });
+// Function to update or create a wallet for a user
+async function updateOrCreateWallet(userId, description, amount, type) {
+  try {
+    console.log(`Updating/Creating Wallet with - Description: ${description}, Amount: ${amount}, Type: ${type}`);
 
-  if (!wallet) {
+    let wallet = await Wallet.findOne({ user: userId });
+    console.log(type)
+    // Ensure the type is either 'Dr' or 'Cr'
+    if (!['Dr', 'Cr'].includes(type)) {
+      throw new Error("Invalid type for wallet transaction. Must be 'Dr' or 'Cr'");
+    }
+    if (!['Dr', 'Cr'].includes(type)) {
+      throw new Error("Invalid type for wallet transaction.");
+    }
+
+    if (!wallet) {
       // Create a new wallet if it doesn't exist
       wallet = new Wallet({
           user: userId,
           balance: amount,
-          transactions: [{ description, amount }]
+          transactions: [{ description, amount, type }]
       });
-  } else {
+    } else {
       // Update existing wallet
       wallet.balance += amount;
-      wallet.transactions.push({ description, amount });
-  }
+      wallet.transactions.push({ description, amount, type });
+    }
 
-  await wallet.save();
+    await wallet.save();
+  } catch (error) {
+    console.error("Error in updateOrCreateWallet:", error);
+    throw error; // Rethrow the error so it can be caught where this function is called
+  }
 }
+
 
 exports.verifyOTP = async (req, res) => {
   console.log("Verify OTP");
@@ -194,19 +216,32 @@ exports.verifyOTP = async (req, res) => {
       if (req.session.temp.referralCode) {
         // Find the referrer by the referral code
         const referral = await Referral.findOne({ referralCode: req.session.temp.referralCode });
-        console.log(referral)
+        console.log(`Referal is ${referral}`)
         if (referral) {
                 
                 const oldUser = await User.findOne({_id:referral.ownedBy})
                 const newUser = await User.findOne({_id:user._id})
-                await updateOrCreateWallet(oldUser, 'Referral bonus received', 50);
-                await updateOrCreateWallet(newUser._id, 'Referral bonus for joining', 50);
+                await updateOrCreateWallet(oldUser, `Referral bonus received : (${newUser.fullName})`, 50,'Cr');
+                await updateOrCreateWallet(newUser._id, `Referral bonus for joining`, 50,'Cr');
 
                 console.log("*****************")
                 console.log(`New user ${newUser}` )
                 console.log("*****************")
                 console.log(`old user ${oldUser}` )
                 console.log("*****************")
+                try {
+                  // Assuming newUser.fullName is the correct field and it's a string
+                  const updatedReferral = await Referral.findOneAndUpdate(
+                    { referralCode: req.session.temp.referralCode },
+                    { $push: { usedBy: newUser.fullName } },
+                    { new: true }
+                  );
+                
+                  console.log("Updated referral document:", updatedReferral);
+                } catch (error) {
+                  console.error("Error updating referral:", error);
+                }
+
             }
         }
     
@@ -393,11 +428,13 @@ exports.smallcart = async (req, res) => {
 
 exports.userDashboard = async (req, res) => {
   try {
+    const wishlistCount = userSideMiddleware.getWishlistCountOfUser(req.session.user.id)
     const id = req.session.user.id;
     const addresses = await Address.find({ userId: req.session.user.id });
     const user = await User.findOne({ _id: id });
     const orders = await Order.find({ user: id }).populate('items.product');
     const wishlist = await Wishlist.find({user: id}).populate('products')
+    const wallet = await Wallet.findOne({user: id});
     // Fetch product images for each product in the orders
     for (const order of orders) {
       for (const item of order.items) {
@@ -405,13 +442,13 @@ exports.userDashboard = async (req, res) => {
         item.product.images = product.images;
         item.product.price  = product.price;
       }
-      console.log(order.price)
+      
     }
+   
     const adminRef = await adminReferral.findOne({},{isEnabled:1 ,_id:0})
     const refer = await Referral.findOne({ownedBy:id},{referralCode:1,_id:0});
-    console.log(`Admin ref : ${adminRef}`)
-    console.log(`user ref : ${refer}`)
-    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders,wishlist : wishlist,adminRef,refer });
+    console.log(orders)
+    res.render('user/userDashboard', { addresses: addresses, user: user, orders: orders,wishlist : wishlist,adminRef,refer,req,wishlistCount,wallet  });
   } catch (error) {
     console.error("Failed to get addresses and orders for user:", error);
     res.status(500).render('error', { message: 'Unable to fetch addresses and orders.' });

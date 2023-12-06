@@ -94,101 +94,109 @@
 
 <script>
     function convertToISO(dateStr, timeStr) {
-    // Parse the date and time
-    const [month, day, year] = dateStr.split('/');
-    const [hour, minutePart] = timeStr.split(':');
-    const minute = minutePart.slice(0, 2);
-    const amPm = minutePart.slice(3).toUpperCase();
+        // Parse the date and time
+        const [month, day, year] = dateStr.split('/');
+        const [hour, minutePart] = timeStr.split(':');
+        const minute = minutePart.slice(0, 2);
+        const amPm = minutePart.slice(3).toUpperCase();
 
-    // Convert 12-hour time to 24-hour time
-    let hour24 = parseInt(hour, 10);
-    if (amPm === 'PM' && hour24 < 12) {
-        hour24 += 12;
-    } else if (amPm === 'AM' && hour24 === 12) {
-        hour24 = 0;
+        // Convert 12-hour time to 24-hour time
+        let hour24 = parseInt(hour, 10);
+        if (amPm === 'PM' && hour24 < 12) {
+            hour24 += 12;
+        } else if (amPm === 'AM' && hour24 === 12) {
+            hour24 = 0;
+        }
+
+        // Create a new Date object
+        const dateTime = new Date(Date.UTC(year, month - 1, day, hour24, minute));
+
+        // Convert to ISO string with timezone offset
+        return dateTime.toISOString();
     }
 
-    // Create a new Date object
-    const dateTime = new Date(Date.UTC(year, month - 1, day, hour24, minute));
+    document.getElementById('offerForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        console.log("Button Pressed");
 
-    // Convert to ISO string with timezone offset
-    return dateTime.toISOString();
-}
+        const offerType = document.querySelector('[name="offerType"]').value;
+        let productId;
+        let categoryId;
 
-document.getElementById('offerForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-  console.log("Button Pressed");
+        if (offerType === "Product") {
+            let productSelect = document.querySelector('select[name="offerProduct"]');
+            if (productSelect && productSelect.selectedOptions.length > 0) {
+                productId = productSelect.selectedOptions[0].dataset.productid;
+            } else {
+                productSelect = null;
+                console.error("Product select box not found or no product selected");
+                // Handle the error case appropriately
+            }
+        } else if (offerType === "Category") {
+            let categorySelect = document.querySelector('select[name="offerCategory"]');
+            if (categorySelect && categorySelect.selectedOptions.length > 0) {
+                categoryId = categorySelect.selectedOptions[0].dataset.categoryid;
+            } else {
+                categorySelect = null;
+                console.error("Category select box not found or no category selected");
+                // Handle the error case appropriately
+            }
+        }
 
-  const offerType = document.querySelector('[name="offerType"]').value;
-  let productId;
-  let categoryId;
+        const offerName = document.querySelector('[name="offerName"]').value;
+        const offerDescription = document.querySelector('[name="offerDescription"]').value;
+        const offerDiscount = document.querySelector('[name="offerDiscount"]').value;
+        const coupanDate = document.querySelector('[name="coupanDate"]').value;
+        const coupanTime = document.querySelector('[name="coupanTime"]').value;
+        const offerMaxUses = document.querySelector('[name="offerMaxUses"]').value;
+        const offerEnable = document.querySelector('[name="offerEnable"]:checked').value === 'Enable';
 
-  if (offerType === "Product") {
-    let productSelect = document.querySelector('select[name="offerProduct"]');
-    if (productSelect && productSelect.selectedOptions.length > 0) {
-      productId = productSelect.selectedOptions[0].dataset.productid;
-    } else {
-      productSelect = null;
-      console.error("Product select box not found or no product selected");
-      // Handle the error case appropriately
-    }
-  } else if (offerType === "Category") {
-    let categorySelect = document.querySelector('select[name="offerCategory"]');
-    if (categorySelect && categorySelect.selectedOptions.length > 0) {
-      categoryId = categorySelect.selectedOptions[0].dataset.categoryid;
-    } else {
-      categorySelect = null;
-      console.error("Category select box not found or no category selected");
-      // Handle the error case appropriately
-    }
-  }
+        const isoDateTime = convertToISO(coupanDate, coupanTime);
+        console.log(isoDateTime);
 
-  const offerName = document.querySelector('[name="offerName"]').value;
-  const offerDescription = document.querySelector('[name="offerDescription"]').value;
-  const offerDiscount = document.querySelector('[name="offerDiscount"]').value;
-  const coupanDate = document.querySelector('[name="coupanDate"]').value;
-  const coupanTime = document.querySelector('[name="coupanTime"]').value;
-  const offerMaxUses = document.querySelector('[name="offerMaxUses"]').value;
-  const offerEnable = document.querySelector('[name="offerEnable"]:checked').value === 'Enable';
+        const data = {
+            offerName,
+            offerDescription,
+            offerCategory: categoryId,
+            offerProduct: productId,
+            offerType,
+            offerDiscount,
+            offerValidUntil: isoDateTime,
+            offerMaxUses,
+            offerEnable
+        };
 
-  const isoDateTime = convertToISO(coupanDate, coupanTime);
-console.log(isoDateTime);
 
-  const data = {
-    offerName,
-    offerDescription,
-    offerCategory: categoryId,
-    offerProduct: productId,
-    offerType,
-    offerDiscount,
-    offerValidUntil:isoDateTime,
-    offerMaxUses,
-    offerEnable
-  };
 
-  
-
-  $.ajax({
-    url: '/admin/create-offer',
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(data),
-    success: function (response) {
-      console.log('Offer created:', response);
-      // Handle success (e.g., showing a success message)
-    },
-    error: function (xhr, status, error) {
-      const errorMessage = xhr.responseText;
-      console.error('Error creating offer:', errorMessage);
-      // Handle errors (e.g., showing an error message)
-
-      // Show detailed error message to the user
-      const errorEl = document.getElementById('error-message');
-      errorEl.textContent = errorMessage;
-      errorEl.style.display = 'block';
-    }
-  });
-});
+        $.ajax({
+            url: '/admin/create-offer',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function (response) {
+                console.log('Offer created:', response);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Offer Added successfully:',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    // Reload the page when the user clicks "OK"
+                    location.reload();
+                });
+            },
+            error: function (xhr, status, error) {
+                const errorMessage = xhr.responseText;
+                console.error('Error creating offer:', errorMessage);
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Error creating offer:'+ errorMessage,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                })
+            }
+        });
+    });
 
 </script>
 
@@ -202,17 +210,28 @@ console.log(isoDateTime);
             const reward = $('#referralReward').val();
 
             $.ajax({
-                url: '/admin/update-referral-settings', // the route you will create on the server
+                url: '/admin/update-referral-settings',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ isEnabled, reward }),
                 success: function (response) {
                     console.log(response);
-                    // Handle success - maybe display a success message to the user
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Referral settings updated successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    })
+
                 },
                 error: function (error) {
                     console.error(error);
-                    // Handle error - maybe display an error message to the user
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Error updating referral settings',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    })
                 }
             });
         });
@@ -220,30 +239,41 @@ console.log(isoDateTime);
 </script>
 
 
+
 <script>
     $(document).ready(function () {
-        // Listen for click events on the remove-offer buttons
-        $('.remove-offer').click(function () {
-            const offerId = $(this).data('offerid');
-    
-            // Send an AJAX request to remove the offer
-            $.ajax({
-                type: 'POST',
-                url: '/admin/remove-offer',
-                data: { offerId: offerId },
-                success: function (response) {
-                    // Remove the table row when the offer is successfully removed
-                    $(`tr[data-offerid="${offerId}"]`).remove();
-                    console.log('Offer removed successfully:', response.message);
-                },
-                error: function (error) {
-                    console.error('Error removing offer:', error.responseText);
-                    // Handle errors (e.g., show an error message)
-                }
-            });
+    // Listen for click events on the remove-offer buttons
+    $('.remove-offer').click(function () {
+        const offerId = $(this).data('offerid');
+
+        // Send an AJAX request to remove the offer
+        $.ajax({
+            type: 'POST',
+            url: '/admin/remove-offer',
+            data: { offerId: offerId },
+            success: function (response) {
+                // Remove the table row when the offer is successfully removed
+                $(`tr[data-offerid="${ offerId }"]`).remove();
+                console.log('Offer removed successfully:', response.message);
+                Swal.fire({
+                    title: 'Success!',
+                    text: 'Offer removed successfully:',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(function () {
+                    // Reload the page when the user clicks "OK"
+                    location.reload();
+                });
+            },
+            error: function (error) {
+                console.error('Error removing offer:', error.responseText);
+                // Handle errors (e.g., show an error message)
+            }
         });
     });
-    </script>
+});
+
+</script>
 
 
 

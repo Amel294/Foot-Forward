@@ -9,7 +9,8 @@ const OrderStatus = {
   PROCESSING: 'Processing',
   SHIPPED: 'Shipped',
   DELIVERED: 'Delivered',
-  RETURN : "Return",
+  RETURN : "Returned",
+  RETURNAPPROVAL: "Return Initiated",
   ADMINCANCELLED: 'Cancelled By Admin',
   USERCANCELED : 'Cancelled By User'
 };
@@ -45,8 +46,18 @@ const orderSchema = new Schema({
          default: 0,
       },
       orderID:{
-        type: String
-      }
+        type: String,
+        required:true,
+        unique: true,
+      },
+      itemStatus: {
+        type: String,
+        enum: Object.values(OrderStatus), // Use the defined order status values
+        default: OrderStatus.PENDING, // Default status is "Pending"
+      },
+      returnReason:{
+        type:String,
+      },
     },
   ],
   total: {
@@ -58,10 +69,24 @@ const orderSchema = new Schema({
     enum: ['COD', 'PayOnline'], // Payment method options
     required: true,
   },
+  
   shippingAddress: {
-    type:ObjectId,
-    ref: 'Address', // Reference to the 'ProductDB' model
-    required: true
+    street: {
+      type: String,
+      required: [true, 'Street address is required'] // Street is required
+    },
+    city: {
+      type: String,
+      required: [true, 'City is required'] // City is required
+    },
+    state: {
+      type: String,
+      required: [true, 'State is required'] // State is required
+    },
+    zipCode: {
+      type: String,
+      required: [true, 'Zip code is required'] // Zip code is required
+    }
   },
   orderDate: {
     type: Date,
@@ -74,7 +99,12 @@ const orderSchema = new Schema({
   },
 });
 
-orderSchema.pre('save', async function(next) {
+
+
+
+
+// Middleware to calculate itemTotal
+orderSchema.pre('save', async function (next) {
   try {
     for (const item of this.items) {
       console.log(`Fetching product for ID: ${item.product}`);
@@ -97,8 +127,6 @@ orderSchema.pre('save', async function(next) {
     next(error);
   }
 });
-
-
 
 orderSchema.plugin(mongoosePaginate);
 

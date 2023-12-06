@@ -7,6 +7,7 @@ const subcategories = require('../model/productAttribute/categoryDB')
 const color = require("../model/productAttribute/colorDB")
 const Category = require("../model/productAttribute/categoryDB")
 const wishlist = require("../model/wishlist")
+const userMiddleware = require('../middleware/userSideMiddleware')
 
 
 // Handle API request to get the last added product's ID
@@ -172,7 +173,11 @@ exports.getProductData = async (req, res) => {
 
 exports.getAllProducts = async (req, res) => {
     try {
-        const wishlistCount = await wishlist.countDocuments({ user: req.session.user.id });
+        let wishlistCount;
+        if(req.session.user){
+            wishlistCount = await userMiddleware.getWishlistCountOfUser(req.session.user.id)
+            console.log(wishlistCount)
+        }
         console.log(`Wishlist count is ${wishlistCount}`)
         // Fetch the list of brands from the database
         const brands = await brand.find();
@@ -216,7 +221,7 @@ exports.getAllProducts = async (req, res) => {
         // });
         
         const currentPage = parseInt(req.query.page) || 1;
-
+       
         res.render('user/productview', { brands, colors, subcategories, minPrice, maxPrice,currentPage ,req,wishlistCount });
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -327,9 +332,13 @@ exports.productById = async (req, res) => {
         if (!productData || productData.length === 0) {
             return res.status(404).json({ message: 'Product not found' });
         }
+        let wishlistCount;
+        if(req.session.user){
+             wishlistCount = await wishlist.countDocuments({ user: req.session.user.id });
 
+        }
         // Send the response with the populated product data
-        res.render('user/productSingle', { productData: productData[0] });
+        res.render('user/productSingle', { productData: productData[0],req,wishlistCount });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });

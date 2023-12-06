@@ -56,6 +56,8 @@
   }
 
 </script>
+
+
 <!-- Add your Slick carousel initialization script at the bottom of your page -->
 <script>
   $(document).ready(function () {
@@ -144,49 +146,99 @@
   
   <script>
     // Function to cancel an order
-function cancelOrder(orderId) {
-  fetch(`/orders/cancel/${orderId}`, {
+    function cancelOrder(orderId, itemId) {
+  fetch(`/orders/cancel/${orderId}/${itemId}`, {
     method: 'POST',
   })
   .then(response => response.json())
   .then(data => {
-    alert(data.message);
+    // Use SweetAlert2 to display the message
+    Swal.fire({
+  title: 'Order Cancelled!',
+  text: 'Your order has been successfully cancelled.',
+  imageUrl: 'https://i.gifer.com/7JJ.gif',
+  imageWidth: 100, // You can set the width of your image here
+  imageHeight: 100, // And the height here
+  imageAlt: 'Custom image', // Alt text for the image
+  confirmButtonText: 'OK'
+});
+
     // Update the UI to show that the order has been cancelled
     const orderElement = document.querySelector(`[data-order-id='${orderId}']`).closest('.order-row');
     if (orderElement) {
       orderElement.innerHTML = '<p>Order Cancelled</p>'; // Replace with your preferred UI change
     }
   })
-  .catch(error => console.error('Error cancelling order:', error));
+  .catch(error => {
+    console.error('Error cancelling order:', error);
+    Swal.fire({
+      title: 'Error',
+      text: 'There was an error cancelling your order.',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+  });
 }
 
 // Function to return an order
-function returnOrder(orderId) {
-  fetch(`/orders/return/${orderId}`, {
-    method: 'POST',
-  })
-  .then(response => response.json())
-  .then(data => {
-    alert(data.message);
-    // Update the UI to show that the order is being returned
-    const orderElement = document.querySelector(`[data-order-id='${orderId}']`).closest('.order-row');
-    if (orderElement) {
-      orderElement.innerHTML = '<p>Return Initiated</p>'; // Replace with your preferred UI change
+function returnOrder(orderId, itemId) {
+  Swal.fire({
+    title: 'Enter your return reason',
+    input: 'text',
+    inputLabel: 'Reason for Return',
+    showCancelButton: true,
+    confirmButtonText: 'Submit',
+    showLoaderOnConfirm: true,
+    preConfirm: (returnReason) => {
+      // Check if the returnReason is empty
+      if (!returnReason.trim()) {
+        Swal.showValidationMessage('Please enter a reason for return');
+        return false; // Prevents the dialog from closing
+      }
+      // Proceed with the fetch request
+      return fetch(`/orders/return/${orderId}/${itemId}/${encodeURIComponent(returnReason)}`, {
+        method: 'POST',
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+        return response.json();
+      })
+      .catch(error => {
+        Swal.showValidationMessage(`Request failed: ${error}`);
+      });
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+  }).then((result) => {
+    if (result.isConfirmed && result.value) {
+      // Assuming result.value contains the response from your server
+      alert(result.value.message);
+      // Update the UI to show that the order is being returned
+      const orderElement = document.querySelector(`[data-order-id='${orderId}']`).closest('.order-row');
+      if (orderElement) {
+        orderElement.innerHTML = '<p>Return Initiated</p>'; // Replace with your preferred UI change
+      }
     }
   })
   .catch(error => console.error('Error returning order:', error));
 }
+
 
 // Event listeners for cancel and return buttons
 document.addEventListener('click', function (event) {
   if (event.target.classList.contains('cancel-order')) {
     event.preventDefault();
     const orderId = event.target.getAttribute('data-order-id');
-    cancelOrder(orderId);
+    const itemId = event.target.getAttribute('data-item-id');
+
+    cancelOrder(orderId,itemId);
   } else if (event.target.classList.contains('return-order')) {
     event.preventDefault();
     const orderId = event.target.getAttribute('data-order-id');
-    returnOrder(orderId);
+    const itemId = event.target.getAttribute('data-item-id');
+
+    returnOrder(orderId,itemId);
   }
 });
 

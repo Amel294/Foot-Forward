@@ -20,7 +20,6 @@ const offerSchema = new mongoose.Schema({
     offerCategory: { // Assuming this is needed based on your initial script
         type: ObjectId,
         ref: 'Category',
-        unique:true
     },
     offerProduct: { // Assuming this is needed based on your initial script
         type: ObjectId,

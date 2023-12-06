@@ -46,31 +46,23 @@ exports.addCoupon = async function addCoupon(req, res) {
   
 
 
-
-exports.removeCoupon = async (req, res) => {
+  exports.removeCoupon = async (req, res) => {
     try {
-      const { couponCode } = req.body;
-  
-      // Check if the cart exists and the user is associated with it
-      const cart = await Cart.findOne({ user: req.session.user.id });
-  
-      if (!cart) {
-        return res.status(404).json({ message: 'Cart not found' });
-      }
-     
-      // Check if the cart has the same coupon applied
-      if (cart.coupon === couponCode) {
-        
-        // Remove the coupon from the cart
-        cart.coupon = null; // Null indicates no coupon applied
+        // Check if the cart exists and the user is associated with it
+        const cart = await Cart.findOne({ user: req.session.user.id });
+
+        if (!cart) {
+            return res.status(200).json({ message: 'Coupon removed successfully' });
+        }
+
+        // Set coupon to undefined
+        cart.coupon = undefined;
+
         await cart.save();
-  
         return res.status(200).json({ message: 'Coupon removed successfully' });
-      } else {
-        return res.status(400).json({ message: 'Coupon not found in the cart' });
-      }
     } catch (error) {
-      console.error('Error removing coupon:', error);
-      return res.status(500).json({ message: 'Internal server error' });
+        console.error('Error removing coupon:', error);
+        return res.status(500).json({ message: 'Internal server error' });
     }
-  }
+}
+

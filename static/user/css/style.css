@@ -477,3 +477,19 @@
   right: 0; /* Align to the top right corner */
   border: none; /* Remove border if it's not needed */
 }
+
+.small_cart_image{
+  max-height: 70px;
+    min-height: 60px;
+}
+
+
+.wishlist-style{
+  color: black;
+  border: black;
+  border-radius: 10px;
+  border-color: black;
+  border-style: solid;
+}
+
+

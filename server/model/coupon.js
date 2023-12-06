@@ -6,10 +6,12 @@ const couponSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true, // Ensure that each coupon code is unique
+    default: null,
   },
   discount: {
     type: Number,
     required: true,
+    default :0
   },
   type: {
     type: String,

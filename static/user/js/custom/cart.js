@@ -1,6 +1,6 @@
  // Function to fetch and update the cart's total from the server
  function fetchAndUpdateCartTotal() {
-    fetch('/cart/total', {
+    fetch('/cart/totalAndDisount', {
       method: 'GET',
     })
     .then(response => response.json())
@@ -22,52 +22,79 @@
 
   
     // Function to update the quantity in the input field and send an update request
-    function updateQuantity(itemId, newQuantity) {
-      const priceElement = document.getElementById(`price-${itemId}`);
-      const price = parseFloat(priceElement.innerText.replace('₹', ''));
-      const totalElement = document.getElementById(`total-${itemId}`);
-      
-      fetch(`/cart/update-quantity/${itemId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ quantity: newQuantity }),
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // Update the UI accordingly
-          document.getElementById(`quantity-${itemId}`).value = newQuantity;
-          // Update the total price for the item
-          if (totalElement) {
-            const itemTotalPrice = (price * newQuantity).toFixed(2);
-            totalElement.innerText = `₹${itemTotalPrice}`;
-          }
-          // Fetch and update the cart's total
-          fetchAndUpdateCartTotal();
-        } else {
-          // Handle error, maybe revert the quantity change in the input
-          alert('Quantity update failed');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    // Function to update the quantity in the input field and send an update request
+function updateQuantity(itemId, newQuantity, variantId, buttonClicked) {
+  const priceElement = document.getElementById(`price-${itemId}`);
+  const price = parseFloat(priceElement.innerText.replace('₹', ''));
+  const totalElement = document.getElementById(`total-${itemId}`);
+
+  console.log(totalElement,   "==element", itemId);
+  
+  fetch(`/cart/update-quantity/${itemId}/${variantId}/${buttonClicked}`, {
+    method: 'PUT',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ quantity: newQuantity }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      console.log(`data receiverd and is ${parseInt(data.newTotal)}`)
+      console.log(`data receiverd and is ${data.newTotal} khjsdlafhkj`)
+      console.log(`data receiverd and is ${typeof data.newTotal} khjsdlafhkj`)
+        document.getElementById(`quantity-${itemId}`).value = newQuantity;
+        totalElement.innerHTML = `₹${data.newTotal}`;
+        // if (totalElement) {
+        //     const itemTotalPrice = (price * newQuantity).toFixed(2);
+        //     console.log(itemTotalPrice, 'itemTotalPrice');
+        //     // totalElement.innerText = `₹${itemTotalPrice}`;
+        // }
+        fetchAndUpdateCartTotal();
+        Swal.fire({
+            title: 'Success!',
+            text: data.message || 'Quantity updated successfully',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    } else {
+        Swal.fire({
+            title: 'Failed!',
+            text: data.message || 'Quantity update failed',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
     }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    Swal.fire({
+        title: 'Error!',
+        text: 'Failed to update quantity',
+        icon: 'error',
+        confirmButtonText: 'OK'
+    });
+  });
+}
+
+  
     
     // Event listeners for plus and minus buttons
     document.querySelectorAll('.quantity-left-minus, .quantity-right-plus').forEach(button => {
       button.addEventListener('click', function() {
         const itemId = this.dataset.field; // Using data-field attribute as per your EJS
+        const variantId = this.dataset.vaientid;
         const input = document.getElementById(`quantity-${itemId}`);
         let newQuantity = parseInt(input.value);
+        let buttonClicked = ""; // Variable to
         if (this.classList.contains('quantity-left-minus')) {
-          newQuantity = newQuantity > 1 ? newQuantity - 1 : 1; // Prevent quantity from going below 1
-        } else {
-          newQuantity = newQuantity < 10 ? newQuantity + 1 : 10; // Prevent quantity from going above 10
+          newQuantity = Math.max(newQuantity - 1, 1); // Decrement quantity, but not below 1
+          buttonClicked = "minus";
+        } else if (this.classList.contains('quantity-right-plus')) {
+          newQuantity = Math.min(newQuantity + 1, 10); // Increment quantity, but not above 10
+          buttonClicked = "plus";
         }
-        updateQuantity(itemId, newQuantity);
+        updateQuantity(itemId, newQuantity,variantId,buttonClicked);
       });
     });
     
@@ -118,3 +145,74 @@
     
     // Call fetchAndUpdateCartTotal on page load to ensure totals are correct
     document.addEventListener('DOMContentLoaded', fetchAndUpdateCartTotal,updateQuantity);
+
+
+
+    
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Get a reference to the "Proceed to Checkout" link
+      const checkoutLink = document.querySelector('.checkout-button');
+    
+      // Add a click event listener to the link
+      checkoutLink.addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent the default link behavior (navigating to /checkout)
+    
+        // Get the product IDs from the table rows
+        const productIds = Array.from(document.querySelectorAll('tr[data-productID]')).map(row => row.getAttribute('data-productID'));
+        const variantIds = Array.from(document.querySelectorAll('tr[data-variantID]')).map(row => row.getAttribute('data-variantID'));
+        const quantities = Array.from(document.querySelectorAll('input[name="quantity"]')).map(input => input.value);
+
+        console.log(productIds);
+        console.log(variantIds);
+        console.log(quantities);
+        
+        // Make a fetch request to the /checkout endpoint with the product IDs in the request body
+        fetch('/checkCart', {
+          method: 'POST', // Use POST to send data in the request body
+          headers: {
+            'Content-Type': 'application/json',
+            // Include any other headers as required
+          },
+          body: JSON.stringify({ productIds,variantIds,quantities }), // Send the product IDs in the request body
+        })
+          .then(response => {
+            if (response.ok) {
+              console.log("Response id OK");
+              return response.json();
+            } else {
+              // Handle any error response here
+              return response.json().then(data => {
+                return Promise.reject(data);
+              });
+            }
+          })
+          .then(data => {
+            // Handle success, e.g., show a success message
+            Swal.fire({
+              title: 'Success!',
+              text: 'Cart is valid. Redirecting to checkout...',
+              icon: 'success',
+              confirmButtonText: 'OK',
+            }).then(() => {
+              // Redirect to the /checkout page
+              window.location.href = '/checkout';
+            });
+          })
+          
+          .catch(error => {
+            // Handle any error, e.g., show an error message
+            Swal.fire({
+              title: 'Error!',
+              text: error.message || 'Something went wrong.',
+              icon: 'error',
+              confirmButtonText: 'OK',
+            });
+          });
+      });
+    });
+    
+    
+    
+    

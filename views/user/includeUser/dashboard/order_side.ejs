@@ -1,63 +1,86 @@
 <div class="tab-pane fade table-dashboard dashboard wish-list-section" id="order">
-    <div class="box-head mb-3">
-        <h3>My Order</h3>
+    <div class="page-title title title1 title-effect">
+        <h2>My Orders</h2>
     </div>
-    <div class="table-responsive">
-        <table class="table cart-table">
-            <thead>
-                <tr class="table-head">
-                    <th scope="col">Image</th>
-                    <th scope="col">Order Id</th>
-                    <th scope="col">Product Details</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% orders.reverse().forEach(function(order) { %>
-                    <% order.items.forEach(function(item) { %>
-                        <tr>
-                            <td>
-                                <a href="product-left-sidebar.html">
-                                    <img
-                                        src="data:image/jpeg;base64,<%= item.product.images[0].data.toString('base64') %>">
-                                </a>
-                            </td>
-                            <td>
-                                <p class="mt-0">
-                                    <%= order._id %>
-                                </p>
-                            </td>
-                            <td>
-                                <p class="fs-6 m-0">
-                                    <%= item.product.name %> x<%= item.quantity %>
-                                    
-                                </p>
-                            </td>
-                            <td>
-                                <p class="btn btn-sm">
-                                    <%= order.orderStatus %>
-                                </p>
-                            </td>
-                            <td>
-                                <p class="theme-color fs-6">₹<%= item.product.price * item.quantity %>
-                                </p>
-                            </td>
-                            <td>
-                                <% if (order.orderStatus === "Delivered") { %>
-                                  <a href="#" class="btn btn-solid-default btn-sm fw-bold return-order" data-order-id="<%= order._id %>">Return</a>
-                                <% } else if (order.orderStatus !== "Return" && order.orderStatus !== "Cancelled By User" && order.orderStatus !== "Cancelled By Admin") { %>
-                                  <a href="#" class="btn btn-solid-default btn-sm fw-bold cancel-order" data-order-id="<%= order._id %>">Cancel</a>
-                                <% } %>
-                              </td>
-                              
-                              
-                              
-                        </tr>
-                        <% }); %>
-                            <% }); %>
-            </tbody>
-        </table>
+    <div class="accordion" id="ordersAccordion">
+        <% let ordersReversed = orders.slice().reverse(); %>
+        <% ordersReversed.forEach(function(order, orderIndex) { 
+            let totalCost = order.items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+        %>
+            <div class="accordion-item">
+                <h4 class="accordion-header d-flex justify-content-between" id="heading<%= orderIndex %>">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= orderIndex %>" aria-expanded="false" aria-controls="collapse<%= orderIndex %>">
+                        OrderID: <%= order._id  %>&nbsp;&nbsp;&nbsp;Order Date: <%= new Date(order.orderDate).toLocaleDateString() %> <%= new Date(order.orderDate).toLocaleTimeString() %>&nbsp;&nbsp;&nbsp;Items: <%= order.items.length %>&nbsp;&nbsp;&nbsp;Total Cost: ₹<%= totalCost %>
+                    </button>
+                   
+                </h4>
+                <div id="collapse<%= orderIndex %>" class="accordion-collapse collapse" aria-labelledby="heading<%= orderIndex %>" data-bs-parent="#ordersAccordion">
+                    <div class="accordion-body">
+                        <table class="table cart-table">
+                            <thead>
+                                <tr class="table-head">
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Item Id</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Qty</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% order.items.forEach(function(item) { %>
+                                    <tr>
+                                        <td>
+                                            <a href="product-left-sidebar.html">
+                                                <% if (item.product.images[0].data) { %>
+                                                    <img src="data:<%= item.product.images[0].contentType %>;base64,<%= item.product.images[0].data.toString('base64') %>">
+                                                <% } %>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <p class="mt-0">
+                                                <%= item.orderID %>
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <p class="fs-6 m-0">
+                                                <%= item.product.name %>
+                                            </p>
+                                        </td>
+                                        
+                                        <td>
+                                            <p class="theme-color fs-6">₹<%= item.product.price%></p>
+                                        </td>
+                                        <td>
+                                            <p class="theme-color fs-6"><%= item.quantity%></p>
+                                        </td>
+                                        <td>
+                                            <p class="theme-color fs-6">₹<%= item.product.price* item.quantity%></p>
+                                        </td>
+                                        
+                                        <td>
+                                            <p class="btn btn-sm">
+                                                <%= item.itemStatus %>
+                                            </p>
+                                        </td>
+                                        <td>
+                                            <% if (item.itemStatus == "Delivered") { %>
+                                              <a href="#" class="btn btn-solid-default btn-sm fw-bold return-order" data-order-id="<%= order._id %>" data-item-id="<%= item.orderID %>">Return</a>
+                                            <% } else if (item.itemStatus === "Shipped" || item.itemStatus === "Processing" || item.itemStatus === "Pending") { %>
+                                              <a href="#" class="btn btn-solid-default btn-sm fw-bold cancel-order" data-order-id="<%= order._id %>" data-item-id="<%= item.orderID %>">Cancel</a>
+                                            <% } else if (item.itemStatus === "Cancelled By User" || item.itemStatus === "Cancelled By Admin" || item.itemStatus === "Returned" ||item.itemStatus === "Return Initiated" ) { %>
+                                              <span class="text-muted">No Actions</span>
+                                            <% } %>
+                                          </td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <% }); %>
     </div>
 </div>

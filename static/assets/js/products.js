@@ -32,7 +32,11 @@ function updateStock(variantId) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Update the UI to reflect the new stock value if needed
+            // Update the UI with the new stock value
+            const currentStockSpan = document.getElementById(`current-stock-${variantId}`);
+            if (currentStockSpan) {
+                currentStockSpan.textContent = `Current Stock: ${data.newStock}`;
+            }
             alert('Stock updated successfully');
         } else {
             alert('Failed to update stock');
@@ -42,3 +46,4 @@ function updateStock(variantId) {
         console.error('Error:', error);
     });
 }
+

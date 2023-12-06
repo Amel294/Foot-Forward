@@ -69,7 +69,7 @@
                                             </a>
                                         </li>
                                         <li class="">
-                                            <a href="wishlist.html" class="nav-link menu-title theme-color">
+                                            <a href="/checkout" class="nav-link menu-title theme-color">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -80,7 +80,7 @@
                                                 </svg>
                                                 <span>Wishlist</span>
                                                 <% if (req.session.user && wishlistCount > 0) { %>
-                                                    <span class="badge badge-pill badge-danger"><%= wishlistCount %></span>
+                                                    <span class="badge badge-pill badge-danger wishlist-style"><%= wishlistCount %></span>
                                                 <% } %>
                                             </a>
                                         </li>
