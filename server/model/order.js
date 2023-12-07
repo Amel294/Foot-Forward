@@ -64,9 +64,19 @@ const orderSchema = new Schema({
     type: Number,
     required: true,
   },
+  offerDiscount:{
+    type:Number,
+  },
+  couponDiscount: {
+    type:Number,
+  },
+  payable : {
+    type: Number,
+    required:true
+  },
   paymentMethod: {
     type: String,
-    enum: ['COD', 'PayOnline'], // Payment method options
+    enum: ['COD', 'PayOnline','Wallet'], // Payment method options
     required: true,
   },
   

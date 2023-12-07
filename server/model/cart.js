@@ -39,6 +39,9 @@ const cartSchema = new Schema(
         },
         itemTotal:{
           type:Number,
+        },
+        discountedPrice :{
+          type:Number,
         }
       }
     ],
@@ -85,6 +88,7 @@ cartSchema.pre('save', async function (next) {
 
         if (product.offer.hasOffer === true) {
           this.offerDiscount += product.offer.offerPrice * item.quantity;
+          item.discountedPrice = product.offer.offerPrice * item.quantity
         } else {
           console.log(`No offer for product ${item.product.name}`);
         }
@@ -100,9 +104,10 @@ cartSchema.pre('save', async function (next) {
 
       if (coupon) {
         if (coupon.type === "Percent") {
-          this.coupanDiscount = this.totalAfterOffer * (this.totalAfterOffer * (coupon.discount / 100));
+          this.coupanDiscount = this.totalAfterOffer * (coupon.discount / 100);
         } else {
-          this.coupanDiscount = this.totalAfterOffer - coupon.discount;
+          console.log(`Flat rate discount is ${coupon.discount}`)
+          this.coupanDiscount = coupon.discount;
         }
       } else {
         console.error("Coupon not found");

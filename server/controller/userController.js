@@ -58,21 +58,30 @@ async function sendOtpEmail(session, isResend = false) {
 
 exports.home = async (req, res) => {
   try {
-      // Fetch existing banners from the database
-      const existingBanners = await Banner.find({active:true});
-      
-      const products =await await ProductDB.find()
+    let wishlistCount = 0; // Initialize wishlistCount
+
+    // Check if req.session.user is defined before accessing its properties
+    if (req.session && req.session.user && req.session.user.id) {
+      wishlistCount = userSideMiddleware.getWishlistCountOfUser(req.session.user.id);
+    }
+
+    // Fetch existing banners from the database
+    const existingBanners = await Banner.find({ active: true });
+
+    const products = await ProductDB.find()
       .sort({ createdAt: -1 }) // Sort by creation date descending
       .limit(6);
-      console.log(products)
-      // Render the banner page and pass the existing banners
-      res.render('user/home', {  banners: existingBanners ,products :products,req });
+    console.log(products);
+
+    // Render the banner page and pass the existing banners
+    res.render('user/home', { banners: existingBanners, products: products, req, wishlistCount });
   } catch (error) {
-      // Handle errors
-      console.error('Error:', error);
-      res.status(500).send('Internal Server Error');
+    // Handle errors
+    console.error('Error:', error);
+    res.status(500).send('Internal Server Error');
   }
-}
+};
+
 
 
 

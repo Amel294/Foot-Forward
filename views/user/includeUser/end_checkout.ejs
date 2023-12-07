@@ -214,7 +214,48 @@
           console.error("Error:", error);
         }
       }
-
+      if (paymentMethod === "COD" ) {
+        fetch('/place-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            paymentMethod: "COD",
+            address: address,
+          }),
+        }).then(response => {
+                        if (!response.ok) {
+                          throw new Error('Error placing order ' + response.statusText);
+                        }
+                        return response.json();
+                      })
+          .then(orderResponse => {
+            console.log(orderResponse);
+            window.location.href = '/orderSuccess'; // Redirect to the success page
+          })
+      }
+      if (paymentMethod === "Wallet" ) {
+        fetch('/place-order', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            paymentMethod: "Wallet",
+            address: address,
+          }),
+        }).then(response => {
+                        if (!response.ok) {
+                          throw new Error('Error placing order ' + response.statusText);
+                        }
+                        return response.json();
+                      })
+          .then(orderResponse => {
+            console.log(orderResponse);
+            window.location.href = '/orderSuccess'; // Redirect to the success page
+          })
+      }
     });
   });
 </script>
@@ -253,78 +294,78 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ couponCode: couponCode })
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Coupon applied:', data);
-      // Display a success message using Swal
-      Swal.fire({
-        title: 'Success!',
-        text: 'Coupon applied successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK'
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        console.log('Coupon applied:', data);
+        // Display a success message using Swal
+        Swal.fire({
+          title: 'Success!',
+          text: 'Coupon applied successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        // Additional logic to handle successful coupon application
+      })
+      .catch(error => {
+        console.error('Error applying coupon:', error);
+        // Optionally, you could also use Swal to display error messages
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to apply coupon.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       });
-      // Additional logic to handle successful coupon application
-    })
-    .catch(error => {
-      console.error('Error applying coupon:', error);
-      // Optionally, you could also use Swal to display error messages
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to apply coupon.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    });
   });
 
 
 
   document.getElementById('removeCoupan').addEventListener('click', function (e) {
     e.preventDefault(); // Prevent default form submission
-    
+
     fetch('/remove-coupon', {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      return response.json();
-    })
-    .then(data => {
-      console.log('Coupon removed:', data);
-
-      // Display a success message using Swal
-      Swal.fire({
-        title: 'Success!',
-        text: 'Coupon removed successfully!',
-        icon: 'success',
-        confirmButtonText: 'OK'
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
       })
-      .then(() => {
-        // Reload the page after the user clicks "OK" or outside the modal
-        location.reload();
+      .then(data => {
+        console.log('Coupon removed:', data);
+
+        // Display a success message using Swal
+        Swal.fire({
+          title: 'Success!',
+          text: 'Coupon removed successfully!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        })
+          .then(() => {
+            // Reload the page after the user clicks "OK" or outside the modal
+            location.reload();
+          });
+      })
+      .catch(error => {
+        console.error('Error applying coupon:', error);
+        // Optionally, you could also use Swal to display error messages
+        Swal.fire({
+          title: 'Error!',
+          text: 'Failed to apply coupon.',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
       });
-    })
-    .catch(error => {
-      console.error('Error applying coupon:', error);
-      // Optionally, you could also use Swal to display error messages
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to apply coupon.',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    });
   });
-  
-  
+
+
 </script>
 
 

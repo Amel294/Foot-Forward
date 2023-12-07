@@ -6,7 +6,8 @@ const CouponsDB = require("../model/coupon")
 const mongoose = require('mongoose');
 const Address = require("../model/address");
 const Color = require("../model/productAttribute/colorDB")
-const Size = require("../model/productAttribute/sizeDB")
+const Size = require("../model/productAttribute/sizeDB");
+const Wallet = require("../model/wallet");
 exports.cartTotal = async (req, res) => {
   try {
     // Assuming `Cart` is your Mongoose model for the cart collection
@@ -42,21 +43,21 @@ exports.getCartPage = async (req, res) => {
           const variant = product.variants.find(v => v._id.toString() === item.variant.toString());
           if (variant) {
             const stock = variant.stock;
-            console.log(`Variant: ${variant._id}, Stock: ${stock}`);
+            console.log(`Variant: ${ variant._id }, Stock: ${ stock }`);
             if (item.quantity > stock) {
               item.outOfStock = true;
             }
           } else {
-            console.log(`Variant with ID ${item.variant} not found for product ${item.product}`);
+            console.log(`Variant with ID ${ item.variant } not found for product ${ item.product }`);
           }
         } else {
-          console.log(`Product with ID ${item.product} not found`);
+          console.log(`Product with ID ${ item.product } not found`);
         }
       } catch (error) {
-        console.error(`Error finding stock for item: ${error.message}`);
+        console.error(`Error finding stock for item: ${ error.message }`);
       }
     }
-    
+
 
     res.render('user/cart', { cart, req, wishlistCount, });
   } catch (error) {
@@ -95,9 +96,9 @@ exports.itemCount = async (req, res) => {
 
 exports.placeOrder = async (req, res) => {
   try {
-    const userId = req.session.user.id;
+    const userId = new mongoose.Types.ObjectId(req.session.user.id); // Convert userId to ObjectId
     const { paymentMethod, address, paymentId } = req.body;
-    console.log(`Payment oid is : ${ paymentId }`)
+    console.log(paymentMethod);
     const shippingAddress = await Address.aggregate([
       {
         $match: { _id: new mongoose.Types.ObjectId(address) }
@@ -112,35 +113,111 @@ exports.placeOrder = async (req, res) => {
         }
       }
     ]);
-    console.log(shippingAddress[0].street)
+    console.log(shippingAddress[0].street);
 
     const userCart = await Cart.findOne({ user: userId }).populate('items.product');
     if (!userCart || userCart.items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty or not found' });
     }
-    let order
+
+    let order;
+
     if (paymentMethod === "PayOnline") {
+      console.log(`Inside PayOnline payment`);
       order = new Order({
         user: userId,
         items: userCart.items,
         total: userCart.total,
+        offerDiscount: userCart.offerDiscount,
+        couponDiscount: userCart.coupanDiscount,
+        payable: userCart.payable,
         paymentMethod: paymentMethod,
         shippingAddress: {
-          street: shippingAddress[0].street, // This line is incorrect
-          city: shippingAddress[0].city,     // You should set the street, city, state, and zipCode fields here
+          street: shippingAddress[0].street,
+          city: shippingAddress[0].city,
           state: shippingAddress[0].state,
           zipCode: shippingAddress[0].zipCode
         },
-
-
       });
     }
 
+    if (paymentMethod === "COD") {
+      console.log(`Inside COD payment`);
+      order = new Order({
+        user: userId,
+        items: userCart.items,
+        total: userCart.total,
+        offerDiscount: userCart.offerDiscount,
+        couponDiscount: userCart.coupanDiscount,
+        payable: userCart.payable,
+        paymentMethod: paymentMethod,
+        shippingAddress: {
+          street: shippingAddress[0].street,
+          city: shippingAddress[0].city,
+          state: shippingAddress[0].state,
+          zipCode: shippingAddress[0].zipCode
+        },
+      });
+    }
+
+    if (paymentMethod === "Wallet") {
+      console.log(`Inside Wallet payment`);
+      const wallet = await Wallet.findOne({ user: userId });
+
+      if (wallet.balance < userCart.payable) {
+        return res.status(400).json({ error: 'Insufficient balance in the wallet' });
+      }
+
+      order = new Order({
+        user: userId,
+        items: userCart.items,
+        total: userCart.total,
+        offerDiscount: userCart.offerDiscount,
+        couponDiscount: userCart.coupanDiscount,
+        payable: userCart.payable,
+        paymentMethod: paymentMethod,
+        shippingAddress: {
+          street: shippingAddress[0].street,
+          city: shippingAddress[0].city,
+          state: shippingAddress[0].state,
+          zipCode: shippingAddress[0].zipCode
+        },
+      });
+
+      // Save the order to the database
+
+      // Update wallet balance and add transaction record
+      
+    } else {
+      return res.status(400).json({ error: 'Invalid payment method' });
+    }
+
+    if (!order) {
+      return res.status(500).json({ error: 'Failed to create order' });
+    }
 
     // Assign unique order IDs to each item
     await assignUniqueOrderIDs(order.items);
 
+    // Save the order and clear the cart
     await order.save();
+    if (paymentMethod === "Wallet") {
+      console.log(`Inside Wallet payment`);
+      const wallet = await Wallet.findOne({ user: userId });
+
+      if (wallet.balance < userCart.payable) {
+        return res.status(400).json({ error: 'Insufficient balance in the wallet' });
+      }
+      wallet.balance -= userCart.payable;
+      wallet.transactions.push({
+        description: `Order Payment for orderID: ${order._id}`,
+        amount: -userCart.payable,
+        type: 'Dr',
+      });
+
+      await wallet.save();
+
+    }
     await userCart.clearCart();
 
     res.status(200).json({ message: 'Order placed successfully' });
@@ -149,6 +226,8 @@ exports.placeOrder = async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
 
 async function assignUniqueOrderIDs(items) {
   for (const item of items) {
@@ -239,7 +318,7 @@ exports.updateQuantity = async (req, res) => {
     const cartTotal = userCart.total
     const grandTotal = userCart.totalAfterOffer
     const total = userCart.total
-    res.json({ success: true, message: 'Quantity updated successfully', hasStock, newTotal: userCart.total, newTotal: newPrice * newQuantity, discount, grandTotal, cartTotal,total });
+    res.json({ success: true, message: 'Quantity updated successfully', hasStock, newTotal: userCart.total, newTotal: newPrice * newQuantity, discount, grandTotal, cartTotal, total });
   } catch (error) {
     console.error('Error updating item quantity:', error);
     res.status(500).json({ success: false, message: 'Failed to update quantity' });
@@ -309,17 +388,17 @@ exports.removeFromCart = async (req, res) => {
     if (cartInstance) {
       await cartInstance.removeItem(itemId, userId);
       console.log('Item removed successfully!');
-      const cart  = await Cart.findOne({user:req.session.user.id})
-      console.log(`Updated caet details are : ${cart}`)
+      const cart = await Cart.findOne({ user: req.session.user.id })
+      console.log(`Updated caet details are : ${ cart }`)
       const discount = cart.offerDiscount
-    const grandTotal = cart.totalAfterOffer
-    const total = cart.total
-    console.log(`Cart total in remove is ${total}`)
-    
-      res.status(200).json({ success:true, message: 'Item removed successfully', discount, grandTotal,total});
+      const grandTotal = cart.totalAfterOffer
+      const total = cart.total
+      console.log(`Cart total in remove is ${ total }`)
+
+      res.status(200).json({ success: true, message: 'Item removed successfully', discount, grandTotal, total });
     } else {
       console.error('Cart not found for user:', userId);
-      res.status(404).json({success:false , message: 'Cart not found for user' });
+      res.status(404).json({ success: false, message: 'Cart not found for user' });
     }
   } catch (error) {
     console.error('Error while removing item:', error);

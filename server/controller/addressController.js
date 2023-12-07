@@ -7,10 +7,11 @@ const userSideMiddleware = require("../middleware/userSideMiddleware")
 const Product = require("../model/productDB")
 const Color = require("../model/productAttribute/colorDB")
 const Size = require("../model/productAttribute/sizeDB")
+const Wallet = require("../model/wallet")
 
 async function getDataFromProductsDB(productId, variantId, itemQty, hasoffer = false, offerPercent = 0, req, promocode = null) {
   const productData = await Product.findOne({ _id: productId });
-  
+
   console.log(`Price is : ${ productData.price } and offer price is ${ productData.offer.offerPrice } in get data function`)
   let itemPriceAfterDisount;
   if (productData && productData.variants && productData.variants.length > 0) {
@@ -64,72 +65,31 @@ exports.checkout = async (req, res) => {
   const id = req.session.user.id;
   const addresses = await Address.find({ userId: req.session.user.id });
   const user = await userDB.findOne({ _id: id });
-  const cart = await Cart.findOne(
-    { user: id }, // Query: Find a cart by user ID
-    {
-      _id: 1,
-      "items.product": 1, // Assuming 'items' is an array of objects containing product references
-      "items.variant": 1,  // Each item has a 'variant' field referring to the selected variant ID
-      "items.quantity": 1,
-      "total": 1,
-      "coupon": 1,
+  console.log(req.session.user.id)
+  const cart = await Cart.findOne({ user: req.session.user.id }).populate('items.product coupon items.color items.size')
+
+  cart.items.forEach(function (item) {
+    const product = item.product; 
+
+    if (product && product.images && product.images.length > 0) {
+      console.log(`First Image for Product ${ product._id }: ${ product.images[0] }`);
     }
-  );
-
-  let promocode;
-  let promoCouponType;
-  let promoCouponDiscount;
-
-const promocodeData = await Cart.findOne({ user: req.session.user.id }).populate('coupon');
-
-console.log(`Promocode data is : ${JSON.stringify(promocodeData)}`);
-
-const isEmpty = (obj) => {
-    return Object.keys(obj).length === 0;
-};
-
-if (!promocodeData || !promocodeData.coupon || isEmpty(promocodeData.coupon)) {
-    console.log("Is empty or falsy");
-} else {
-    promocode = promocodeData.coupon.code;
-    promoCouponType = promocodeData.coupon.type;
-    promoCouponDiscount = promocodeData.coupon.discount;
-    console.log(`Coupon inside function is: ${promocode}    ${promoCouponType}     ${promoCouponDiscount}`);
-}
-
-  let ProductsInCart
-
-  if (cart && cart.items) {
-    const promises = cart.items.map(item => getDataFromProductsDB(item.product, item.variant, item.quantity, item.product.hasOffer, item.product.offerPercent, req, promocode));
-    ProductsInCart = await Promise.all(promises);
-  } else {
-    console.log('No cart items found.');
-  }
-  let TotalBeforeCoupon = 0;
-  ProductsInCart.forEach(item => {
-    TotalBeforeCoupon += item.itemPriceAfterDisount;
   });
-  let finalPrice = TotalBeforeCoupon;
-  let couponDiscount = 0;
-  if (promocode ) {
-    if (promoCouponType === "Percent") {
-      couponDiscount = TotalBeforeCoupon * (promoCouponDiscount / 100)
-      console.log(`Coupon discount percent is : ${ couponDiscount }`)
-    } else {
-      couponDiscount = promoCouponDiscount
 
-    }
-  }
-  finalPrice = TotalBeforeCoupon - couponDiscount;
 
-  console.log(`"the total before copon is ${ TotalBeforeCoupon }`)
-  console.log(`"the total is ${ finalPrice }`)
 
-  
 
-  cart.TotalBeforeCoupon = TotalBeforeCoupon;
-  cart.coupanDiscount = couponDiscount
-  cart.payable = finalPrice
+  const total = cart.total
+  const coupon = cart.coupon;
+  const couponDiscount = cart.coupanDiscount
+  const finalPrice = cart.payable
+  let promocode = null;
+  if (coupon) promocode = coupon.code
+  else console.log(`Coupan does not exist`)
+  // dasdasdas
+  const ProductsInCart = null
+  // sdasdasd
+  const TotalBeforeCoupon = cart.offerDiscount
   await cart.save();
   const currentDate = new Date();
   const availableCoupon = await Coupon.find({
@@ -137,9 +97,9 @@ if (!promocodeData || !promocodeData.coupon || isEmpty(promocodeData.coupon)) {
     validUntil: { $gte: currentDate }
   });
 
+  const wallet = await Wallet.findOne({user: req.session.user.id},{balance:1,_id:0})
 
-
-  res.render('user/checkout', { addresses: addresses, user: user, coupons: availableCoupon, coupon :promocode, req, wishlistCount, cart, ProductsInCart, TotalBeforeCoupon, couponDiscount, totalAfterCoupon: finalPrice });
+  res.render('user/checkout', { addresses: addresses, user: user, coupons: availableCoupon, coupon: promocode, req, wishlistCount, cart, ProductsInCart, total, TotalBeforeCoupon, couponDiscount, totalAfterCoupon: finalPrice,wallet });
 };
 
 

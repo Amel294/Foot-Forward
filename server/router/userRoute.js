@@ -29,6 +29,7 @@ const couponController = require("../controller/couponController")
 const Offer = require("../model/offer")
 const adminReferral = require("../model/referral")
 const Referral = require("../model/ReferralModel")
+const Wallet   =require("../model/wallet")
 // Apply globally
 router.use(checkSession);
 router.get('/blocked', (req, res) => {
@@ -103,7 +104,7 @@ function Protected(req, res, next) {
 
 
 //home
-router.get('/', controller.home);
+router.get('/',isActive, controller.home);
 
 //signup
 
@@ -272,18 +273,37 @@ router.post('/orders/cancel/:orderId/:itemId', async (req, res) => {
     const itemId = req.params.itemId;
     console.log(`OrderId is ${orderID}
     ItemId is ${itemId}`)
+    
+    // Find the order and update the item status
     const updatedOrder = await Order.findOneAndUpdate(
       { 'items.orderID': itemId },
       { $set: { 'items.$.itemStatus': 'Cancelled By User' } },
       { new: true }
     );
-      console.log(updatedOrder)
+
+    // Check if the order's payment method is 'Wallet'
+    if (updatedOrder.paymentMethod === 'Wallet') {
+      // Refund the amount to the user's wallet
+      const wallet = await Wallet.findOne({ user: updatedOrder.user });
+
+      wallet.balance += updatedOrder.payable;
+      wallet.transactions.push({
+        description: `Order Cancelled - Refund for orderID: ${updatedOrder._id}`,
+        amount: updatedOrder.payable,
+        type: 'Cr', // Cr (Credit) for refund
+      });
+
+      await wallet.save();
+    }
+
+    console.log(updatedOrder);
     return res.status(200).json({ message: 'Order cancelled successfully' });
   } catch (error) {
     console.error('Error cancelling order:', error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 
 // Return Order
