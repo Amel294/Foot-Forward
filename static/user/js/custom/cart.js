@@ -124,8 +124,7 @@ document.querySelectorAll('.remove-item').forEach(button => {
   });
 });
 
-// Call fetchAndUpdateCartTotal on page load to ensure totals are correct
-document.addEventListener('DOMContentLoaded', fetchAndUpdateCartTotal, updateQuantity);
+
 
 
 
@@ -189,10 +188,16 @@ document.addEventListener('DOMContentLoaded', function () {
           text: error.message || 'Something went wrong.',
           icon: 'error',
           confirmButtonText: 'OK',
-        });
+        })
+        .then(()=>{
+          window.location.href = window.location.href;
+
+        })
       });
   });
 });
+
+
 
 
 

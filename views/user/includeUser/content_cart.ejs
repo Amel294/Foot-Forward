@@ -18,6 +18,8 @@
                     <thead>
                         <tr class="table-head">
                             <!-- <th scope="col">image</th> -->
+
+                            <th scope="col">Image</th>
                             <th scope="col">product name</th>
                             <th scope="col">size & color</th>
                             
@@ -31,7 +33,14 @@
                         <% cart.items.forEach(function(item) { %>
                             <tr id="item-row-<%= item._id %>" data-productID="<%= item.product._id %>" data-variantID= "<%= item.variant._id %>">
                                 
-                                
+                                <td><a href="">
+                                    <%if(item.outOfStock){%>
+                                        <i class="fas fa-exclamation-circle" style="color: red;" data-toggle="tooltip" data-placement="top" title="Your Tooltip Content"></i>
+                                        <%}%>
+                                        <img src="data:<%= item.product.images[0].contentType %>;base64,<%= item.product.images[0].data.toString('base64') %>"
+                                            class="blur-up lazyloaded" alt="">
+                                    </a>
+                                </td>
                                     
                                     <td id="name-<%= item.name %>"><%= item.product.name %></td>
                                     <td id="name-<%= item.name %>">

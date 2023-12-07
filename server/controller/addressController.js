@@ -11,15 +11,15 @@ const Size = require("../model/productAttribute/sizeDB")
 async function getDataFromProductsDB(productId, variantId, itemQty, hasoffer = false, offerPercent = 0, req, promocode = null) {
   const productData = await Product.findOne({ _id: productId });
   
-  console.log(`Price is : ${ productData.price } and offer price is ${ productData.offerPrice } in get data function`)
+  console.log(`Price is : ${ productData.price } and offer price is ${ productData.offer.offerPrice } in get data function`)
   let itemPriceAfterDisount;
   if (productData && productData.variants && productData.variants.length > 0) {
     // Find the variant that matches the variantId
     const variant = productData.variants.find(v => v._id.toString() === variantId.toString());
-    if (productData.offerPercent <= 0) {
+    if (productData.offer.offerPercent <= 0) {
       itemPriceAfterDisount = productData.price * itemQty
     } else {
-      itemPriceAfterDisount = productData.offerPrice * itemQty
+      itemPriceAfterDisount = productData.offer.offerPrice * itemQty
     }
     console.log(itemPriceAfterDisount)
     if (variant) {

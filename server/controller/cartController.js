@@ -35,7 +35,28 @@ exports.getCartPage = async (req, res) => {
 
     console.log(cart)
 
-
+    for (const item of cart.items) {
+      try {
+        const product = await ProductDB.findOne({ _id: item.product });
+        if (product) {
+          const variant = product.variants.find(v => v._id.toString() === item.variant.toString());
+          if (variant) {
+            const stock = variant.stock;
+            console.log(`Variant: ${variant._id}, Stock: ${stock}`);
+            if (item.quantity > stock) {
+              item.outOfStock = true;
+            }
+          } else {
+            console.log(`Variant with ID ${item.variant} not found for product ${item.product}`);
+          }
+        } else {
+          console.log(`Product with ID ${item.product} not found`);
+        }
+      } catch (error) {
+        console.error(`Error finding stock for item: ${error.message}`);
+      }
+    }
+    
 
     res.render('user/cart', { cart, req, wishlistCount, });
   } catch (error) {
