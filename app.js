@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan')
 const nocache = require("nocache");
-const port = 3000;
 const dotenv = require("dotenv");
 const connectDB = require("./server/database/connection")
 const cors = require("cors")
@@ -16,11 +15,6 @@ const mongoose = require('mongoose');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-const corsOptions = {
-    origin: 'http://localhost:3000',
-    // Other CORS options if needed
-};
 
 app.use(session({
     secret: 'your-secret-key', // Change this to a strong secret key
@@ -107,6 +101,6 @@ app.use('/user', require('./server/router/userDashboard'))
 
 // Start the server
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${ port }`);
+app.listen(process.env.MONGO_URI, () => {
+    console.log(`Server is running at http://localhost:${ process.env.MONGO_URI }`);
 });

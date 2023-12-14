@@ -20,7 +20,6 @@ router.get('/products', async (req, res) => {
   
       res.render('products', { products: products.docs, activeRoute: 'products', totalPages: products.totalPages, currentPage: page });
     } catch (error) {
-      console.error('Error fetching products:', error);
       res.status(500).json({ error: 'Internal server error' });
     }
   });

@@ -1,0 +1,207 @@
+<div class="nk-content ">
+    <div class="container-fluid">
+        <div class="nk-content-inner">
+            <div class="nk-content-body">
+                <div class="components-preview mx-auto">
+                    <div class="nk-block nk-block-lg">
+
+                        <div class="card">
+                            <div class="card-inner ">
+                                <div class="card-head">
+                                    <h3 class="card-title">Edit Coupon</h3>
+                                </div>
+                                <form action="#" class="gy-3" id="couponForm">
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label" for="site-name">Coupon
+                                                    Name</label></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap"><input type="text" name="coupanName"
+                                                        class="form-control form-control-lg" value="<%=coupon.code%>"
+                                                        placeholder="NEWYEAR20"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label" for="site-name">Coupon
+                                                    Description</label></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap"><input type="text"
+                                                        name="coupanDescription" class="form-control form-control-lg"
+                                                        value="<%=coupon.Description%>"
+                                                        placeholder="Get 20% off on purchase of Rs.3000"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label"> Type of
+                                                    Coupan</label></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap">
+                                                    <ul class="custom-control-group">
+                                                        <li>
+                                                            <% if(coupon.type==="Percent" ){%>
+                                                               
+                                                                        <input type="text" class="form-control form-control-lg" id="default-1-03" disabled="" value="Percent">
+                                                                <%}else{%>
+                                                                    <input type="text" class="form-control form-control-lg" id="default-1-03" disabled="" value="Flat Rate">
+
+
+                                                                    <%}%>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row g-3 align-center" id="discountInputGroup">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label">Discount in
+                                                    Percent</label></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap"><input type="text" name="coupanDiscount"
+                                                        class="form-control form-control-lg"
+                                                        value="<%=coupon.discount%>" placeholder="2%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label">Pick Date and Time for
+                                                    Coupon expiry</label></div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap ">
+                                                    <div class="form-icon form-icon-right"><em
+                                                            class="icon ni ni-calendar-alt"></em></div><input
+                                                        type="text"
+                                                        class="form-control form-control-xl form-control-outlined date-picker"
+                                                        name="coupanDate" id="outlined-date-picker"><label
+                                                        class="form-label-outlined" for="outlined-date-picker">Date
+                                                        Picker</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap has-timepicker">
+                                                    <div class="form-icon form-icon-right"><em
+                                                            class="icon ni ni-clock"></em></div><input type="text"
+                                                        class="form-control form-control-xl form-control-outlined time-picker"
+                                                        name="coupanTime" id="outlined-time-picker"><label
+                                                        class="form-label-outlined" for="outlined-time-picker">Time
+                                                        Picker</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label">Min Order Amount In
+                                                    ₹</label></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap "><input type="text"
+                                                        name="coupanMinOrderAmount" class="form-control form-control-lg"
+                                                        name="site-url" value="<%=coupon.minimumOrderAmount%>"
+                                                        placeholder="3000"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="row g-3 align-center">
+                                        <div class="col-lg-5">
+                                            <div class="form-group"><label class="form-label">Total Coupans</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="form-group">
+                                                <div class="form-control-wrap "><input type="text" name="coupanTotal"
+                                                        class="form-control form-control-lg" name="site-url"
+                                                        value="<%=coupon.maxUses%>" placeholder="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                    <div class="row g-3">
+                                        <div class="col-lg-7 offset-lg-5">
+                                            <div class="form-group mt-2">
+                                                <button type="submit" id="submitCoupon"
+                                                    class="btn btn-lg btn-primary">Save Changes</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const coupon = JSON.parse('<%- JSON.stringify(coupon) %>');
+    console.log(coupon);
+
+    // Ensure that coupon.validUntil.$date is already a string, not a Date object
+    var couponDate = new Date(coupon.validUntil);
+
+    // Format date and time
+    var formattedDate = formatDate(couponDate);
+    var formattedTime = formatTime(couponDate);
+
+    // Set the values in the date and time input fields
+    document.getElementById('outlined-date-picker').value = formattedDate;
+    document.getElementById('outlined-time-picker').value = formattedTime;
+
+    function formatDate(date) {
+        var day = date.getDate();
+        var month = date.getMonth() + 1; // Months are zero-based
+        var year = date.getFullYear();
+
+        return pad(day) + '/' + pad(month) + '/' + year;
+    }
+
+    function formatTime(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var seconds = date.getSeconds();
+
+        return pad(hours) + ':' + pad(minutes) + ':' + pad(seconds);
+    }
+
+    function pad(value) {
+        return value < 10 ? '0' + value : value;
+    }
+</script>
+
+
+
+

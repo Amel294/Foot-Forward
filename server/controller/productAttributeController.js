@@ -427,11 +427,9 @@ exports.deleteSubcategory = async (req, res) => {
     try {
         const subcategoryId = req.params.subcategoryId;
 
-        // Check if the subcategory is associated with any products
         const associatedProducts = await Product.find({ 'subcategory': subcategoryId }, 'productId');
 
         if (associatedProducts.length > 0) {
-            // List the IDs of products associated with this subcategory
             const productIds = associatedProducts.map(product => product.productId);
             console.error(`Can't delete subcategory as it is associated with products: ${productIds.join(', ')}`);
             return res.status(400).json({
@@ -439,11 +437,13 @@ exports.deleteSubcategory = async (req, res) => {
             });
         }
 
-        // Proceed with deletion if no associated products
         const result = await Category.deleteOne({ _id: subcategoryId });
+
         if (result.deletedCount === 0) {
             return res.status(404).json({ message: 'Subcategory not found' });
         }
+
+        await Category.updateOne({ _id: subcategoryId }, { $set: { isDeleted: true } });
 
         res.status(200).json({ message: 'Subcategory deleted successfully' });
 

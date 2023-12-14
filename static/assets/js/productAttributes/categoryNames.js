@@ -102,34 +102,64 @@ function fetchAndPopulateSubcategories(mainCategory) {
 
 
 
-$(document).on('click', '.delCat', function(event) {
-  console.log("Delete button clicked");
-  event.preventDefault();
+$(document).on('click', '.delCat', function (event) {
+    console.log("Delete button clicked");
+    event.preventDefault();
 
-  const subcategoryName = $(this).data('category-id');
-  console.log("Subcategory:", subcategoryName);
+    const subcategoryName = $(this).data('category-id');
+    console.log("Subcategory:", subcategoryName);
 
-  $.ajax({
-      type: 'DELETE',
-      url: `http://localhost:3000/attributes/category/${encodeURIComponent(subcategoryName)}`,
-      success: function(response) {
-          console.log('Subcategory deleted:', response);
+    // Use SweetAlert2 for confirmation
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Proceed with deletion
+            $.ajax({
+                type: 'DELETE',
+                url: `http://localhost:3000/attributes/category/${encodeURIComponent(subcategoryName)}`,
+                success: function (response) {
+                    console.log('Subcategory deleted:', response);
 
-          // Remove the subcategory element from the DOM
-          $(event.target).closest('.card-inner-md').remove();
-      },
-      error: function(xhr, status, error) {
-        if (xhr.status === 400) {
-            // Server responded with a 400 status, indicating the subcategory is in use
-            alert(xhr.responseJSON.message);
-        } else {
-            // Handle other kinds of errors
-            console.error('An error occurred:', error);
-            alert('An error occurred while deleting the subcategory.');
+                    // Remove the subcategory element from the DOM
+                    $(event.target).closest('.card-inner-md').remove();
+
+                    // Show success message
+                    Swal.fire(
+                        'Deleted!',
+                        'Subcategory has been deleted.',
+                        'success'
+                    );
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 400) {
+                        // Server responded with a 400 status, indicating the subcategory is in use
+                        Swal.fire(
+                            'Error!',
+                            xhr.responseJSON.message,
+                            'error'
+                        );
+                    } else {
+                        // Handle other kinds of errors
+                        console.error('An error occurred:', error);
+                        Swal.fire(
+                            'Error!',
+                            'An error occurred while deleting the subcategory.',
+                            'error'
+                        );
+                    }
+                }
+            });
         }
-    }
-  });
+    });
 });
+
 
 
 // Call the function for each main category on document ready

@@ -104,7 +104,7 @@ function Protected(req, res, next) {
 
 
 //home
-router.get('/',isActive, controller.home);
+router.get('/', controller.home);
 
 //signup
 

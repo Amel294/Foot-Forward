@@ -1,0 +1,107 @@
+<div class="nk-footer">
+  <div class="container-fluid">
+    <div class="nk-footer-wrap">
+      <div class="nk-footer-copyright"> &copy;Foot Forward </div>
+
+    </div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Import jQuery from a CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="/static/assets/js/bundlee5ca.js?ver=3.2.3"></script>
+<script src="/static/assets/js/scriptse5ca.js?ver=3.2.3"></script>
+<script src="/static/assets/js/demo-settingse5ca.js?ver=3.2.3"></script>
+<script src="/static/assets/js/example-sweetalerte5ca.js"></script>
+<!-- <script src="/static/assets/js/charts/chart-ecommercee5ca.js?ver=3.2.3"></script> -->
+<!-- JavaScript for Select2 -->
+
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src = /static/assets/js/orders.js></script>
+<script src = /static/assets/js/products.js></script>
+<script>$("#banner_active").prop("checked", true);
+</script>
+
+
+
+
+
+  
+
+
+
+
+<script>
+  $(document).ready(function () {
+    const $couponForm = $('#couponForm');
+    const couponId = window.location.pathname.split('/').pop(); // Extract coupon ID from the current URL
+
+    $couponForm.on('submit', function (e) {
+      e.preventDefault();
+      const formData = $couponForm.serializeArray().reduce(function (obj, item) {
+        obj[item.name] = item.value;
+        return obj;
+      }, {});
+
+      // Append the coupon ID to the data
+      formData.couponid = couponId;
+
+      console.log("In edit");
+      console.log(formData);
+
+      $.ajax({
+        type: 'post',
+        url: `/admin/editCoupons/${couponId}`,
+        data: formData,
+        success: function (response) {
+          console.log(response.message);
+          Swal.fire({
+            title: 'Success!',
+            text: 'Coupon added successfully.',
+            icon: 'success',
+            confirmButtonText: 'OK'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Reload the page when OK is clicked
+              location.reload();
+            }
+          });
+        },
+        error: function (error) {
+          console.error('Error:', error.responseText);
+          // Add error handling Sweet Alert here if desired
+        },
+      });
+    });
+  });
+</script>
+
+<sc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
