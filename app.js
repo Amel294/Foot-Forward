@@ -1,8 +1,9 @@
 const express = require('express');
 const app = express();
+port = 3000
 const morgan = require('morgan')
 const nocache = require("nocache");
-const dotenv = require("dotenv");
+const dotenv = require('dotenv').config();
 const connectDB = require("./server/database/connection")
 const cors = require("cors")
 const multer = require('multer')
@@ -28,7 +29,7 @@ app.use(session({
 
 
 
-dotenv.config({ path: '.env' });
+
 app.use(morgan('dev'));
 app.use(nocache());
 // app.use(morgan('combined'));
@@ -103,7 +104,8 @@ app.use('/user', require('./server/router/userDashboard'))
 
 
 // Start the server
-
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running at http://localhost:${ process.env.PORT }`);
+console.log(`Port env mongo is is ${process.env.MONGO_URI}
+Port env PORT is is ${process.env.PORT}`)
+app.listen(port, () => {
+    console.log(`Server is running at http://localhost:${ port }`);
 });

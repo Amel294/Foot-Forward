@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-
+const uri  = 'mongodb+srv://admin:admin123@cluster0.l8fhcjl.mongodb.net/footforwardDB'
 const connectDB = async () => {
   try {
-    const con = await mongoose.connect(process.env.MONGO_URI, {
+    const con = await mongoose.connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
