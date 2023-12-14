@@ -15,7 +15,10 @@ const mongoose = require('mongoose');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    // Other CORS options if needed
+};
 app.use(session({
     secret: 'your-secret-key', // Change this to a strong secret key
     resave: false,
@@ -101,6 +104,6 @@ app.use('/user', require('./server/router/userDashboard'))
 
 // Start the server
 
-app.listen(process.env.MONGO_URI, () => {
-    console.log(`Server is running at http://localhost:${ process.env.MONGO_URI }`);
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running at http://localhost:${ process.env.PORT }`);
 });
