@@ -28,8 +28,13 @@ exports.getCartPage = async (req, res) => {
     const wishlistCount = userSideMiddleware.getWishlistCountOfUser(req.session.user.id);
 
     // Fetch the cart based on user session ID
-    const cart = await Cart.findOne({ user: req.session.user.id }).populate('items.product  items.color items.size total price');
+    let cart = await Cart.findOne({ user: req.session.user.id }).populate('items.product  items.color items.size total price');
+    if (!cart) {
+      cart = new Cart({ user: req.session.user.id, items: [], total: 0, price: 0 });
+      await cart.save();
+    }
 
+    console.log(cart);
     if (!cart) {
       return res.status(404).send('Cart not found.');
     }
@@ -98,6 +103,8 @@ exports.placeOrder = async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.session.user.id); // Convert userId to ObjectId
     const { paymentMethod, address, paymentId } = req.body;
+
+    
     console.log(paymentMethod);
     const shippingAddress = await Address.aggregate([
       {
@@ -119,7 +126,7 @@ exports.placeOrder = async (req, res) => {
     if (!userCart || userCart.items.length === 0) {
       return res.status(400).json({ error: 'Cart is empty or not found' });
     }
-
+    console.log(userCart)
     let order;
 
     if (paymentMethod === "PayOnline") {
@@ -139,6 +146,7 @@ exports.placeOrder = async (req, res) => {
           zipCode: shippingAddress[0].zipCode
         },
       });
+      console.log(`Data received ${ order }`)
     }
 
     if (paymentMethod === "COD") {
@@ -184,12 +192,8 @@ exports.placeOrder = async (req, res) => {
         },
       });
 
-      // Save the order to the database
 
-      // Update wallet balance and add transaction record
-      
-    } else {
-      return res.status(400).json({ error: 'Invalid payment method' });
+
     }
 
     if (!order) {
@@ -201,6 +205,8 @@ exports.placeOrder = async (req, res) => {
 
     // Save the order and clear the cart
     await order.save();
+
+
     if (paymentMethod === "Wallet") {
       console.log(`Inside Wallet payment`);
       const wallet = await Wallet.findOne({ user: userId });
@@ -210,7 +216,7 @@ exports.placeOrder = async (req, res) => {
       }
       wallet.balance -= userCart.payable;
       wallet.transactions.push({
-        description: `Order Payment for orderID: ${order._id}`,
+        description: `Order Payment for orderID: ${ order._id }`,
         amount: -userCart.payable,
         type: 'Dr',
       });

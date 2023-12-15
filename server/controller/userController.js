@@ -442,7 +442,7 @@ exports.userDashboard = async (req, res) => {
     const user = await User.findOne({ _id: id });
     const orders = await Order.find({ user: id }).populate('items.product');
     const wishlist = await Wishlist.find({user: id}).populate('products')
-    const wallet = await Wallet.findOne({user: id});
+    let wallet = await Wallet.findOne({user: id});
     // Fetch product images for each product in the orders
     for (const order of orders) {
       for (const item of order.items) {
@@ -450,9 +450,14 @@ exports.userDashboard = async (req, res) => {
         item.product.images = product.images;
         item.product.price  = product.price;
       }
-      
     }
-   
+
+    if(!wallet){
+      new Wallet({user: id}).save()
+    }
+    console.log(`wallet balance is ${wallet}`)
+
+    wallet = await Wallet.findOne({user: id});
     const adminRef = await adminReferral.findOne({},{isEnabled:1 ,_id:0})
     const refer = await Referral.findOne({ownedBy:id},{referralCode:1,_id:0});
     console.log(orders)

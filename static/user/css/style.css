@@ -75,7 +75,7 @@
 }
 
 /* On tablet and desktop screens, show the menu */
-@media (min-width: 768px) { /* Adjust the pixel value based on when you want the menu to appear */
+@media (min-width: 200px) { /* Adjust the pixel value based on when you want the menu to appear */
     .menu-right,
     .main-navbar {
         display: block;
@@ -491,5 +491,48 @@
   border-color: black;
   border-style: solid;
 }
+
+
+
+@media (max-width: 575px) {
+  #home {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  #shoes {
+    margin-top: 20vh;
+  }
+
+  @media (max-width: 1080px) {
+    #shoes {
+      margin-top: 50vh;
+    }
+  }
+}
+
+@media (max-width: 575px) {
+  #shoes {
+    margin-top: 100vh;
+  }
+
+  @media (min-width: 575px) {
+    #shoes {
+      margin-top: 40px;
+    }
+  }
+  @media(max-width: 767px){
+    #shoes{
+      width: 100%;
+    position: relative;
+    padding-top: 80px;
+    margin-top: 200px !important
+    }
+  }
+}
+
+
+
 
 

@@ -93,9 +93,7 @@ $(document).ready(function () {
 });
 
 document.addEventListener('DOMContentLoaded', (event) => {
-  // ... (your existing code)
 
-  // Handle form submission
   document.getElementById('editForm').addEventListener('submit', function (e) {
     e.preventDefault();
 

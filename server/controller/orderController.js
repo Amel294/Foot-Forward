@@ -4,10 +4,7 @@ const userMiddleware = require("../middleware/userSideMiddleware")
 exports. orderSuccess = async (req,res)=>{
   
     const userId = req.session.user.id; 
-    //   let userId
-    // if(req.body.user){
-    //   userId = req.body.user
-    // }
+   
     const order = await Order.findOne({ user: userId }).sort({ orderDate: -1 })
     .populate({
       path: 'items.product', // Path to the "product" field within "items"

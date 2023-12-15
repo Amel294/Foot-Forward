@@ -1,28 +1,29 @@
 <section class="pt-0 overflow-hidden">
-    <div>
-        <div class="banner-slider box-arrow slick-initialized slick-slider">
-            <div class="slick-list ">
-                <div class="slick-track" style="opacity: 1; width: 5781px;">
-                    <div class="slick-slide slick-current slick-active" data-slick-index="0" aria-hidden="false"
-                        style="width: 1927px; position: relative; left: 0px; top: 0px; z-index: 999; opacity: 1;">
-                        <div>
-                            <div class="banner-poster" style="width: 100%; display: inline-block;">
-                                <div class="slider-bg">
-                                    <div class="bg-text">
-                                        <span>Foot Forward</span>
-                                    </div>
-                                    <div class="bg-circle gradient-purple"></div>
-                                    <img src="/static/user/images/home_shoes.png"
-                                        class="shoes-1 img-fluid blur-up lazyloaded" alt="">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+  <div>
+    <div class="banner-slider box-arrow slick-initialized slick-slider">
+      <div class="slick-list ">
+        <div class="slick-track" style="opacity: 1; width: 5781px;">
+          <div class="slick-slide slick-current slick-active" data-slick-index="0" aria-hidden="false"
+            style="width: 110vw;height: 100vh;/* position: relative; left: 0px;top: 0px;z-index: 999; opacity: 1; ">
+            <div>
+              <div class="banner-poster" id="shoes2" style=" display: inline-block; height: 98vh;
+                            width: 100%;
+                            position: relative;">
+                <div class="slider-bg" id="shoes">
+                  <div class="bg-text">
+                    <span>Foot Forward</span>
+                  </div>
+                  <div class="bg-circle gradient-purple"></div>
+                  <img src="/static/user/images/home_shoes.png" class="shoes-1 img-fluid blur-up lazyloaded" alt="">
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-    
+  </div>
+
 </section>
 
 
@@ -33,16 +34,15 @@
 
 <!-- Add banner section in your EJS template -->
 <section class="poster-section ratio2_1">
-    <div>
-        <div class="container">
-            <div class="row">
-                <% banners.forEach((banner, index)=> { %>
-                    <div class="col-lg-12 banner-slide" id="banner<%= index %>"
-                        style="width: 100%; max-width: 90%; margin: 0 auto; display: <%= index === 0 ? 'block' : 'none' %>;">
-                        <!-- Add banner image with hyperlink and title -->
-                        <a href="<%= banner.hyperlink %>" style="position: relative; display: block;">
-                            <div class="banner-title"
-                                style="position: absolute;
+  <div>
+    <div class="container">
+      <div class="row">
+        <% banners.forEach((banner, index)=> { %>
+          <div class="col-lg-12 banner-slide" id="banner<%= index %>"
+            style="width: 100%; max-width: 90%; margin: 0 auto; display: <%= index === 0 ? 'block' : 'none' %>;">
+            <!-- Add banner image with hyperlink and title -->
+            <a href="<%= banner.hyperlink %>" style="position: relative; display: block;">
+              <div class="banner-title" style="position: absolute;
                                 top: 7%;
                                 left: 4.5%;
                                 background-color: rgba(0, 0, 0, 0.7);
@@ -50,45 +50,45 @@
                                 padding: 5px;
                                 z-index: 10;
                                 font-size: 1.2em;">
-                                <%= banner.title %>
-                            </div>
-                            <img src="data:<%= banner.images[0].contentType %>;base64,<%= banner.images[0].data %>"
-                                class="img-fluid" alt="Banner Image" >
-                        </a>
-                    </div>
-                    <% }); %>
-            </div>
-        </div>
+                <%= banner.title %>
+              </div>
+              <img src="data:<%= banner.images[0].contentType %>;base64,<%= banner.images[0].data %>" class="img-fluid"
+                alt="Banner Image">
+            </a>
+          </div>
+          <% }); %>
+      </div>
     </div>
+  </div>
 </section>
 
 
 
 <script>
-    // JavaScript code to automatically change the banner every 5 seconds
-    const banners = document.querySelectorAll('.banner-slide');
-    let currentBannerIndex = 0;
+  // JavaScript code to automatically change the banner every 5 seconds
+  const banners = document.querySelectorAll('.banner-slide');
+  let currentBannerIndex = 0;
 
-    function showBanner(index) {
-        // Hide all banners
-        banners.forEach((banner) => {
-            banner.style.display = 'none';
-        });
+  function showBanner(index) {
+    // Hide all banners
+    banners.forEach((banner) => {
+      banner.style.display = 'none';
+    });
 
-        // Show the banner at the given index
-        banners[index].style.display = 'block';
-    }
+    // Show the banner at the given index
+    banners[index].style.display = 'block';
+  }
 
-    function nextBanner() {
-        currentBannerIndex = (currentBannerIndex + 1) % banners.length;
-        showBanner(currentBannerIndex);
-    }
-
-    // Initially show the first banner
+  function nextBanner() {
+    currentBannerIndex = (currentBannerIndex + 1) % banners.length;
     showBanner(currentBannerIndex);
+  }
 
-    // Automatically change banner every 5 seconds
-    setInterval(nextBanner, 5000);
+  // Initially show the first banner
+  showBanner(currentBannerIndex);
+
+  // Automatically change banner every 5 seconds
+  setInterval(nextBanner, 5000);
 </script>
 
 
@@ -99,96 +99,95 @@
 
 
 <section class="ratio_asos mb-5">
-    <div class="container">
-        <div class="row m-0">
-            <div class="col-sm-12 p-0">
-                <div class="title title-2 text-center">
-                    <h2>New Arrival</h2>
-                    <h5>Our collection</h5>
-                </div>
-                
-                <div id="product-container" 
-                class="" style="
+  <div class="container">
+    <div class="row m-0">
+      <div class="col-sm-12 p-0">
+        <div class="title title-2 text-center">
+          <h2>New Arrival</h2>
+          <h5>Our collection</h5>
+        </div>
+
+        <div id="product-container" class="" style="
                 display: flex;
-                flex-direction: column;"> 
-                    <div class="container">
-                        <div class="row"> <!-- Make sure this row class is present -->
-                  
-                          <% products.forEach(product=> { %>
-                            <div class="col-md-2">
-                              <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
-                                <div class="img-wrapper position-relative">
-                                  <!-- Discount Banner -->
-                  
-                                  <% if (product.hasOffer) { %>
-                                    <div class="discount-banner position-absolute top-0 end-0 bg-danger text-white p-2"
-                                      style="width: 50%;">
-                                      <%= product.offerPercent %>% OFF
-                                    </div>
+                flex-direction: column;">
+          <div class="container">
+            <div class="row"> <!-- Make sure this row class is present -->
+
+              <% products.forEach(product=> { %>
+                <div class="col-md-2">
+                  <div class="product-box shadow p-3 mb-5 bg-white rounded-3">
+                    <div class="img-wrapper position-relative">
+                      <!-- Discount Banner -->
+
+                      <% if (product.hasOffer) { %>
+                        <div class="discount-banner position-absolute top-0 end-0 bg-danger text-white p-2"
+                          style="width: 50%;">
+                          <%= product.offerPercent %>% OFF
+                        </div>
+                        <% } %>
+                          <div class="front">
+                            <a href="/product/<%= product.productId %>" class="bg-size blur-up lazyloaded"
+                              style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
+                            </a>
+                          </div>
+                    </div>
+
+                    <div class="product-details">
+                      <!-- Rating Details -->
+                      <h6 class="theme-color">
+                        <%= product.brand.name %>
+                      </h6>
+                      <h3 class="theme-color">
+                        <%= product.name %>
+                      </h3>
+
+                      <div class="main-price">
+                        <% if (product.hasOffer) { %>
+                          <!-- Original Price Strikethrough -->
+                          <h5 class="font-light theme-color text-decoration-line-through">
+                            ₹<%= product.price %>
+                          </h5>
+                          <!-- Discounted Price -->
+                          <h5 class="font-light theme-color">
+                            ₹<%= (product.price - (product.price * product.offerPercent / 100)).toFixed(2) %>
+                          </h5>
+                          <% } else { %>
+                            <!-- Regular Price -->
+                            <h5 class="font-light theme-color">₹<%= product.price %>
+                            </h5>
+                            <% } %>
+
+                              <% if (req.session.user) { %>
+                                <% if (product.isInWishlist) { %>
+                                  <!-- Full heart icon for products in the wishlist -->
+                                  <button type="button"
+                                    class="btn m-1 btn-sm rounded-3 add-to-wishlist-button added-to-wishlist"
+                                    style="border: none;" data-product-id="<%= product._id %>">
+                                    <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                                      viewBox="0 0 48 48">
+                                      <path class="heart"
+                                        d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" />
+                                    </svg>
+                                  </button>
+                                  <% } else { %>
+                                    <!-- Hollow heart icon for products not in the wishlist -->
+                                    <button type="button" class="btn m-1 btn-sm rounded-3 add-to-wishlist-button"
+                                      style="border: none;" data-product-id="<%= product._id %>">
+                                      <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30"
+                                        height="30" viewBox="0 0 48 48">
+                                        <path class="heart"
+                                          d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" />
+                                      </svg>
+                                    </button>
                                     <% } %>
-                                      <div class="front">
-                                        <a href="/product/<%= product.productId %>" class="bg-size blur-up lazyloaded"
-                                          style="background-image: url(data:image/jpeg;base64,<%= product.images[0].data.toString('base64') %>); background-size: contain; background-position: center center; background-repeat: no-repeat; display: block;">
-                                        </a>
-                                      </div>
-                                </div>
-                  
-                                <div class="product-details">
-                                  <!-- Rating Details -->
-                                  <h6 class="theme-color">
-                                    <%= product.brand.name %>
-                                  </h6>
-                                  <h3 class="theme-color">
-                                    <%= product.name %>
-                                  </h3>
-                  
-                                  <div class="main-price">
-                                    <% if (product.hasOffer) { %>
-                                      <!-- Original Price Strikethrough -->
-                                      <h5 class="font-light theme-color text-decoration-line-through">
-                                        ₹<%= product.price %>
-                                      </h5>
-                                      <!-- Discounted Price -->
-                                      <h5 class="font-light theme-color">
-                                        ₹<%= (product.price - (product.price * product.offerPercent / 100)).toFixed(2) %>
-                                      </h5>
-                                      <% } else { %>
-                                        <!-- Regular Price -->
-                                        <h5 class="font-light theme-color">₹<%= product.price %>
-                                        </h5>
-                                        <% } %>
-                  
-                                          <% if (req.session.user) { %>
-                                            <% if (product.isInWishlist) { %>
-                                              <!-- Full heart icon for products in the wishlist -->
-                                              <button type="button"
-                                                class="btn m-1 btn-sm rounded-3 add-to-wishlist-button added-to-wishlist"
-                                                style="border: none;" data-product-id="<%= product._id %>">
-                                                <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                  viewBox="0 0 48 48">
-                                                  <path class="heart"
-                                                    d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" />
-                                                </svg>
-                                              </button>
-                                              <% } else { %>
-                                                <!-- Hollow heart icon for products not in the wishlist -->
-                                                <button type="button" class="btn m-1 btn-sm rounded-3 add-to-wishlist-button"
-                                                  style="border: none;" data-product-id="<%= product._id %>">
-                                                  <svg class="wishlist-icon" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                    viewBox="0 0 48 48">
-                                                    <path class="heart"
-                                                      d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" />
-                                                  </svg>
-                                                </button>
-                                                <% } %>
-                                                  <% } %>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <% }); %>
-                        </div>
+                                      <% } %>
                       </div>
-                        </div>
-                    
+                    </div>
+                  </div>
+                </div>
+                <% }); %>
+            </div>
+          </div>
+        </div>
+
 </section>

@@ -1,125 +1,152 @@
 <header class="header-style-2" id="home">
-    <div class="main-header navbar-searchbar">
-        <div class="container-fluid-lg">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="main-menu">
-                        <div class="menu-left">
-                            <div class="brand-logo">
-                                <a href="index.html">
-                                    <svg class="svg-icon">
-                                        <use class="fill-color" xlink:href="/static/user/svg/icons.svg#logo"></use>
-                                    </svg>
-                                    <img src="/static/user/images/logo.png" class="img-fluid blur-up lazyloaded"
-                                        alt="logo">
-                                </a>
-                            </div>
-                        </div>
-
-                        <!-- Main navigation -->
-                        <div class="menu-right main-navbar ">
-                            <div id="mainnav">
-                                <ul class="nav-menu" style="right: -410px;">
-                                    <li class="back-btn d-xl-none">
-                                        <div class="close-btn">
-                                            Menu
-                                            <span class="mobile-back"><i class="fa fa-angle-left"></i>
-                                            </span>
-                                        </div>
-                                    </li>
-                                    <ul>
-                                        <li>
-                                            <a href="/" class="nav-link menu-title theme-color">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-home">
-                                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                                                </svg>
-                                                <span>Home</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="/products" class="nav-link menu-title theme-color">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-align-justify">
-                                                    <line x1="21" y1="10" x2="3" y2="10"></line>
-                                                    <line x1="21" y1="6" x2="3" y2="6"></line>
-                                                    <line x1="21" y1="14" x2="3" y2="14"></line>
-                                                    <line x1="21" y1="18" x2="3" y2="18"></line>
-                                                </svg>
-                                                <span>Shop</span>
-                                            </a>
-                                        </li>
-                                        <% if (isAuthenticated) { %>
-                                        <li>
-                                            <a href="/cart" class="nav-link menu-title theme-color">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-shopping-bag">
-                                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
-                                                </svg>
-                                                <span>Cart</span>
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="/checkout" class="nav-link menu-title theme-color">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-heart">
-                                                    <path
-                                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
-                                                    </path>
-                                                </svg>
-                                                <span>Wishlist</span>
-                                                <% if (req.session.user && wishlistCount > 0) { %>
-                                                    <span class="badge badge-pill badge-danger wishlist-style"><%= wishlistCount %></span>
-                                                <% } %>
-                                            </a>
-                                        </li>
-                                        
-
-                                        <li>
-                                            <a href="/userDashboard" class="nav-link menu-title theme-color">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                    class="feather feather-user">
-                                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                                    <circle cx="12" cy="7" r="4"></circle>
-                                                </svg>
-                                                <span>Account</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="" id="logout_main_nav"  class="nav-link menu-title theme-color">
-                                                <svg fill="#7520dd" height="24" width="24" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-49.91 -49.91 598.92 598.92" xml:space="preserve" transform="rotate(180)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <path d="M0,249.6c0,9.5,7.7,17.2,17.2,17.2h327.6l-63.9,63.8c-6.7,6.7-6.7,17.6,0,24.3c3.3,3.3,7.7,5,12.1,5s8.8-1.7,12.1-5 l93.1-93.1c6.7-6.7,6.7-17.6,0-24.3l-93.1-93.1c-6.7-6.7-17.6-6.7-24.3,0c-6.7,6.7-6.7,17.6,0,24.3l63.8,63.8H17.2 C7.7,232.5,0,240.1,0,249.6z"></path> <path d="M396.4,494.2c56.7,0,102.7-46.1,102.7-102.8V107.7C499.1,51,453,4.9,396.4,4.9H112.7C56,4.9,10,51,10,107.7V166 c0,9.5,7.7,17.1,17.1,17.1c9.5,0,17.2-7.7,17.2-17.1v-58.3c0-37.7,30.7-68.5,68.4-68.5h283.7c37.7,0,68.4,30.7,68.4,68.5v283.7 c0,37.7-30.7,68.5-68.4,68.5H112.7c-37.7,0-68.4-30.7-68.4-68.5v-57.6c0-9.5-7.7-17.2-17.2-17.2S10,324.3,10,333.8v57.6 c0,56.7,46.1,102.8,102.7,102.8H396.4L396.4,494.2z"></path> </g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g></svg>                                                
-                                                <span>Logout</span>
-                                            </a>
-                                        </li>
-                                        
-                                        <% } else { %>
-                                            <li>
-                                                <a href="/signin" class="nav-link menu-title theme-color">
-                                                    <svg fill="#7520dd" height="24" width="24" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="-49.91 -49.91 598.92 598.92" xml:space="preserve" transform="rotate(0)"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g> <g> <g> <path d="M0,249.6c0,9.5,7.7,17.2,17.2,17.2h327.6l-63.9,63.8c-6.7,6.7-6.7,17.6,0,24.3c3.3,3.3,7.7,5,12.1,5s8.8-1.7,12.1-5 l93.1-93.1c6.7-6.7,6.7-17.6,0-24.3l-93.1-93.1c-6.7-6.7-17.6-6.7-24.3,0c-6.7,6.7-6.7,17.6,0,24.3l63.8,63.8H17.2 C7.7,232.5,0,240.1,0,249.6z"></path> <path d="M396.4,494.2c56.7,0,102.7-46.1,102.7-102.8V107.7C499.1,51,453,4.9,396.4,4.9H112.7C56,4.9,10,51,10,107.7V166 c0,9.5,7.7,17.1,17.1,17.1c9.5,0,17.2-7.7,17.2-17.1v-58.3c0-37.7,30.7-68.5,68.4-68.5h283.7c37.7,0,68.4,30.7,68.4,68.5v283.7 c0,37.7-30.7,68.5-68.4,68.5H112.7c-37.7,0-68.4-30.7-68.4-68.5v-57.6c0-9.5-7.7-17.2-17.2-17.2S10,324.3,10,333.8v57.6 c0,56.7,46.1,102.8,102.7,102.8H396.4L396.4,494.2z"></path> </g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> <g> </g> </g> </g></svg>                                                  
-                                                    <span>Login</span>
-                                                </a>
-                                            </li>
-                                            <% } %>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- /Main navigation -->
+    <div class="main-header">
+        <div class="container-fluid-lg ">
+            <!-- Navbar-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+                <div class="container-fluid justify-content-between">
+                    <!-- Left elements -->
+                    <div class="d-flex">
+                        <!-- Brand -->
+                        <a class="navbar-brand me-2 mb-1 d-flex align-items-center" href="#">
+                            <img src="static/images/logo-dark.png" height="20" alt="MDB Logo" loading="lazy"
+                                style="margin-top: 2px;" />
+                        </a>
                     </div>
+                    <!-- Left elements -->
+
+
+
+                    <!-- Right elements -->
+                    <ul class="navbar-nav flex-row">
+                        <li class="nav-item me-3 me-lg-1">
+                            <a class="nav-link d-sm-flex align-items-sm-center" href="/">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="#7520dd" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-home">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                </svg>
+                                <span style="color: #7520dd;">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item me-3 me-lg-1">
+                            <a class="nav-link d-sm-flex align-items-sm-center" href="/products">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="#7520dd" stroke="#7520dd" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-align-justify">
+                                    <line x1="21" y1="10" x2="3" y2="10"></line>
+                                    <line x1="21" y1="6" x2="3" y2="6"></line>
+                                    <line x1="21" y1="14" x2="3" y2="14"></line>
+                                    <line x1="21" y1="18" x2="3" y2="18"></line>
+                                </svg>
+                                <span style="color: #7520dd;">Shop</span>
+                            </a>
+                        </li>
+                        <% if (isAuthenticated) { %>
+                            <li class="nav-item me-3 me-lg-1">
+                                <a class="nav-link d-sm-flex align-items-sm-center" href="/cart">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="#7520dd" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-shopping-bag">
+                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                    </svg>
+                                    <span style="color: #7520dd;">Cart</span>
+                                </a>
+                            </li>
+                            <li class="nav-item me-3 me-lg-1">
+                                <a class="nav-link d-sm-flex align-items-sm-center" href="/userDashboard">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="#7520dd" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-heart">
+                                        <path
+                                            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                        </path>
+                                    </svg>
+                                    <span style="color: #7520dd;">Wishlist</span>
+                                    <% if (req.session.user && wishlistCount> 0) { %>
+                                        <span class="badge badge-pill badge-danger wishlist-style">
+                                            <%= wishlistCount %>
+                                        </span>
+                                        <% } %>
+                                </a>
+                            </li>
+                            <li class="nav-item me-3 me-lg-1">
+                                <a class="nav-link d-sm-flex align-items-sm-center" href="#">
+                                    <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="#7520dd" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-user">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    <span style="color: #7520dd;">Account</span>
+                                </a>
+                            </li>
+                            <li class="nav-item me-3 me-lg-1">
+                                <a class="nav-link d-sm-flex align-items-sm-center" href="#">
+                                    <svg fill="#7520dd" height="24" width="24" version="1.1" id="Capa_1"
+                                        xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        viewBox="-49.91 -49.91 598.92 598.92" xml:space="preserve"
+                                        transform="rotate(180)">
+                                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round">
+                                        </g>
+                                        <g id="SVGRepo_iconCarrier">
+                                            <g>
+                                                <g>
+                                                    <g>
+                                                        <path
+                                                            d="M0,249.6c0,9.5,7.7,17.2,17.2,17.2h327.6l-63.9,63.8c-6.7,6.7-6.7,17.6,0,24.3c3.3,3.3,7.7,5,12.1,5s8.8-1.7,12.1-5 l93.1-93.1c6.7-6.7,6.7-17.6,0-24.3l-93.1-93.1c-6.7-6.7-17.6-6.7-24.3,0c-6.7,6.7-6.7,17.6,0,24.3l63.8,63.8H17.2 C7.7,232.5,0,240.1,0,249.6z">
+                                                        </path>
+                                                        <path
+                                                            d="M396.4,494.2c56.7,0,102.7-46.1,102.7-102.8V107.7C499.1,51,453,4.9,396.4,4.9H112.7C56,4.9,10,51,10,107.7V166 c0,9.5,7.7,17.1,17.1,17.1c9.5,0,17.2-7.7,17.2-17.1v-58.3c0-37.7,30.7-68.5,68.4-68.5h283.7c37.7,0,68.4,30.7,68.4,68.5v283.7 c0,37.7-30.7,68.5-68.4,68.5H112.7c-37.7,0-68.4-30.7-68.4-68.5v-57.6c0-9.5-7.7-17.2-17.2-17.2S10,324.3,10,333.8v57.6 c0,56.7,46.1,102.8,102.7,102.8H396.4L396.4,494.2z">
+                                                        </path>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <span style="color: #7520dd;">Logout</span>
+                                </a>
+                            </li>
+                            <% } else { %>
+                                <li class="nav-item me-3 me-lg-1">
+                                    <a class="nav-link d-sm-flex align-items-sm-center" href="/signin">
+                                        <svg fill="#7520dd" height="24" width="24" version="1.1" id="Capa_1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            xmlns:xlink="http://www.w3.org/1999/xlink"
+                                            viewBox="-49.91 -49.91 598.92 598.92" xml:space="preserve"
+                                            transform="rotate(0)">
+                                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                            <g id="SVGRepo_tracerCarrier" stroke-linecap="round"
+                                                stroke-linejoin="round"></g>
+                                            <g id="SVGRepo_iconCarrier">
+                                                <g>
+                                                    <g>
+                                                        <g>
+                                                            <path
+                                                                d="M0,249.6c0,9.5,7.7,17.2,17.2,17.2h327.6l-63.9,63.8c-6.7,6.7-6.7,17.6,0,24.3c3.3,3.3,7.7,5,12.1,5s8.8-1.7,12.1-5 l93.1-93.1c6.7-6.7,6.7-17.6,0-24.3l-93.1-93.1c-6.7-6.7-17.6-6.7-24.3,0c-6.7,6.7-6.7,17.6,0,24.3l63.8,63.8H17.2 C7.7,232.5,0,240.1,0,249.6z">
+                                                            </path>
+                                                            <path
+                                                                d="M396.4,494.2c56.7,0,102.7-46.1,102.7-102.8V107.7C499.1,51,453,4.9,396.4,4.9H112.7C56,4.9,10,51,10,107.7V166 c0,9.5,7.7,17.1,17.1,17.1c9.5,0,17.2-7.7,17.2-17.1v-58.3c0-37.7,30.7-68.5,68.4-68.5h283.7c37.7,0,68.4,30.7,68.4,68.5v283.7 c0,37.7-30.7,68.5-68.4,68.5H112.7c-37.7,0-68.4-30.7-68.4-68.5v-57.6c0-9.5-7.7-17.2-17.2-17.2S10,324.3,10,333.8v57.6 c0,56.7,46.1,102.8,102.7,102.8H396.4L396.4,494.2z">
+                                                            </path>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </g>
+                                        </svg>
+                                        <span style="color: #7520dd;">Login</span>
+                                    </a>
+                                </li>
+
+                                <% } %>
+
+                    </ul>
+                    <!-- Right elements -->
                 </div>
-            </div>
+            </nav>
+            <!-- Navbar -->
         </div>
     </div>
 </header>

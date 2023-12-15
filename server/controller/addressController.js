@@ -96,9 +96,11 @@ exports.checkout = async (req, res) => {
     minimumOrderAmount: { $lte: TotalBeforeCoupon },
     validUntil: { $gte: currentDate }
   });
-
-  const wallet = await Wallet.findOne({user: req.session.user.id},{balance:1,_id:0})
-
+  
+  let wallet = await Wallet.findOne({user: req.session.user.id},{balance:1,_id:0}) 
+  if(!wallet){
+    wallet = 0
+  }
   res.render('user/checkout', { addresses: addresses, user: user, coupons: availableCoupon, coupon: promocode, req, wishlistCount, cart, ProductsInCart, total, TotalBeforeCoupon, couponDiscount, totalAfterCoupon: finalPrice,wallet });
 };
 
