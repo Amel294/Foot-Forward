@@ -15,8 +15,8 @@ $(document).ready(function () {
   // When the close button (x) is clicked, hide the modal
   $('#closeModal').click(hideAddAddressModal);
 
-  // When the save button is clicked, submit the address data
-  $('#saveAddress').click(function (event) {
+   // When the save button is clicked, submit the address data
+   $('#saveAddress').click(function (event) {
     event.preventDefault(); // Prevent the default form submission
 
     var fullName = $('#fullName').val();
@@ -40,7 +40,7 @@ $(document).ready(function () {
     console.log('Submitting data', data);
 
     // Using fetch to send the data
-    fetch('http://localhost:3000/user/add-address', {
+    fetch('/user/add-address', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,48 +50,50 @@ $(document).ready(function () {
       .then(response => response.json())
       .then(data => {
         console.log('Success:', data);
-        hideAddAddressModal(); // Hide the modal after successful submission
-        // Clear the input fields
-        $('#fullName').val('');
-        $('#street').val('');
-        $('#city').val('');
-        $('#state').val('');
-        $('#zipCode').val('');
-        $('#mobile').val('');
+
+        if (data.success) {
+          hideAddAddressModal(); // Hide the modal after successful submission
+          // Clear the input fields
+          $('#fullName').val('');
+          $('#street').val('');
+          $('#city').val('');
+          $('#state').val('');
+          $('#zipCode').val('');
+          $('#mobile').val('');
+
+          // Show SweetAlert success message
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'New address saved successfully!',
+          });
+
+          // Reload the page
+          window.location.reload();
+        } else {
+          // Show SweetAlert error message
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error saving address',
+          });
+        }
       })
       .catch((error) => {
         console.error('Error:', error);
-        // Handle the error here, maybe show a message to the user
+
+        // Show SweetAlert error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error saving address',
+        });
       });
   });
 });
 
-
-
-
 document.addEventListener('DOMContentLoaded', (event) => {
-  // Open modal with dynamic content
-  document.querySelectorAll('[data-bs-toggle="modal"]').forEach(item => {
-    item.addEventListener('click', event => {
-      const fieldType = item.getAttribute('data-field-type');
-      const currentValue = item.getAttribute('data-current-value');
-      const modalLabel = document.getElementById('editModalLabel');
-      const editInput = document.getElementById('editInput');
-      const fieldTypeInput = document.getElementById('fieldType');
-
-      // Update modal based on the data attributes
-      modalLabel.textContent = `Edit ${ fieldType.charAt(0).toUpperCase() + fieldType.slice(1) }`;
-      editInput.value = currentValue;
-      editInput.name = fieldType;
-      fieldTypeInput.value = fieldType;
-
-      // Set proper input type for password field
-      editInput.type = fieldType === 'password' ? 'password' : 'text';
-
-      // Change the label for the input
-      document.querySelector('label[for="editInput"]').textContent = `${ fieldType.charAt(0).toUpperCase() + fieldType.slice(1) }:`;
-    });
-  });
+  // ... (your existing code)
 
   // Handle form submission
   document.getElementById('editForm').addEventListener('submit', function (e) {
@@ -100,7 +102,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     const fieldValue = document.getElementById('editInput').value;
     const fieldType = document.getElementById('fieldType').value;
 
-    fetch('http://localhost:3000/user/add-address', {
+    fetch('/user/add-address', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -115,19 +117,31 @@ document.addEventListener('DOMContentLoaded', (event) => {
       })
       .then(data => {
         console.log('Success:', data);
-        
-      
+
         // Close the modal
         $('#editModal').modal('hide');
+
+        // Show SweetAlert success message
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Address updated successfully!',
+        });
+
         // Redirect to /checkout after the modal has hidden
         $('#editModal').on('hidden.bs.modal', function (e) {
-          console.log("trtying tio redirect ");
-          window.location.href = '/checkout'; // Redirect to the checkout route
-        })
+          console.log("trying to redirect ");
+          window.location.reload();         })
       })
       .catch((error) => {
         console.error('Error:', error);
+
+        // Show SweetAlert error message
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Error updating address',
+        });
       });
   });
 });
-

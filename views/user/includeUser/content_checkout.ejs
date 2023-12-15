@@ -205,7 +205,11 @@
       
       <div class="col-lg-5">
         <div class="your-cart-box">
-          <h3 class="text-capitalize d-flex justify-content-between mb-5">Wallet Balance<span>₹ <%=wallet.balance%></span></h3>
+          <% if(wallet && wallet.balance){%>
+            <h3 class="text-capitalize d-flex justify-content-between mb-5">Wallet Balance<span>₹ <%=wallet.balance%></span></h3>
+          <%}else{%>
+          <h3 class="text-capitalize d-flex justify-content-between mb-5">Wallet Balance<span>₹ 0 </span></h3>
+          <%}%>
 
           <h3 class="mb-3 d-flex text-capitalize">Your cart<span
             class="badge bg-theme new-badge rounded-pill ms-auto bg-dark">
